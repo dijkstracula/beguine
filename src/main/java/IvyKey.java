@@ -6,6 +6,7 @@ import java.util.Objects;
 
 /**
  * Models the Ivy instantiation of keys (unbounded nat)
+ * TODO: Originally this was backed by a BigInt.  I changed it but I don't remember why?
  */
 public class IvyKey implements RoutableKey, RoutingKey {
     public final long val;
