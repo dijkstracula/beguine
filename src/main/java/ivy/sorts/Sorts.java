@@ -3,6 +3,8 @@ package ivy.sorts;
 import com.microsoft.z3.*;
 import ivy.decls.Decls;
 
+import java.util.Iterator;
+import java.util.PrimitiveIterator;
 import java.util.Random;
 import java.util.function.Supplier;
 import java.util.stream.LongStream;
@@ -25,10 +27,10 @@ public class Sorts {
         if (min >= max) {
             throw new RuntimeException(String.format("Invalid range [%d, %d)", min, max));
         }
-        LongStream rands = random.longs(min, max);
+        PrimitiveIterator.OfLong rands = random.longs(min, max).iterator();
         return new IvyInt(
                 name,
-                () -> rands.findFirst().getAsLong(),
+                () -> rands.next(),
                 e -> ctx.mkGe(e, ctx.mkInt(min)),
                 e -> ctx.mkLt(e, ctx.mkInt(max)));
     }
@@ -63,6 +65,8 @@ public class Sorts {
         }
     }
 
+    // TODO: in practice seems like we have to cast longs to ints.
+    // should this just be parameterised with Integer instead?
     public class IvyInt extends IvySort<Long, IntSort> {
 
         IvyInt(String name, Supplier<Long> f, Constraint<Long, IntSort>... constraints) {

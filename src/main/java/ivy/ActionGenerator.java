@@ -18,16 +18,14 @@ import ivy.sorts.Sorts.*;
 public abstract class ActionGenerator<P> {
     private final Context ctx;
     private final Solver slvr;
-    private Model model; // TODO: Optional<Model>?
 
     protected final Sorts sorts;
     protected final Decls decls;
 
     private int tmp_ctr;
 
-    public ActionGenerator() {
-        Random r = new Random(42); // TODO: inject Random from the outside
-
+    // TODO: is there any point in passing in P here?
+    public ActionGenerator(Random r, P p) {
         ctx = new Context();
         slvr = ctx.mkSolver();
         sorts = new Sorts(ctx, r);
@@ -46,14 +44,14 @@ public abstract class ActionGenerator<P> {
     }
 
     protected void push() { slvr.push(); }
-    protected void pop() { slvr.push(); }
+    protected void pop() { slvr.pop(); }
 
     public Context getContext() { return ctx; }
 
 
     //abstract public int choose(int rng, String name);
-    abstract public boolean generate(P protocol);
-    abstract public void execute(P protocol);
+    abstract public Model generate(P protocol);
+    abstract public void execute(P protocol, Model m);
 
     String fresh_name() {
         return String.format("$tmp%d", tmp_ctr++);
