@@ -1,13 +1,10 @@
 package ivy.sorts;
 
 import com.microsoft.z3.*;
-import ivy.decls.Decls;
 
-import java.util.Iterator;
 import java.util.PrimitiveIterator;
 import java.util.Random;
 import java.util.function.Supplier;
-import java.util.stream.LongStream;
 
 public class Sorts {
     private final Context ctx;
@@ -18,16 +15,16 @@ public class Sorts {
         this.random = random;
     }
 
-    public IvyBool mkBool(String name) { return mkBool(name, () -> random.nextBoolean()); }
+    public IvyBool mkBool(String name) { return mkBool(name, random::nextBoolean); }
     public IvyBool mkBool(String name, Supplier<Boolean> f) { return new IvyBool(name, f); }
 
-    public IvyInt mkInt(String name) { return mkInt(name, () -> random.nextLong()); }
-    public IvyInt mkInt(String name, Supplier<Long> f) { return new IvyInt(name, f); }
-    public IvyInt mkInt(String name, long min, long max) {
+    public IvyInt mkInt(String name) { return mkInt(name, random::nextInt); }
+    public IvyInt mkInt(String name, Supplier<Integer> f) { return new IvyInt(name, f); }
+    public IvyInt mkInt(String name, int min, int max) {
         if (min >= max) {
             throw new RuntimeException(String.format("Invalid range [%d, %d)", min, max));
         }
-        PrimitiveIterator.OfLong rands = random.longs(min, max).iterator();
+        PrimitiveIterator.OfInt rands = random.ints(min, max).iterator();
         return new IvyInt(
                 name,
                 () -> rands.next(),
@@ -65,17 +62,15 @@ public class Sorts {
         }
     }
 
-    // TODO: in practice seems like we have to cast longs to ints.
-    // should this just be parameterised with Integer instead?
-    public class IvyInt extends IvySort<Long, IntSort> {
+    public class IvyInt extends IvySort<Integer, IntSort> {
 
-        IvyInt(String name, Supplier<Long> f, Constraint<Long, IntSort>... constraints) {
+        IvyInt(String name, Supplier<Integer> f, Constraint<Integer, IntSort>... constraints) {
             super(name, f, constraints);
         }
 
         @Override
-        public Expr<IntSort> to_solver(Long val) {
-            return ctx.mkInt(val);
+        public Expr<IntSort> to_solver(Integer val) {
+            return ctx.mkInt(val.toString());
         }
 
         @Override
@@ -84,9 +79,9 @@ public class Sorts {
         }
 
         @Override
-        public Long eval(Model m, Expr<IntSort> expr) {
+        public Integer eval(Model m, Expr<IntSort> expr) {
             IntNum evaled = (IntNum) m.eval(expr, false);
-            return evaled.getInt64();
+            return evaled.getInt();
         }
     }
 }
