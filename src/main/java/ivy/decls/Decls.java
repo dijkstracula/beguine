@@ -20,7 +20,7 @@ public class Decls {
         this.random = random;
     }
 
-    public <J, Z extends Sort, I extends IvySort<J, Z>> IvyConst<J, Z, I> mkConst(String name, I sort) {
+    public <J, Z extends Sort> IvyConst<J, Z> mkConst(String name, IvySort<J, Z> sort) {
         return new IvyConst<>(name, sort);
     }
 
@@ -31,12 +31,12 @@ public class Decls {
      * @param <I> The IvySort that this Const is a type of.
      *            TODO: do we actually need the I typevar
      */
-    public class IvyConst<J, Z extends Sort, I extends IvySort<J, Z>> {
+    public class IvyConst<J, Z extends Sort> {
         public final String name;
-        public final I sort;
+        public final IvySort<J, Z> sort;
         public final Expr<Z> theConst;
 
-        IvyConst(String name, I sort) {
+        IvyConst(String name, IvySort<J, Z> sort) {
             this.name = name;
             this.sort = sort;
             this.theConst = ctx.mkConst(name, sort.getZ3Sort());
