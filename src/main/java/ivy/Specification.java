@@ -1,10 +1,14 @@
 package ivy;
 
 import com.microsoft.z3.*;
+
+import ivy.Conjecture.ConjectureFailure;
 import ivy.decls.Decls;
+import ivy.functions.ThrowingRunnable;
 import ivy.sorts.IvySort;
 import ivy.sorts.Sorts;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -22,6 +26,8 @@ public abstract class Specification<I> {
 
     private int tmp_ctr;
 
+    private final Random random;
+
     private final Context ctx;
     private final Solver slvr;
 
@@ -30,14 +36,19 @@ public abstract class Specification<I> {
 
     private List<Conjecture<I>> conjectures;
 
-    private List<Runnable> actions;
+    private List<ThrowingRunnable<ConjectureFailure>> actions;
 
-    public Specification(Random r, I impl) {
+    public Specification(Random r, I i) {
         ctx = new Context();
         slvr = ctx.mkSolver();
         sorts = new Sorts(ctx, r);
         decls = new Decls(ctx, sorts, r);
-        this.impl = impl;
+
+        actions = new ArrayList<>();
+        conjectures = new ArrayList<>();
+
+        random = r;
+        impl = i;
     }
 
     public void push() { slvr.push(); }
@@ -53,7 +64,13 @@ public abstract class Specification<I> {
         conjectures.add(conj);
     }
 
-    public void addAction(Runnable r) {
+    private void checkConjectures() throws ConjectureFailure {
+        for (Conjecture<I> conj : conjectures) {
+            conj.accept(impl);
+        }
+    }
+
+    public void addAction(ThrowingRunnable r) {
         Objects.requireNonNull(r);
         actions.add(r);
     }
@@ -62,6 +79,16 @@ public abstract class Specification<I> {
         Objects.requireNonNull(source);
         Objects.requireNonNull(sink);
         actions.add(pipe(source, sink));
+    }
+
+    public void addAction(Supplier<Void> source, Runnable sink) {
+        Objects.requireNonNull(source);
+        Objects.requireNonNull(sink);
+        actions.add(pipe(source, sink));
+    }
+
+    public ThrowingRunnable<ConjectureFailure> chooseAction() {
+        return actions.get(random.nextInt(actions.size()));
     }
 
     protected void addPredicate(Expr<BoolSort> pred) {
@@ -92,22 +119,26 @@ public abstract class Specification<I> {
         return slvr.getModel();
     }
 
-    public static <T> Runnable pipe(Supplier<T> source, Consumer<T> sink) {
+    public <T> ThrowingRunnable<ConjectureFailure> pipe(Supplier<T> source, Consumer<T> sink) {
         Objects.requireNonNull(source);
         Objects.requireNonNull(sink);
 
         // TODO: truly no other way to compose these??
         // TODO: is there value in a subclass of Runnable that also contains metadata like the action name, etc
-        return () -> sink.accept(source.get());
+        return () -> {
+            sink.accept(source.get());
+            checkConjectures();
+        };
     }
 
-    public static <I, S extends Specification<I>> Runnable pipe(Generator.UnitGenerator<I, S> source, Runnable sink) {
+    public <I, S extends Specification<I>> ThrowingRunnable<ConjectureFailure> pipe(Supplier<Void> source, Runnable sink) {
         Objects.requireNonNull(source);
         Objects.requireNonNull(sink);
 
         return () -> {
             source.get();
             sink.run();
+            checkConjectures();
         };
     }
 }

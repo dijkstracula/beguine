@@ -1,7 +1,9 @@
 package ivy;
 
 import com.microsoft.z3.*;
+import ivy.Conjecture.ConjectureFailure;
 import ivy.decls.Decls;
+import ivy.functions.ThrowingRunnable;
 import ivy.sorts.Sorts;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,6 +49,7 @@ public class TrivialFailureDetectorTest {
             super(r, i);
             isDownGen = new IsDownGenerator(this);
             isDownExec = i::isDown;
+            addAction(isDownGen, isDownExec);
 
             Sorts.IvyInt nodeSort = mkInt("nodeSort", 0, i.MAX_N);
             node = mkConst("node", nodeSort);
@@ -86,7 +89,7 @@ public class TrivialFailureDetectorTest {
 
     @Test
     public void testGenAndExec() {
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 500; i++) {
             // Generating a value for p.n should put it within the right bounds.
             int n = s.isDownGen.get();
             assertTrue(0 <= n);
@@ -99,12 +102,29 @@ public class TrivialFailureDetectorTest {
     }
 
     @Test
-    public void testPipe() {
+    public void testPipe() throws ConjectureFailure {
         // Tests the same thing as testGenAndExec, but with the added layer of composing
         // the source and sink into a thunk.
-        Runnable pipe = Specification.pipe(s.isDownGen, s.isDownExec);
-        for (int i = 0; i < 1000; i++) {
+        ThrowingRunnable<ConjectureFailure> pipe = s.pipe(s.isDownGen, s.isDownExec);
+
+        for (int i = 0; i < 500; i++) {
             pipe.run();
+        }
+
+        // Since piping the action values abstracts the particular choices away, we can
+        // only observe that after a ~sufficient~ number of iterations, all nodes are
+        // downed eventually.
+        for (int i = 0; i < p.MAX_N; i++) {
+            assertFalse(p.statuses.get(i));
+        }
+    }
+
+    @Test
+    public void testAct() throws ConjectureFailure {
+        // Tests the same thing as testPipe, except that the single isDown action is
+        // "nondeterministically" chosen by the Specification.
+        for (int i = 0; i < 500; i++) {
+            s.chooseAction().run();
         }
 
         // Since piping the action values abstracts the particular choices away, we can

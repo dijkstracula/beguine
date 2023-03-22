@@ -1,6 +1,9 @@
 package ivy;
 
 import com.microsoft.z3.*;
+
+import java.util.Objects;
+import java.util.Random;
 import java.util.function.Supplier;
 
 /**
@@ -36,6 +39,11 @@ public abstract class Generator<I, S extends Specification<I>, T> implements Sup
     abstract protected void randomize();
     abstract protected T eval(Model m);
 
+
+    public static <I, S extends Specification<I>> UnitGenerator<I, S> UnitGenerator(S s) {
+        Objects.requireNonNull(s);
+        return new UnitGenerator<>(s);
+    }
 
     public static class UnitGenerator<I, S extends Specification<I>> extends Generator<I, S, Void> {
         UnitGenerator(S spec){
