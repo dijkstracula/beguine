@@ -16,7 +16,7 @@ public class MultiCounterTest {
         MultiCounterSpec spec = new MultiCounterSpec(r, impl);
 
         assertThrows(Conjecture.ConjectureFailure.class, () -> {
-            // At some point, the counter will go negative, invalidating the
+            // At some point, one of the nodes' counter will go negative, invalidating the
             // nonnegativity conjecture.
             while (true) {
                 spec.chooseAction().run();

@@ -47,32 +47,13 @@ public class TrivialFailureDetectorTest {
 
         public TrivialFailureDetectorSpec(Random r, TrivialFailureDetector i) {
             super(r, i);
-            isDownGen = new IsDownGenerator(this);
+            Sorts.IvyInt nodeSort = mkInt("nodeSort", 0, i.MAX_N);
+            node = mkConst("node", nodeSort);
+
+            isDownGen = nodeSort;
             isDownExec = i::isDown;
             addAction(isDownGen, isDownExec);
 
-            Sorts.IvyInt nodeSort = mkInt("nodeSort", 0, i.MAX_N);
-            node = mkConst("node", nodeSort);
-        }
-
-        /**
-         * Generates random events to be passed to TrivialFailureDetector::isDown().
-         */
-         public class IsDownGenerator extends Generator<TrivialFailureDetector, TrivialFailureDetectorSpec, Integer> {
-
-            public IsDownGenerator(TrivialFailureDetectorSpec spec) {
-                super(spec);
-            }
-
-            @Override
-            protected void randomConstrain() {
-                add(specification.node.randomConstrain());
-            }
-
-            @Override
-            protected Integer eval(Model m) {
-                return specification.node.eval(m);
-            }
         }
     }
 

@@ -1,7 +1,6 @@
 package ivy.MultiCounterTest;
 
 import com.microsoft.z3.IntSort;
-import ivy.Conjecture;
 import ivy.decls.Decls;
 import ivy.Specification;
 import ivy.sorts.Sorts;
@@ -22,12 +21,7 @@ public class MultiCounterSpec extends Specification<MultiCounterRefImpl> {
 
         addAction(nodeSort, impl::dec);
         addAction(nodeSort, impl::inc);
-        addConjecture("non-negativity", (im) -> {
-            for (int i : im.val.values()) {
-                if (i < 0) return false;
-            }
-            return true;
-        });
+        addConjecture("non-negativity", im -> im.val.values().stream().anyMatch(i -> i < 0));
     }
 
 }
