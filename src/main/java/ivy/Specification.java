@@ -91,7 +91,7 @@ public abstract class Specification<I> {
         return actions.get(random.nextInt(actions.size()));
     }
 
-    protected void addPredicate(Expr<BoolSort> pred) {
+    public void addPredicate(Expr<BoolSort> pred) {
         slvr.add(pred);
     }
 
@@ -131,7 +131,7 @@ public abstract class Specification<I> {
         };
     }
 
-    public <I, S extends Specification<I>> ThrowingRunnable<ConjectureFailure> pipe(Supplier<Void> source, Runnable sink) {
+    public ThrowingRunnable<ConjectureFailure> pipe(Supplier<Void> source, Runnable sink) {
         Objects.requireNonNull(source);
         Objects.requireNonNull(sink);
 

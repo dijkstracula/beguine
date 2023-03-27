@@ -42,8 +42,8 @@ public class Decls {
             this.theConst = ctx.mkConst(name, sort.getZ3Sort());
         }
 
-        public Expr<BoolSort> randomize() {
-            return ctx.mkEq(theConst, sort.to_solver(sort.fromSupplier()));
+        public Expr<BoolSort> randomConstrain() {
+            return ctx.mkEq(theConst, sort.to_solver(sort.get()));
         }
 
         public J eval(Model m) {

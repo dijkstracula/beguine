@@ -6,25 +6,27 @@ import com.microsoft.z3.Model;
 import com.microsoft.z3.Sort;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
-public abstract class IvySort<J, Z extends Sort> {
+public abstract class IvySort<J, Z extends Sort> implements Supplier<J> {
+
     @FunctionalInterface
-    interface Constraint<J, Z extends Sort> {
+    interface Constraint<Z extends Sort> extends Function<Expr<Z>, Expr<BoolSort>> {
         public Expr<BoolSort> apply(Expr<Z> zExpr);
     }
 
     protected final String name;
     protected final Supplier<J> supplier;
-    protected final List<Constraint<J, Z>> constraints;
+    protected final List<Constraint<Z>> constraints;
 
-    public IvySort(String name, Supplier<J> f, Constraint<J, Z>... constraints) {
+    public IvySort(String name, Supplier<J> f, Constraint<Z>... constraints) {
         this.name = name;
         this.supplier = f;
         this.constraints = List.of(constraints);
     }
 
-    public J fromSupplier() {
+    public J get() {
         return supplier.get();
     }
 

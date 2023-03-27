@@ -25,8 +25,8 @@ public class NonnegativeCounterTest {
     public class NonnegativeCounterSpec extends Specification<NonnegativeCounterImpl>  {
         public NonnegativeCounterSpec(Random r, NonnegativeCounterImpl impl) {
             super(r, impl);
-            addAction(new Generator.UnitGenerator<>(this), impl::dec);
-            addAction(new Generator.UnitGenerator<>(this), impl::inc);
+            addAction(Generator.Unit, impl::dec);
+            addAction(Generator.Unit, impl::inc);
             addConjecture("non-negativity", (i) -> i.val >= 0);
         }
     }

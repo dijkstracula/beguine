@@ -64,7 +64,7 @@ public class Sorts {
 
     public class IvyInt extends IvySort<Integer, IntSort> {
 
-        IvyInt(String name, Supplier<Integer> f, Constraint<Integer, IntSort>... constraints) {
+        IvyInt(String name, Supplier<Integer> f, Constraint<IntSort>... constraints) {
             super(name, f, constraints);
         }
 

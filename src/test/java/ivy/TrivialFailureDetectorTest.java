@@ -65,8 +65,8 @@ public class TrivialFailureDetectorTest {
             }
 
             @Override
-            protected void randomize() {
-                add(specification.node.randomize());
+            protected void randomConstrain() {
+                add(specification.node.randomConstrain());
             }
 
             @Override
