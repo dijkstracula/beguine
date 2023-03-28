@@ -37,7 +37,7 @@ public class TrivialFailureDetectorTest {
         }
     }
 
-    public static class TrivialFailureDetectorSpec extends Specification<TrivialFailureDetector> {
+    public static class TrivialFailureDetectorProto extends Protocol<TrivialFailureDetector> {
         // Actions
         public final Supplier<Integer> isDownGen;
         public final Consumer<Integer> isDownExec;
@@ -45,8 +45,8 @@ public class TrivialFailureDetectorTest {
         // Ghost state
         public final Decls.IvyConst<Integer, IntSort> node;
 
-        public TrivialFailureDetectorSpec(Random r, TrivialFailureDetector i) {
-            super(r, i);
+        public TrivialFailureDetectorProto(Random r, TrivialFailureDetector i) {
+            super(r);
             Sorts.IvyInt nodeSort = mkInt("nodeSort", 0, i.MAX_N);
             node = mkConst("node", nodeSort);
 
@@ -58,14 +58,14 @@ public class TrivialFailureDetectorTest {
     }
 
     private TrivialFailureDetector p;
-    private TrivialFailureDetectorSpec s;
+    private TrivialFailureDetectorProto s;
 
 
     @BeforeEach
     public void setup() {
         Random r = new Random(42);
         p = new TrivialFailureDetector(42);
-        s = new TrivialFailureDetectorSpec(r, p);
+        s = new TrivialFailureDetectorProto(r, p);
     }
 
     @Test

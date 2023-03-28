@@ -2,18 +2,18 @@ package ivy.MultiCounterTest;
 
 import com.microsoft.z3.IntSort;
 import ivy.decls.Decls;
-import ivy.Specification;
+import ivy.Protocol;
 import ivy.sorts.Sorts;
 
 import java.util.Random;
 
 
-public class MultiCounterSpec extends Specification<MultiCounterRefImpl> {
+public class MultiCounterProto extends Protocol<MultiCounterRefImpl> {
     public final Decls.IvyConst<Integer, IntSort> node;
     public final Decls.IvyConst<Integer, IntSort> val;
 
-    public MultiCounterSpec(Random r, MultiCounterRefImpl impl) {
-        super(r, impl);
+    public MultiCounterProto(Random r, MultiCounterRefImpl impl) {
+        super(r);
 
         Sorts.IvyInt nodeSort = mkInt("nodeSort", 0, impl.max_n);
         node = mkConst("node", nodeSort);
@@ -21,7 +21,6 @@ public class MultiCounterSpec extends Specification<MultiCounterRefImpl> {
 
         addAction(nodeSort, impl::dec);
         addAction(nodeSort, impl::inc);
-        addConjecture("non-negativity", im -> im.val.values().stream().anyMatch(i -> i < 0));
+        addConjecture("non-negativity", () -> impl.val.values().stream().anyMatch(i -> i < 0));
     }
-
 }

@@ -10,7 +10,7 @@ import java.util.function.Supplier;
  * @param <I> The isolate that we are generating events for
  * @param <T> The type(s) of the arguments to the action that this is generating.
  */
-public abstract class Generator<I, S extends Specification<I>, T> implements Supplier<T> {
+public abstract class Generator<I, S extends Protocol<I>, T> implements Supplier<T> {
 
     protected S specification; // TODO: wildcard bounds on P?
 

@@ -22,20 +22,20 @@ public class NonnegativeCounterTest {
         }
     }
 
-    public class NonnegativeCounterSpec extends Specification<NonnegativeCounterImpl>  {
-        public NonnegativeCounterSpec(Random r, NonnegativeCounterImpl impl) {
-            super(r, impl);
+    public class NonnegativeCounterProtocol extends Protocol<NonnegativeCounterImpl> {
+        public NonnegativeCounterProtocol(Random r, NonnegativeCounterImpl impl) {
+            super(r);
             addAction(Generator.Unit, impl::dec);
             addAction(Generator.Unit, impl::inc);
-            addConjecture("non-negativity", (i) -> i.val >= 0);
+            addConjecture("non-negativity", () -> impl.val >= 0);
         }
     }
 
     @Test
-    public void testCounter() throws ConjectureFailure {
+    public void testCounter() {
         Random r = new Random(42);
         NonnegativeCounterImpl impl = new NonnegativeCounterImpl();
-        NonnegativeCounterSpec spec = new NonnegativeCounterSpec(r, impl);
+        NonnegativeCounterProtocol spec = new NonnegativeCounterProtocol(r, impl);
 
         assertThrows(ConjectureFailure.class, () -> {
             // At some point, the counter will go negative, invalidating the

@@ -1,27 +1,28 @@
 package ivy;
 
-import ivy.functions.ThrowingConsumer;
+import ivy.functions.ThrowingRunnable;
 
-import java.util.function.Predicate;
+import java.util.function.Supplier;
 
-public class Conjecture<T> implements ThrowingConsumer<T, Conjecture.ConjectureFailure> {
+public class Conjecture implements ThrowingRunnable<Conjecture.ConjectureFailure> {
     private final String desc;
-    private final Predicate<T> pred;
+    private final Supplier<Boolean> pred;
 
-    public Conjecture(String desc, Predicate<T> pred) {
+    public Conjecture(String desc, Supplier<Boolean> pred) {
         this.desc = desc;
         this.pred = pred;
     }
 
-    public void accept(T t) throws ConjectureFailure {
-        if (!pred.test(t)) {
-            throw new ConjectureFailure(this);
+    @Override
+    public void run() throws ConjectureFailure {
+        if (!pred.get()) {
+            throw new ConjectureFailure();
         }
     }
 
-    public static class ConjectureFailure extends Exception {
-        public ConjectureFailure(Conjecture<?> conj) {
-            super(String.format("Conjecture \"%s\" failed", conj.desc));
+    public class ConjectureFailure extends Exception {
+        public ConjectureFailure() {
+            super(String.format("Conjecture \"%s\" failed", Conjecture.this.desc));
         }
     }
 }

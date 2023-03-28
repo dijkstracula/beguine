@@ -21,9 +21,7 @@ import java.util.function.Supplier;
  * TODO: Is this actually the top-level class?  If so, is it better named "module" (per Ivy) or "Protocol"?
  * @param <I> The implementation class. (TODO: what if there isn't a single impl class, does this make sense)
  */
-public abstract class Specification<I> {
-    protected I impl;
-
+public abstract class Protocol<I> {
     private int tmp_ctr;
 
     private final Random random;
@@ -34,11 +32,11 @@ public abstract class Specification<I> {
     private final Sorts sorts;
     private final Decls decls;
 
-    private List<Conjecture<I>> conjectures;
+    private List<Conjecture> conjectures;
 
     private List<ThrowingRunnable<ConjectureFailure>> actions;
 
-    public Specification(Random r, I i) {
+    public Protocol(Random r) {
         ctx = new Context();
         slvr = ctx.mkSolver();
         sorts = new Sorts(ctx, r);
@@ -48,25 +46,24 @@ public abstract class Specification<I> {
         conjectures = new ArrayList<>();
 
         random = r;
-        impl = i;
     }
 
     public void push() { slvr.push(); }
     public void pop() { slvr.pop(); }
 
-    protected void addConjecture(String desc, Predicate<I> pred) {
+    protected void addConjecture(String desc, Supplier<Boolean> pred) {
         Objects.requireNonNull(desc);
         Objects.requireNonNull(pred);
-        conjectures.add(new Conjecture<>(desc, pred));
+        conjectures.add(new Conjecture(desc, pred));
     }
-    protected void addConjecture(Conjecture<I> conj) {
+    protected void addConjecture(Conjecture conj) {
         Objects.requireNonNull(conj);
         conjectures.add(conj);
     }
 
     private void checkConjectures() throws ConjectureFailure {
-        for (Conjecture<I> conj : conjectures) {
-            conj.accept(impl);
+        for (Conjecture conj : conjectures) {
+            conj.run();
         }
     }
 

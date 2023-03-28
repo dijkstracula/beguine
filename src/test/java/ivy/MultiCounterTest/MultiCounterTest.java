@@ -13,7 +13,7 @@ public class MultiCounterTest {
     public void testCounter() {
         Random r = new Random(42);
         MultiCounterRefImpl impl = new MultiCounterRefImpl(10);
-        MultiCounterSpec spec = new MultiCounterSpec(r, impl);
+        MultiCounterProto spec = new MultiCounterProto(r, impl);
 
         assertThrows(Conjecture.ConjectureFailure.class, () -> {
             // At some point, one of the nodes' counter will go negative, invalidating the
