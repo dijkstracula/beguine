@@ -1,4 +1,4 @@
-package ivy.MultiCounterTest;
+package ivy.multicounter;
 
 import ivy.Conjecture;
 import org.junit.jupiter.api.Test;

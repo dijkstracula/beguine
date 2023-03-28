@@ -1,4 +1,4 @@
-package ivy.MultiCounterTest;
+package ivy.multicounter;
 
 import java.util.ArrayList;
 
