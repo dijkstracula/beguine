@@ -4,6 +4,8 @@ import com.microsoft.z3.*;
 
 import ivy.Conjecture.ConjectureFailure;
 import ivy.decls.Decls;
+import ivy.functions.Action;
+import ivy.functions.ThrowingConsumer;
 import ivy.functions.ThrowingRunnable;
 import ivy.sorts.IvySort;
 import ivy.sorts.Sorts;
@@ -67,12 +69,18 @@ public abstract class Protocol<I> {
         }
     }
 
-    public void addAction(ThrowingRunnable r) {
+    public void addAction(ThrowingRunnable<ConjectureFailure> r) {
         Objects.requireNonNull(r);
         actions.add(r);
     }
 
-    public <T> void addAction(Supplier<T> source, Consumer<T> sink) {
+    public <T> void addAction(Supplier<T> source, Action<T, Void> sink) {
+        Objects.requireNonNull(source);
+        Objects.requireNonNull(sink);
+        actions.add(pipe(source, sink::apply));
+    }
+
+    public <T> void addAction(Supplier<T> source, ThrowingConsumer<T, ConjectureFailure> sink) {
         Objects.requireNonNull(source);
         Objects.requireNonNull(sink);
         actions.add(pipe(source, sink));
@@ -116,12 +124,10 @@ public abstract class Protocol<I> {
         return slvr.getModel();
     }
 
-    public <T> ThrowingRunnable<ConjectureFailure> pipe(Supplier<T> source, Consumer<T> sink) {
+    public <T> ThrowingRunnable<ConjectureFailure> pipe(Supplier<T> source, ThrowingConsumer<T, ConjectureFailure> sink) {
         Objects.requireNonNull(source);
         Objects.requireNonNull(sink);
 
-        // TODO: truly no other way to compose these??
-        // TODO: is there value in a subclass of Runnable that also contains metadata like the action name, etc
         return () -> {
             sink.accept(source.get());
             checkConjectures();

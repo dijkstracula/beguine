@@ -3,6 +3,7 @@ package ivy;
 import com.microsoft.z3.*;
 import ivy.Conjecture.ConjectureFailure;
 import ivy.decls.Decls;
+import ivy.functions.ThrowingConsumer;
 import ivy.functions.ThrowingRunnable;
 import ivy.sorts.Sorts;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +41,7 @@ public class TrivialFailureDetectorTest {
     public static class TrivialFailureDetectorProto extends Protocol<TrivialFailureDetector> {
         // Actions
         public final Supplier<Integer> isDownGen;
-        public final Consumer<Integer> isDownExec;
+        public final ThrowingConsumer<Integer, ConjectureFailure> isDownExec;
 
         // Ghost state
         public final Decls.IvyConst<Integer, IntSort> node;
@@ -53,7 +54,6 @@ public class TrivialFailureDetectorTest {
             isDownGen = nodeSort;
             isDownExec = i::isDown;
             addAction(isDownGen, isDownExec);
-
         }
     }
 
@@ -69,7 +69,7 @@ public class TrivialFailureDetectorTest {
     }
 
     @Test
-    public void testGenAndExec() {
+    public void testGenAndExec() throws ConjectureFailure {
         for (int i = 0; i < 500; i++) {
             // Generating a value for p.n should put it within the right bounds.
             int n = s.isDownGen.get();
