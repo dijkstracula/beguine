@@ -1,8 +1,8 @@
 package ivy;
 
 import com.microsoft.z3.*;
-import ivy.Conjecture.ConjectureFailure;
 import ivy.decls.Decls;
+import ivy.exceptions.IvyExceptions;
 import ivy.functions.ThrowingConsumer;
 import ivy.functions.ThrowingRunnable;
 import ivy.sorts.Sorts;
@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.function.Consumer;
 import java.util.Random;
 import java.util.function.Supplier;
 
@@ -38,10 +37,10 @@ public class TrivialFailureDetectorTest {
         }
     }
 
-    public static class TrivialFailureDetectorProto extends Protocol<TrivialFailureDetector> {
+    public static class TrivialFailureDetectorProto extends Protocol {
         // Actions
         public final Supplier<Integer> isDownGen;
-        public final ThrowingConsumer<Integer, ConjectureFailure> isDownExec;
+        public final ThrowingConsumer<Integer, IvyExceptions.ConjectureFailure> isDownExec;
 
         // Ghost state
         public final Decls.IvyConst<Integer, IntSort> node;
@@ -69,7 +68,7 @@ public class TrivialFailureDetectorTest {
     }
 
     @Test
-    public void testGenAndExec() throws ConjectureFailure {
+    public void testGenAndExec() throws IvyExceptions.ConjectureFailure {
         for (int i = 0; i < 500; i++) {
             // Generating a value for p.n should put it within the right bounds.
             int n = s.isDownGen.get();
@@ -83,10 +82,10 @@ public class TrivialFailureDetectorTest {
     }
 
     @Test
-    public void testPipe() throws ConjectureFailure {
+    public void testPipe() throws IvyExceptions.ConjectureFailure {
         // Tests the same thing as testGenAndExec, but with the added layer of composing
         // the source and sink into a thunk.
-        ThrowingRunnable<ConjectureFailure> pipe = s.pipe(s.isDownGen, s.isDownExec);
+        ThrowingRunnable<IvyExceptions.ConjectureFailure> pipe = s.pipe(s.isDownGen, s.isDownExec);
 
         for (int i = 0; i < 500; i++) {
             pipe.run();
@@ -101,7 +100,7 @@ public class TrivialFailureDetectorTest {
     }
 
     @Test
-    public void testAct() throws ConjectureFailure {
+    public void testAct() throws IvyExceptions.ConjectureFailure {
         // Tests the same thing as testPipe, except that the single isDown action is
         // "nondeterministically" chosen by the Specification.
         for (int i = 0; i < 500; i++) {

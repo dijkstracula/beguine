@@ -1,27 +1,36 @@
 package ivy.functions;
 
-import ivy.Conjecture.ConjectureFailure;
+import ivy.exceptions.IvyExceptions;
 import org.javatuples.Pair;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * An action comprises a function and optional pre/post operations.
  */
-public class Action<T, U> implements ThrowingFunction<T, U, ConjectureFailure> {
-    private final Optional<ThrowingRunnable<ConjectureFailure>> pre;
-    private final ThrowingFunction<T, U, ConjectureFailure> action;
+public class Action<T, U> implements ThrowingFunction<T, U, IvyExceptions.ConjectureFailure> {
+    private final Optional<ThrowingRunnable<IvyExceptions.ConjectureFailure>> pre;
+    private final Function<T, U> action;
 
-    private final Optional<ThrowingConsumer<Pair<T, U>, ConjectureFailure>> post;
+    private final Optional<ThrowingConsumer<Pair<T, U>, IvyExceptions.ConjectureFailure>> post;
 
-    public Action(ThrowingFunction<T, U, ConjectureFailure> f) {
+    public Action(Function<T, U> f) {
         pre = Optional.empty();
         action = f;
         post = Optional.empty();
     }
 
+    public Action(ThrowingRunnable<IvyExceptions.ConjectureFailure> pre,
+                  Function<T, U> f,
+                  ThrowingConsumer<Pair<T, U>, IvyExceptions.ConjectureFailure> post) {
+        this.pre = Optional.of(pre);
+        this.action = f;
+        this.post = Optional.of(post);
+    }
+
     @Override
-    public U apply(T t) throws ConjectureFailure {
+    public U apply(T t) throws IvyExceptions.ConjectureFailure {
         if (pre.isPresent()) {
             pre.get().run();
         }

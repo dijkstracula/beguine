@@ -1,7 +1,8 @@
-package ivy;
+package ivy.exceptions;
 
 import com.microsoft.z3.FuncDecl;
 import com.microsoft.z3.Sort;
+import ivy.Conjecture;
 
 public class IvyExceptions {
     public static class DuplicateSortDefException extends RuntimeException {
@@ -26,6 +27,12 @@ public class IvyExceptions {
         public FuncArityMismatch(int funcArity, int appArity) {
             super(String.format("FuncDecl of arity %d applied with %d args",
                     funcArity, appArity));
+        }
+    }
+
+    public static class ConjectureFailure extends Exception {
+        public ConjectureFailure(Conjecture conj) {
+            super(String.format("Conjecture \"%s\" failed", conj.getDesc()));
         }
     }
 }

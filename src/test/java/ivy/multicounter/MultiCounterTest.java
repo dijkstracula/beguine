@@ -1,6 +1,6 @@
 package ivy.multicounter;
 
-import ivy.Conjecture;
+import ivy.exceptions.IvyExceptions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;
@@ -15,7 +15,7 @@ public class MultiCounterTest {
         MultiCounterRefImpl impl = new MultiCounterRefImpl(10);
         MultiCounterProto spec = new MultiCounterProto(r, impl);
 
-        assertThrows(Conjecture.ConjectureFailure.class, () -> {
+        assertThrows(IvyExceptions.ConjectureFailure.class, () -> {
             // At some point, one of the nodes' counter will go negative, invalidating the
             // nonnegativity conjecture.
             while (true) {

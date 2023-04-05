@@ -1,10 +1,11 @@
 package ivy;
 
+import ivy.exceptions.IvyExceptions;
 import ivy.functions.ThrowingRunnable;
 
 import java.util.function.Supplier;
 
-public class Conjecture implements ThrowingRunnable<Conjecture.ConjectureFailure> {
+public class Conjecture implements ThrowingRunnable<IvyExceptions.ConjectureFailure> {
     private final String desc;
     private final Supplier<Boolean> pred;
 
@@ -13,16 +14,14 @@ public class Conjecture implements ThrowingRunnable<Conjecture.ConjectureFailure
         this.pred = pred;
     }
 
-    @Override
-    public void run() throws ConjectureFailure {
-        if (!pred.get()) {
-            throw new ConjectureFailure();
-        }
+    public String getDesc() {
+        return desc;
     }
 
-    public class ConjectureFailure extends Exception {
-        public ConjectureFailure() {
-            super(String.format("Conjecture \"%s\" failed", Conjecture.this.desc));
+    @Override
+    public void run() throws IvyExceptions.ConjectureFailure {
+        if (!pred.get()) {
+            throw new IvyExceptions.ConjectureFailure(this);
         }
     }
 }

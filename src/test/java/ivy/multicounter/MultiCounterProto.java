@@ -8,7 +8,7 @@ import ivy.sorts.Sorts;
 import java.util.Random;
 
 
-public class MultiCounterProto extends Protocol<MultiCounterRefImpl> {
+public class MultiCounterProto extends Protocol {
     public final Decls.IvyConst<Integer, IntSort> node;
     public final Decls.IvyConst<Integer, IntSort> val;
 

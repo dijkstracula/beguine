@@ -2,6 +2,7 @@ package ivy.sorts;
 
 import com.microsoft.z3.*;
 
+import java.util.List;
 import java.util.PrimitiveIterator;
 import java.util.Random;
 import java.util.function.Supplier;
@@ -70,7 +71,7 @@ public class Sorts {
 
         @Override
         public Expr<IntSort> to_solver(Integer val) {
-            return ctx.mkInt(val.toString());
+            return ctx.mkInt(val);
         }
 
         @Override
@@ -84,4 +85,59 @@ public class Sorts {
             return evaled.getInt();
         }
     }
+
+    // My kingdom for one or more of:
+    // 1. Typeclasses; 2. Type argument inference; 3. a macro system
+    public class Tuple2<
+            J1, Z1 extends Sort,
+            J2, Z2 extends Sort,
+            T extends IvySort<J1, Z1> ,U extends IvySort<J2, Z2>>
+            extends IvySort<org.javatuples.Pair<T, U>, TupleSort> {
+
+        TupleSort sort;
+
+        public Tuple2(String name, Supplier<org.javatuples.Pair<T, U>> f) {
+            super(name, f);
+
+            org.javatuples.Pair<T, U> val = f.get();
+            T t = val.getValue0();
+            U u = val.getValue1();
+
+            // TODO: priming the pump like this seems a bit suspect.
+            sort = ctx.mkTupleSort(
+                    ctx.mkSymbol(name),
+                    new Symbol[]{ctx.mkSymbol("val1"), ctx.mkSymbol("val2")},
+                    new Sort[]{t.getZ3Sort(), u.getZ3Sort()});
+        }
+
+        @Override
+        public Expr<TupleSort> to_solver(org.javatuples.Pair<T, U> val) {
+            T t = val.getValue0();
+            U u = val.getValue1();
+
+            String name = String.format("Tuple%d[%s, %s]", t.getZ3Sort().getName(), u.getZ3Sort().getName());
+
+            if (sort == null) {
+                sort = ctx.mkTupleSort(
+                        ctx.mkSymbol(name),
+                        new Symbol[]{ctx.mkSymbol("val1"), ctx.mkSymbol("val2")},
+                        new Sort[]{t.getZ3Sort(), u.getZ3Sort()});
+            }
+            FuncDecl<TupleSort> f = sort.mkDecl();
+            return f.apply(
+                    t.to_solver(t.get()),
+                    u.to_solver(u.get()));
+        }
+
+        @Override
+        public TupleSort getZ3Sort() {
+            return null;
+        }
+
+        @Override
+        public org.javatuples.Pair<T, U> eval(Model m, Expr<TupleSort> e) {
+            return null;
+        }
+    }
+
 }

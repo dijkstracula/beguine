@@ -28,8 +28,6 @@ public class Decls {
      * A zero-arity decl (aka a const).
      * @param <J> The Java type that this const value is represented by.
      * @param <Z> The Z3 sort that this const value is represented by.
-     * @param <I> The IvySort that this Const is a type of.
-     *            TODO: do we actually need the I typevar
      */
     public class IvyConst<J, Z extends Sort> {
         public final String name;

@@ -1,8 +1,8 @@
 package ivy;
 
+import ivy.exceptions.IvyExceptions;
 import org.junit.jupiter.api.Test;
 
-import ivy.Conjecture.ConjectureFailure;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,7 +22,7 @@ public class NonnegativeCounterTest {
         }
     }
 
-    public class NonnegativeCounterProtocol extends Protocol<NonnegativeCounterImpl> {
+    public class NonnegativeCounterProtocol extends Protocol {
         public NonnegativeCounterProtocol(Random r, NonnegativeCounterImpl impl) {
             super(r);
             addAction(Generator.Unit, impl::dec);
@@ -37,7 +37,7 @@ public class NonnegativeCounterTest {
         NonnegativeCounterImpl impl = new NonnegativeCounterImpl();
         NonnegativeCounterProtocol spec = new NonnegativeCounterProtocol(r, impl);
 
-        assertThrows(ConjectureFailure.class, () -> {
+        assertThrows(IvyExceptions.ConjectureFailure.class, () -> {
             // At some point, the counter will go negative, invalidating the
             // nonnegativity conjecture.
             while (true) {

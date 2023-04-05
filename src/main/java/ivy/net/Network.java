@@ -1,5 +1,6 @@
 package ivy.net;
 
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -21,5 +22,5 @@ public interface Network<Id extends Comparable<Id>, M> {
      * @param self The ID of the callback.
      * @param callback The operation to invoke on a message recv.
      */
-    void registerRecv(Id self, Consumer<M> callback);
+    //void registerRecv(Id self, BiConsumer<Id, M> callback);
 }

@@ -1,12 +1,13 @@
-package ivy.chainrep;
+package ivy;
 
 import ivy.net.ReliableNetwork;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class ChainRepProto {
+public class ChainRep {
     ReliableNetwork net;
 
     HashMap<Integer, List<Integer>> file;
+
 }
