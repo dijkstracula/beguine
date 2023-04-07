@@ -21,11 +21,6 @@ public abstract class Generator<T> implements Supplier<T> {
         protocol = proto;
     }
 
-    protected void add(Expr<BoolSort> pred) {
-        protocol.addPredicate(pred);
-    }
-
-
     public T get() {
         protocol.push();
         randomConstrain();
