@@ -86,6 +86,7 @@ public class Sorts {
         }
     }
 
+    /*
     // My kingdom for one or more of:
     // 1. Typeclasses; 2. Type argument inference; 3. a macro system
     public class Tuple2<
@@ -139,5 +140,6 @@ public class Sorts {
             return null;
         }
     }
+     */
 
 }

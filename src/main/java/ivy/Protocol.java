@@ -2,9 +2,13 @@ package ivy;
 
 import com.microsoft.z3.*;
 
+import io.vavr.Tuple2;
+import io.vavr.Tuple3;
 import ivy.decls.Decls;
 import ivy.exceptions.IvyExceptions;
-import ivy.functions.Action;
+import ivy.functions.Actions.Action1;
+import ivy.functions.Actions.Action2;
+import ivy.functions.Actions.Action3;
 import ivy.functions.ThrowingConsumer;
 import ivy.functions.ThrowingRunnable;
 import ivy.sorts.IvySort;
@@ -72,11 +76,25 @@ public abstract class Protocol {
         actions.add(r);
     }
 
-    public <T> void addAction(Supplier<T> source, Action<T, Void> sink) {
+    public <T> void addAction(Supplier<T> source, Action1<T, Void> sink) {
         Objects.requireNonNull(source);
         Objects.requireNonNull(sink);
         actions.add(pipe(source, sink::apply));
     }
+
+    public <T1, T2> void addAction(Supplier<Tuple2<T1, T2>> source, Action2<T1, T2, Void> sink) {
+        Objects.requireNonNull(source);
+        Objects.requireNonNull(sink);
+        actions.add(pipe(source, t -> t.apply(sink)));
+    }
+
+    public <T1, T2, T3> void addAction(Supplier<Tuple3<T1, T2, T3>> source, Action3<T1, T2, T3, Void> sink) {
+        Objects.requireNonNull(source);
+        Objects.requireNonNull(sink);
+        actions.add(pipe(source, t -> t.apply(sink)));
+    }
+
+    //
 
     public <T> void addAction(Supplier<T> source, ThrowingConsumer<T, IvyExceptions.ConjectureFailure> sink) {
         Objects.requireNonNull(source);
@@ -89,6 +107,8 @@ public abstract class Protocol {
         Objects.requireNonNull(sink);
         actions.add(pipe(source, sink));
     }
+
+    public List<ThrowingRunnable<IvyExceptions.ConjectureFailure>> getActions() { return actions; }
 
     public ThrowingRunnable<IvyExceptions.ConjectureFailure> chooseAction() {
         return actions.get(random.nextInt(actions.size()));

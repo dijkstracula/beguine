@@ -30,7 +30,13 @@ public class IvyExceptions {
         }
     }
 
-    public static class ConjectureFailure extends Exception {
+    public static abstract class ActionException extends Exception {
+        public ActionException(String msg) {
+            super(msg);
+        }
+    }
+
+    public static class ConjectureFailure extends ActionException {
         public ConjectureFailure(Conjecture conj) {
             super(String.format("Conjecture \"%s\" failed", conj.getDesc()));
         }

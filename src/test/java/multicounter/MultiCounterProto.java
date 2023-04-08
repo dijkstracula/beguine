@@ -1,4 +1,4 @@
-package ivy.multicounter;
+package multicounter;
 
 import com.microsoft.z3.IntSort;
 import ivy.decls.Decls;

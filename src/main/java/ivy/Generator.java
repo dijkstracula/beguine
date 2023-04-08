@@ -1,7 +1,6 @@
 package ivy;
 
 import com.microsoft.z3.*;
-import org.javatuples.Pair;
 
 import java.util.function.Supplier;
 

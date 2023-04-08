@@ -1,5 +1,5 @@
-package ivy;
-
+import ivy.Generator;
+import ivy.Protocol;
 import ivy.exceptions.IvyExceptions;
 import org.junit.jupiter.api.Test;
 

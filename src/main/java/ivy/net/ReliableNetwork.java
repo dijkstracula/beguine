@@ -1,90 +1,73 @@
 package ivy.net;
 
-import ivy.Generator;
-import ivy.functions.Action;
-import ivy.sorts.IvySort;
-import ivy.sorts.Sorts;
-import org.javatuples.Pair;
+import io.vavr.Tuple2;
+import ivy.exceptions.IvyExceptions;
+import ivy.functions.Actions.Action3;
 
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.Random;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
-// TODO: need to be parameterized over nodeSort and msgSort.  How best to do so?
-public class ReliableNetwork extends ivy.Protocol {
-    private final Impl impl;
-    private final Spec spec;
+public class ReliableNetwork<Id extends Comparable<Id>, Msg> extends ivy.Protocol {
+    public final Impl<Id, Msg> impl;
+    public final Spec<Id, Msg> spec;
 
-    public ReliableNetwork(Random r, int max_nodes, Consumer<Pair<Integer, Integer>> callback) {
+    public final Action3<Id, Id, Msg, Void> send;
+    public final Action3<Id, Id, Msg, Void> recv;
+
+
+    public ReliableNetwork(Random r, Impl<Id, Msg> i, Spec<Id, Msg> s) {
         super(r);
-        impl = new Impl(max_nodes, callback);
-        spec = new Spec(max_nodes);
+        impl = i;
+        spec = s;
 
-        Sorts.IvyInt nodeSort = mkInt("nodeSort", 0, max_nodes);
-        Sorts.IvyInt msgSort = mkInt("msgSort");
+        send = new Action3<>(
+                Optional.empty(),
+                impl::send,
+                Optional.of(spec::after_send));
+        recv = new Action3<>(
+                Optional.empty(),
+                impl::recv,
+                Optional.of(spec::after_recv));
 
         addConjecture("at-most-once-delivery", () -> spec.inFlight >= 0);
         addConjecture("eventual-delivery", () ->
-            impl.routingTable.values().stream().allMatch(q -> q.isEmpty()) || spec.inFlight > 0
-        );
-
-        addAction(
-                () -> {
-                    int id = nodeSort.get();
-                    int dst = nodeSort.get();
-                    int msg = msgSort.get();
-                    return new org.javatuples.Triplet<>(id, dst, msg);
-                },
-                t -> {
-                    int id = t.getValue0();
-                    int dst = t.getValue1();
-                    int msg = t.getValue2();
-                    impl.send(id, dst, msg);
-                }
-        );
-
-        addAction(
-                nodeSort::get,
-                n -> impl.onRecv.apply(impl.routingTable.get(n).pop())
-        );
+                impl.routingTable.values().stream().allMatch(q -> q.isEmpty()) || spec.inFlight > 0);
     }
 
-    public class Impl implements Network<Integer, Integer> {
-        private final Action<Pair<Integer, Integer>, Void> onRecv;
-        private final HashMap<Integer, ArrayDeque<Pair<Integer, Integer>>> routingTable;
+    public static abstract class Impl<Id extends Comparable<Id>, Msg> extends Network<Id, Msg> {
+        private final HashMap<Id, ArrayDeque<Tuple2<Id, Msg>>> routingTable;
 
-        public Impl(int max_nodes, Consumer<Pair<Integer, Integer>> onRecv) {
-            this.onRecv = new Action<>(
-                    () -> {},
-                    p -> { onRecv.accept(p); return null; },
-                    (t) -> spec.inFlight--
-            );
-
+        public Impl() {
             routingTable = new HashMap<>();
         }
 
         @Override
-        public void send(Integer self, Integer dst, Integer msg) {
-            System.out.println(String.format("[%s] SEND %s", self, dst));
-            routingTable.computeIfAbsent(dst, id -> new ArrayDeque<>()).add(new Pair<>(self, msg));
-            spec.inFlight++;
+        public Void send(Id self, Id dst, Msg msg) {
+            System.out.println(String.format("[Net %s] SEND %s", self, dst));
+            routingTable.computeIfAbsent(dst, id -> new ArrayDeque<>()).add(new Tuple2<>(self, msg));
+            return null;
         }
 
-        //@Override
-        //public void registerRecv(Integer self, BiConsumer<Integer, Integer> callback) {
-        //    System.out.println(String.format("[%s] RECV %s", self));
-        //    onRecv.put(self, callback.andThen((id, m) -> spec.inFlight--));
-       // }
+        public abstract Void recv(Integer self, Integer src, Byte msg);
     }
 
-    public class Spec {
-        private int inFlight;
+    public static class Spec<Id extends Comparable<Id>, Msg> {
+        public int inFlight;
 
-        public Spec(int max_nodes) {
+        public Spec() {
             inFlight = 0;
+        }
+
+        public Optional<IvyExceptions.ActionException> after_send(Id self, Id dst, Msg msg, Void ret) {
+            inFlight++;
+            return Optional.empty();
+        }
+
+        public Optional<IvyExceptions.ActionException> after_recv(Id self, Id dst, Msg msg, Void ret) {
+            inFlight--;
+            return Optional.empty();
         }
     }
 }

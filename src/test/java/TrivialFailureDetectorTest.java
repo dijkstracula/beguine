@@ -1,6 +1,5 @@
-package ivy;
-
 import com.microsoft.z3.*;
+import ivy.Protocol;
 import ivy.decls.Decls;
 import ivy.exceptions.IvyExceptions;
 import ivy.functions.ThrowingConsumer;

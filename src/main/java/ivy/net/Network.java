@@ -1,26 +1,28 @@
 package ivy.net;
 
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
+import io.vavr.Function3;
+import ivy.functions.Actions.Action3;
 
 /**
  * Mocks an asynchronous network.
  * @param <Id> The routing key for the network (e.g. a network node ID)
  * @param <M> The message class to be routed over the network.
  */
-public interface Network<Id extends Comparable<Id>, M> {
+public abstract class Network<Id extends Comparable<Id>, M> {
     /**
      * Enqueues a message to be transferred over the network mock.
      * @param self The ID of the sender.
      * @param dst The ID of to whom the message should be routed.
      * @param msg The message to be routed.
      */
-    void send(Id self, Id dst, M msg);
+    abstract Void send(Id self, Id dst, M msg);
 
     /**
-     * Associates an ID with action to take when a message is delivered to that ID.
-     * @param self The ID of the callback.
-     * @param callback The operation to invoke on a message recv.
+     * Invoked when a message arrives at a particular node.
+     * @param self the recipient of the message.
+     * @param src the sender of the message.
+     * @param msg The message that has been routed.
      */
-    //void registerRecv(Id self, BiConsumer<Id, M> callback);
+    //public Function3<Id, Id, M, Void> recv = (self, src, msg) -> { throw new RuntimeException("Not implemented"); };
+    public abstract Void recv(Id self, Id src, M msg);
 }

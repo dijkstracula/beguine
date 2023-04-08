@@ -1,14 +1,8 @@
-package ivy.multicounter;
+package multicounter;
 
-import com.microsoft.z3.IntSort;
-import ivy.Protocol;
-import ivy.decls.Decls;
 import ivy.exceptions.IvyExceptions;
-import ivy.sorts.Sorts;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
