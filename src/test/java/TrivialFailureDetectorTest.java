@@ -1,9 +1,9 @@
 import com.microsoft.z3.*;
+import io.vavr.control.Either;
 import ivy.Protocol;
 import ivy.decls.Decls;
 import ivy.exceptions.IvyExceptions;
-import ivy.functions.ThrowingConsumer;
-import ivy.functions.ThrowingRunnable;
+import ivy.functions.Actions.Action1;
 import ivy.sorts.Sorts;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,16 +30,17 @@ public class TrivialFailureDetectorTest {
             statuses = new ArrayList<>(Collections.nCopies(max_n, true));
         }
 
-        public void isDown(int n) {
+        public Void isDown(int n) {
             System.out.println(String.format("Node %d is down", n));
             statuses.set(n, false);
+            return null;
         }
     }
 
     public static class TrivialFailureDetectorProto extends Protocol {
         // Actions
         public final Supplier<Integer> isDownGen;
-        public final ThrowingConsumer<Integer, IvyExceptions.ConjectureFailure> isDownExec;
+        public final Action1<Integer, Void> isDownExec;
 
         // Ghost state
         public final Decls.IvyConst<Integer, IntSort> node;
@@ -50,8 +51,8 @@ public class TrivialFailureDetectorTest {
             node = mkConst("node", nodeSort);
 
             isDownGen = nodeSort;
-            isDownExec = i::isDown;
-            addAction(isDownGen, isDownExec);
+            isDownExec = Action1.from(i::isDown);
+            addAction(isDownExec.pipe(isDownGen));
         }
     }
 
@@ -75,7 +76,7 @@ public class TrivialFailureDetectorTest {
             assertTrue(n < p.MAX_N);
 
             // And executing it should have an observable effect on the implementation.
-            s.isDownExec.accept(n);
+            assert(s.isDownExec.apply(n).isRight());
             assertFalse(p.statuses.get(n));
         }
     }
@@ -83,11 +84,10 @@ public class TrivialFailureDetectorTest {
     @Test
     public void testPipe() throws IvyExceptions.ConjectureFailure {
         // Tests the same thing as testGenAndExec, but with the added layer of composing
-        // the source and sink into a thunk.
-        ThrowingRunnable<IvyExceptions.ConjectureFailure> pipe = s.pipe(s.isDownGen, s.isDownExec);
-
+        // the source and sink into a thunk (specifically a Void-producing Supplier).
+        Supplier<Either<IvyExceptions.ActionException, Void>> pipe = s.isDownExec.pipe(s.isDownGen);
         for (int i = 0; i < 500; i++) {
-            pipe.run();
+            assert(pipe.get().isRight());
         }
 
         // Since piping the action values abstracts the particular choices away, we can
@@ -103,7 +103,7 @@ public class TrivialFailureDetectorTest {
         // Tests the same thing as testPipe, except that the single isDown action is
         // "nondeterministically" chosen by the Specification.
         for (int i = 0; i < 500; i++) {
-            s.chooseAction().run();
+            assert(s.takeAction().isRight());
         }
 
         // Since piping the action values abstracts the particular choices away, we can

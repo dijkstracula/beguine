@@ -8,14 +8,14 @@ import ivy.functions.Actions.Action3;
  * @param <Id> The routing key for the network (e.g. a network node ID)
  * @param <M> The message class to be routed over the network.
  */
-public abstract class Network<Id extends Comparable<Id>, M> {
+public abstract class Network<Id, M> {
     /**
      * Enqueues a message to be transferred over the network mock.
      * @param self The ID of the sender.
      * @param dst The ID of to whom the message should be routed.
      * @param msg The message to be routed.
      */
-    abstract Void send(Id self, Id dst, M msg);
+    public abstract Void send(Id self, Id dst, M msg);
 
     /**
      * Invoked when a message arrives at a particular node.

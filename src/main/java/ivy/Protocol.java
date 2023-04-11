@@ -2,22 +2,13 @@ package ivy;
 
 import com.microsoft.z3.*;
 
-import io.vavr.Tuple2;
-import io.vavr.Tuple3;
+import io.vavr.control.Either;
 import ivy.decls.Decls;
-import ivy.exceptions.IvyExceptions;
-import ivy.functions.Actions.Action1;
-import ivy.functions.Actions.Action2;
-import ivy.functions.Actions.Action3;
-import ivy.functions.ThrowingConsumer;
-import ivy.functions.ThrowingRunnable;
+import ivy.exceptions.IvyExceptions.*;
 import ivy.sorts.IvySort;
 import ivy.sorts.Sorts;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -28,7 +19,7 @@ import java.util.function.Supplier;
 public abstract class Protocol {
     private int tmp_ctr;
 
-    private final Random random;
+    protected final Random random;
 
     private final Context ctx;
     private final Solver slvr;
@@ -38,7 +29,8 @@ public abstract class Protocol {
 
     private List<Conjecture> conjectures;
 
-    private List<ThrowingRunnable<IvyExceptions.ConjectureFailure>> actions;
+    // NB: since these are actions driven by the external environment, I guess they have to be only void-producing.
+    private List<Supplier<Either<ActionException, Void>>> actions;
 
     public Protocol(Random r) {
         ctx = new Context();
@@ -65,53 +57,53 @@ public abstract class Protocol {
         conjectures.add(conj);
     }
 
-    private void checkConjectures() throws IvyExceptions.ConjectureFailure {
+    public List<Conjecture> getConjectures() { return conjectures; }
+
+    private Either<ActionException, Void> checkConjectures() {
         for (Conjecture conj : conjectures) {
-            conj.run();
+            Optional<ConjectureFailure> res = conj.get();
+            if (res.isPresent()) {
+                return Either.left(res.get());
+            }
         }
+        return Either.right(null);
     }
 
-    public void addAction(ThrowingRunnable<IvyExceptions.ConjectureFailure> r) {
-        Objects.requireNonNull(r);
-        actions.add(r);
+    public <U> void addAction(Supplier<Either<ActionException, U>> piped) {
+        actions.add(() -> piped.get().map(u -> null));
     }
 
-    public <T> void addAction(Supplier<T> source, Action1<T, Void> sink) {
-        Objects.requireNonNull(source);
-        Objects.requireNonNull(sink);
-        actions.add(pipe(source, sink::apply));
-    }
-
-    public <T1, T2> void addAction(Supplier<Tuple2<T1, T2>> source, Action2<T1, T2, Void> sink) {
-        Objects.requireNonNull(source);
-        Objects.requireNonNull(sink);
-        actions.add(pipe(source, t -> t.apply(sink)));
-    }
-
-    public <T1, T2, T3> void addAction(Supplier<Tuple3<T1, T2, T3>> source, Action3<T1, T2, T3, Void> sink) {
-        Objects.requireNonNull(source);
-        Objects.requireNonNull(sink);
-        actions.add(pipe(source, t -> t.apply(sink)));
-    }
+    public List<Supplier<Either<ActionException, Void>>> getActions() { return actions; }
 
     //
 
-    public <T> void addAction(Supplier<T> source, ThrowingConsumer<T, IvyExceptions.ConjectureFailure> sink) {
-        Objects.requireNonNull(source);
-        Objects.requireNonNull(sink);
-        actions.add(pipe(source, sink));
+    public void combine(Protocol other) {
+        for (Supplier<Either<ActionException, Void>> action: other.actions) {
+            actions.add(action);
+        }
+        for (Conjecture c : other.conjectures) {
+            conjectures.add(c);
+        }
     }
+    //
 
-    public void addAction(Supplier<Void> source, Runnable sink) {
-        Objects.requireNonNull(source);
-        Objects.requireNonNull(sink);
-        actions.add(pipe(source, sink));
-    }
-
-    public List<ThrowingRunnable<IvyExceptions.ConjectureFailure>> getActions() { return actions; }
-
-    public ThrowingRunnable<IvyExceptions.ConjectureFailure> chooseAction() {
-        return actions.get(random.nextInt(actions.size()));
+    public Either<ConjectureFailure, Void> takeAction() {
+        while (true) {
+            Either<ActionException, Void> res = actions.get(random.nextInt(actions.size())).get();
+            if (res.isLeft()) {
+                // If we get back a RetryGeneration, then the action we chose has a precondition
+                // that isn't currently satisfied.
+                ActionException e = res.getLeft();
+                if (e.getClass().equals(RetryGeneration.class)) {
+                    continue;
+                }
+                // Safety: The only other subclass of ActionException is ConjectureFailure.
+                assert(e.getClass().equals(ConjectureFailure.class));
+                ConjectureFailure fail = (ConjectureFailure)res.getLeft();
+                return Either.left(fail);
+            }
+            return Either.right(res.get());
+        }
     }
 
     public void addPredicate(Expr<BoolSort> pred) {
@@ -140,26 +132,5 @@ public abstract class Protocol {
             throw new RuntimeException(String.format("Got %s back from the solver", s.toString()));
         }
         return slvr.getModel();
-    }
-
-    public <T> ThrowingRunnable<IvyExceptions.ConjectureFailure> pipe(Supplier<T> source, ThrowingConsumer<T, IvyExceptions.ConjectureFailure> sink) {
-        Objects.requireNonNull(source);
-        Objects.requireNonNull(sink);
-
-        return () -> {
-            sink.accept(source.get());
-            checkConjectures();
-        };
-    }
-
-    public ThrowingRunnable<IvyExceptions.ConjectureFailure> pipe(Supplier<Void> source, Runnable sink) {
-        Objects.requireNonNull(source);
-        Objects.requireNonNull(sink);
-
-        return () -> {
-            source.get();
-            sink.run();
-            checkConjectures();
-        };
     }
 }

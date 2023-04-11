@@ -1,73 +1,95 @@
 package ivy.net;
 
-import io.vavr.Tuple2;
+import io.vavr.Function0;
+import io.vavr.Function3;
+import io.vavr.Tuple3;
+import io.vavr.control.Either;
 import ivy.exceptions.IvyExceptions;
+import ivy.exceptions.IvyExceptions.*;
+import ivy.functions.Actions.Action0;
+import ivy.functions.Actions.Action1;
 import ivy.functions.Actions.Action3;
+import ivy.sorts.Sorts;
 
-import java.util.ArrayDeque;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
-public class ReliableNetwork<Id extends Comparable<Id>, Msg> extends ivy.Protocol {
-    public final Impl<Id, Msg> impl;
-    public final Spec<Id, Msg> spec;
+public class ReliableNetwork<Msg> extends ivy.Protocol {
+    public final Impl<Msg> impl;
+    public final Spec<Msg> spec;
 
-    public final Action3<Id, Id, Msg, Void> send;
-    public final Action3<Id, Id, Msg, Void> recv;
+    public final Action3<Integer, Integer, Msg, Void> send;
+    public final Action1<Integer, Void> recv;
 
 
-    public ReliableNetwork(Random r, Impl<Id, Msg> i, Spec<Id, Msg> s) {
+    public ReliableNetwork(Random r, Impl<Msg> i, Spec<Msg> s) {
         super(r);
         impl = i;
         spec = s;
 
-        send = new Action3<>(
-                Optional.empty(),
+        Sorts.IvyInt nodeSort = mkInt("nodeSort", 0, 3);
+        Sorts.IvyInt msgSort = mkInt("msgSort", 33, 126);
+
+        send = Action3.from(
+                (a, b, c) -> Either.right(null),
                 impl::send,
-                Optional.of(spec::after_send));
-        recv = new Action3<>(
-                Optional.empty(),
-                impl::recv,
-                Optional.of(spec::after_recv));
+                spec::after_send);
+        addAction(send.pipe(() -> new Tuple3(nodeSort.get(), nodeSort.get(), msgSort.get())));
+
+        recv = Action1.from(
+                id -> {
+                    if (!impl.routingTable.containsKey(id)) {
+                        return Either.left(new RetryGeneration());
+                    }
+                    if (impl.routingTable.get(id).size() == 0) {
+                        return Either.left(new RetryGeneration());
+                    }
+                    return Either.right(null);
+                },
+                id -> {
+                    Tuple3<Integer, Integer, Msg> t = impl.routingTable.get(id).pop();
+                    t.apply(impl::recv);
+                    return null;
+                });
+        addAction(recv.pipe(nodeSort::get));
 
         addConjecture("at-most-once-delivery", () -> spec.inFlight >= 0);
         addConjecture("eventual-delivery", () ->
                 impl.routingTable.values().stream().allMatch(q -> q.isEmpty()) || spec.inFlight > 0);
     }
 
-    public static abstract class Impl<Id extends Comparable<Id>, Msg> extends Network<Id, Msg> {
-        private final HashMap<Id, ArrayDeque<Tuple2<Id, Msg>>> routingTable;
+    public static abstract class Impl<Msg> extends Network<Integer, Msg> {
+        private final HashMap<Integer, ArrayDeque<Tuple3<Integer, Integer, Msg>>> routingTable;
 
         public Impl() {
             routingTable = new HashMap<>();
         }
 
         @Override
-        public Void send(Id self, Id dst, Msg msg) {
-            System.out.println(String.format("[Net %s] SEND %s", self, dst));
-            routingTable.computeIfAbsent(dst, id -> new ArrayDeque<>()).add(new Tuple2<>(self, msg));
+        public Void send(Integer self, Integer dst, Msg msg) {
+            System.out.println(String.format("[Net %3d] SEND %c to %d", self, msg, dst));
+            routingTable.computeIfAbsent(dst, id -> new ArrayDeque<>()).add(new Tuple3<>(dst, self, msg));
             return null;
         }
 
-        public abstract Void recv(Integer self, Integer src, Byte msg);
+        public abstract Void recv(Integer self, Integer src, Msg msg);
     }
 
-    public static class Spec<Id extends Comparable<Id>, Msg> {
+    public static class Spec<Msg> {
         public int inFlight;
 
         public Spec() {
             inFlight = 0;
         }
 
-        public Optional<IvyExceptions.ActionException> after_send(Id self, Id dst, Msg msg, Void ret) {
+        public Either<ActionException, Void> after_send(Void ret) {
             inFlight++;
-            return Optional.empty();
+            return Either.right(null);
         }
 
-        public Optional<IvyExceptions.ActionException> after_recv(Id self, Id dst, Msg msg, Void ret) {
+        public Either<ActionException, Void> after_recv(Void ret) {
             inFlight--;
-            return Optional.empty();
+            return Either.right(null);
         }
     }
 }

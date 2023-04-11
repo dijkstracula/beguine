@@ -1,6 +1,7 @@
 package multicounter;
 
-import ivy.exceptions.IvyExceptions;
+import io.vavr.control.Either;
+import ivy.exceptions.IvyExceptions.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;
@@ -13,12 +14,16 @@ public class MultiCounterTest {
         Random r = new Random(42);
         MultiCounterProto proto = new MultiCounterProto(r, 5);
 
-        assertThrows(IvyExceptions.ConjectureFailure.class, () -> {
-            // At some point, one of the nodes' counter will go negative, invalidating the
-            // nonnegativity conjecture.
-            while (true) {
-                proto.chooseAction().run();
+        // At some point, one of the nodes' counter will go negative, invalidating the
+        // nonnegativity conjecture.
+        while (true) {
+            Either<ConjectureFailure, Void> res = proto.takeAction();
+            if (res.isLeft()) {
+                ConjectureFailure e = res.getLeft();
+                assert(e.getMessage().contains("non-negativity"));
+                assert(e.conj.getDesc().equals("non-negativity"));
+                break;
             }
-        });
+        }
     }
 }

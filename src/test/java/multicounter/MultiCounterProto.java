@@ -3,6 +3,7 @@ package multicounter;
 import com.microsoft.z3.IntSort;
 import ivy.decls.Decls;
 import ivy.Protocol;
+import ivy.functions.Actions.Action1;
 import ivy.sorts.Sorts;
 
 import java.util.ArrayList;
@@ -112,8 +113,8 @@ public class MultiCounterProto extends Protocol {
             node = mkConst("node", nodeSort);
             val = mkConst("val", mkInt("Int"));
 
-            addAction(nodeSort, impl::dec);
-            addAction(nodeSort, impl::inc);
+            addAction(Action1.from(impl::dec).pipe(nodeSort));
+            addAction(Action1.from(impl::inc).pipe(nodeSort));
 
             // NB: In Ivy-generated C++:
             // 1291         for (int V0 = 0; V0 < server_id__max+1; V0++) {

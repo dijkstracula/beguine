@@ -30,6 +30,7 @@ public class IvyExceptions {
         }
     }
 
+    // TODO: only the specification can throw such an exception: rename it to reflect this.
     public static abstract class ActionException extends Exception {
         public ActionException(String msg) {
             super(msg);
@@ -37,8 +38,16 @@ public class IvyExceptions {
     }
 
     public static class ConjectureFailure extends ActionException {
+        public final Conjecture conj;
         public ConjectureFailure(Conjecture conj) {
             super(String.format("Conjecture \"%s\" failed", conj.getDesc()));
+            this.conj = conj;
+        }
+    }
+
+    public static class RetryGeneration extends ActionException {
+        public RetryGeneration() {
+            super("Ghost code condition necessitates retrying action generation");
         }
     }
 }

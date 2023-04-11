@@ -1,11 +1,12 @@
 package ivy;
 
-import ivy.exceptions.IvyExceptions;
-import ivy.functions.ThrowingRunnable;
+import ivy.exceptions.IvyExceptions.*;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
-public class Conjecture implements ThrowingRunnable<IvyExceptions.ConjectureFailure> {
+// TODO: If this supplied an Either, then the right-bias means we could just map over a list of them.
+public class Conjecture implements Supplier<Optional<ConjectureFailure>> {
     private final String desc;
     private final Supplier<Boolean> pred;
 
@@ -19,9 +20,10 @@ public class Conjecture implements ThrowingRunnable<IvyExceptions.ConjectureFail
     }
 
     @Override
-    public void run() throws IvyExceptions.ConjectureFailure {
-        if (!pred.get()) {
-            throw new IvyExceptions.ConjectureFailure(this);
+    public Optional<ConjectureFailure> get() {
+        if (this.pred.get()) {
+            return Optional.empty();
         }
+        return Optional.of(new ConjectureFailure(this));
     }
 }
