@@ -19,7 +19,13 @@ public class Sorts {
     public IvyBool mkBool(String name) { return mkBool(name, random::nextBoolean); }
     public IvyBool mkBool(String name, Supplier<Boolean> f) { return new IvyBool(name, f); }
 
-    public IvyChar mkPrintableAscii(String name) { return new IvyChar(name, () -> (char) (33 + random.nextInt(127-33))); }
+    public IvyChar mkPrintableAscii(String name) { return new IvyChar(
+            name,
+            () -> (char) (33 + random.nextInt(127-33)),
+            e -> ctx.mkGe(e, ctx.mkInt(33)),
+            e -> ctx.mkLt(e, ctx.mkInt(128))
+            );
+    }
 
     public IvyInt mkInt(String name) { return mkInt(name, random::nextInt); }
     public IvyInt mkInt(String name, Supplier<Integer> f) { return new IvyInt(name, f); }

@@ -46,7 +46,7 @@ public class ReliableNetwork<Msg> extends ivy.Protocol {
                 impl.routingTable.values().stream().allMatch(q -> q.isEmpty()) || spec.inFlight > 0);
     }
 
-    public static abstract class Impl<Msg> extends Network<Integer, Msg> {
+    public static abstract class Impl<Msg> implements Network<Integer, Msg> {
         private final HashMap<Integer, ArrayDeque<Tuple3<Integer, Integer, Msg>>> routingTable;
 
         public Impl() {

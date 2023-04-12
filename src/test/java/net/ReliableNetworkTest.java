@@ -10,7 +10,6 @@ import ivy.net.ReliableNetwork;
 import ivy.sorts.Sorts;
 import org.junit.jupiter.api.Test;
 
-import java.io.CharConversionException;
 import java.util.Random;
 
 public class ReliableNetworkTest {
