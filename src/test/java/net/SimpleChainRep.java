@@ -12,8 +12,8 @@ import ivy.net.ReliableNetwork;
 import ivy.sorts.Sorts;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class SimpleChainRep {
 
@@ -79,6 +79,8 @@ public class SimpleChainRep {
                     net_spec::after_send);
             addAction(appendAction.pipe(() -> new Tuple2(nodeSort.get(), msgSort.get())));
 
+            EventuallyConsistentSpec spec = new EventuallyConsistentSpec();
+
             this.net = net_impl;
 
             self = new HashMap<>();
@@ -94,7 +96,28 @@ public class SimpleChainRep {
                 append.put(i, c -> { n.append(c); return null; });
             }
         }
+
+        public class EventuallyConsistentSpec {
+            private boolean monotonicChain() {
+                List<Integer> nodes = self.keySet().stream().collect(Collectors.toList());
+                nodes.sort(Comparator.naturalOrder());
+
+                String curr = file.get(nodes.get(0)).toString();
+                for (int n : nodes) {
+                    String prefix = file.get(n).toString();
+                    if (!curr.startsWith(prefix)) {
+                        return false;
+                    }
+                    prefix = curr;
+                }
+                return true;
+            }
+            public EventuallyConsistentSpec() {
+                addConjecture("eventually-consistent-chain-prefix", this::monotonicChain);
+            }
+        }
     }
+
 
     @Test
     public void testActionGen() {

@@ -41,8 +41,8 @@ public class ReliableNetwork<Msg> extends ivy.Protocol {
                 });
         addAction(recv.pipe(nodeSort::get));
 
-        addConjecture("at-most-once-delivery", () -> spec.inFlight >= 0);
-        addConjecture("eventual-delivery", () ->
+        addConjecture("reliable-network-at-most-once-delivery", () -> spec.inFlight >= 0);
+        addConjecture("reliable-network-eventual-delivery", () ->
                 impl.routingTable.values().stream().allMatch(q -> q.isEmpty()) || spec.inFlight > 0);
     }
 

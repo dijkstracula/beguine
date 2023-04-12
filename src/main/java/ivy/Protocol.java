@@ -59,6 +59,7 @@ public abstract class Protocol {
 
     private Either<ConjectureFailure, Void> checkConjectures() {
         for (Conjecture conj : conjectures) {
+            System.out.println(String.format("Checking conjecture \"%s\"...", conj.getDesc()));
             Optional<ConjectureFailure> res = conj.get();
             if (res.isPresent()) {
                 return Either.left(res.get());
