@@ -19,6 +19,8 @@ public class Sorts {
     public IvyBool mkBool(String name) { return mkBool(name, random::nextBoolean); }
     public IvyBool mkBool(String name, Supplier<Boolean> f) { return new IvyBool(name, f); }
 
+    public IvyChar mkPrintableAscii(String name) { return new IvyChar(name, () -> (char) (33 + random.nextInt(127-33))); }
+
     public IvyInt mkInt(String name) { return mkInt(name, random::nextInt); }
     public IvyInt mkInt(String name, Supplier<Integer> f) { return new IvyInt(name, f); }
     public IvyInt mkInt(String name, int min, int max) {
@@ -83,6 +85,29 @@ public class Sorts {
         public Integer eval(Model m, Expr<IntSort> expr) {
             IntNum evaled = (IntNum) m.eval(expr, false);
             return evaled.getInt();
+        }
+    }
+
+    public class IvyChar extends IvySort<Character, IntSort> {
+
+        IvyChar(String name, Supplier<Character> f, Constraint<IntSort>... constraints) {
+            super(name, f, constraints);
+        }
+
+        @Override
+        public Expr<IntSort> to_solver(Character val) {
+            return ctx.mkInt(val);
+        }
+
+        @Override
+        public IntSort getZ3Sort() {
+            return ctx.getIntSort();
+        }
+
+        @Override
+        public Character eval(Model m, Expr<IntSort> expr) {
+            IntNum evaled = (IntNum) m.eval(expr, false);
+            return (char)(evaled.getInt());
         }
     }
 

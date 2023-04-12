@@ -109,9 +109,9 @@ public class MultiCounterProto extends Protocol {
         final Decls.IvyConst<Integer, IntSort> val;
 
         public Spec() {
-            Sorts.IvyInt nodeSort = mkInt("nodeSort", 0, impl.max_n);
-            node = mkConst("node", nodeSort);
-            val = mkConst("val", mkInt("Int"));
+            Sorts.IvyInt nodeSort = sorts.mkInt("nodeSort", 0, impl.max_n);
+            node = decls.mkConst("node", nodeSort);
+            val = decls.mkConst("val", sorts.mkInt("Int"));
 
             addAction(Action1.from(impl::dec).pipe(nodeSort));
             addAction(Action1.from(impl::inc).pipe(nodeSort));

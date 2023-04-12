@@ -1,24 +1,18 @@
 package ivy.net;
 
-import io.vavr.Function0;
-import io.vavr.Function3;
 import io.vavr.Tuple3;
 import io.vavr.control.Either;
-import ivy.exceptions.IvyExceptions;
 import ivy.exceptions.IvyExceptions.*;
-import ivy.functions.Actions.Action0;
 import ivy.functions.Actions.Action1;
 import ivy.functions.Actions.Action3;
 import ivy.sorts.Sorts;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ReliableNetwork<Msg> extends ivy.Protocol {
     public final Impl<Msg> impl;
     public final Spec<Msg> spec;
 
-    public final Action3<Integer, Integer, Msg, Void> send;
     public final Action1<Integer, Void> recv;
 
 
@@ -27,14 +21,8 @@ public class ReliableNetwork<Msg> extends ivy.Protocol {
         impl = i;
         spec = s;
 
-        Sorts.IvyInt nodeSort = mkInt("nodeSort", 0, 3);
-        Sorts.IvyInt msgSort = mkInt("msgSort", 33, 126);
-
-        send = Action3.from(
-                (a, b, c) -> Either.right(null),
-                impl::send,
-                spec::after_send);
-        addAction(send.pipe(() -> new Tuple3(nodeSort.get(), nodeSort.get(), msgSort.get())));
+        // TODO: should be visible outside
+        Sorts.IvyInt nodeSort = sorts.mkInt("nodeSort", 0, 3);
 
         recv = Action1.from(
                 id -> {

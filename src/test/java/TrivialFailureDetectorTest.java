@@ -47,8 +47,8 @@ public class TrivialFailureDetectorTest {
 
         public TrivialFailureDetectorProto(Random r, TrivialFailureDetector i) {
             super(r);
-            Sorts.IvyInt nodeSort = mkInt("nodeSort", 0, i.MAX_N);
-            node = mkConst("node", nodeSort);
+            Sorts.IvyInt nodeSort = sorts.mkInt("nodeSort", 0, i.MAX_N);
+            node = decls.mkConst("node", nodeSort);
 
             isDownGen = nodeSort;
             isDownExec = Action1.from(i::isDown);

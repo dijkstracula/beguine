@@ -14,18 +14,16 @@ import java.util.function.Supplier;
 /**
  * I guess solver stuff at the im.module layer??  S
  * TODO: Is this actually the top-level class?  If so, is it better named "module" (per Ivy) or "Protocol"?
- * @param <I> The implementation class. (TODO: what if there isn't a single impl class, does this make sense)
  */
 public abstract class Protocol {
-    private int tmp_ctr;
 
     protected final Random random;
 
     private final Context ctx;
     private final Solver slvr;
 
-    private final Sorts sorts;
-    private final Decls decls;
+    protected final Sorts sorts;
+    protected final Decls decls;
 
     private List<Conjecture> conjectures;
 
@@ -59,7 +57,7 @@ public abstract class Protocol {
 
     public List<Conjecture> getConjectures() { return conjectures; }
 
-    private Either<ActionException, Void> checkConjectures() {
+    private Either<ConjectureFailure, Void> checkConjectures() {
         for (Conjecture conj : conjectures) {
             Optional<ConjectureFailure> res = conj.get();
             if (res.isPresent()) {
@@ -102,28 +100,12 @@ public abstract class Protocol {
                 ConjectureFailure fail = (ConjectureFailure)res.getLeft();
                 return Either.left(fail);
             }
-            return Either.right(res.get());
+            return checkConjectures();
         }
     }
 
     public void addPredicate(Expr<BoolSort> pred) {
         slvr.add(pred);
-    }
-
-    protected Sorts.IvyBool mkBool(String name) {
-        return sorts.mkBool(name);
-    }
-    protected Sorts.IvyInt mkInt(String name) {
-        return sorts.mkInt(name);
-    }
-    protected Sorts.IvyInt mkInt(String name, int min, int max) {
-        return sorts.mkInt(name, min, max);
-    }
-
-    protected <J, Z extends Sort> Decls.IvyConst<J,Z> mkConst(String name, IvySort<J,Z> sort) {
-        Objects.requireNonNull(name);
-        Objects.requireNonNull(sort);
-        return decls.mkConst(name, sort);
     }
 
     public Model solve() {
