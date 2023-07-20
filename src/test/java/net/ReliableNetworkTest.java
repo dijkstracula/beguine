@@ -55,8 +55,8 @@ public class ReliableNetworkTest {
     @Test
     public void testProtocolInheritance() {
         NetTest n = new NetTest(new Random(42));
-        assert(n.getConjectures().stream().anyMatch(c -> c.getDesc().equals("at-most-once-delivery")));
-        assert(n.getConjectures().stream().anyMatch(c -> c.getDesc().equals("eventual-delivery")));
+        assert(n.getConjectures().stream().anyMatch(c -> c.getDesc().equals("reliable-network-at-most-once-delivery")));
+        assert(n.getConjectures().stream().anyMatch(c -> c.getDesc().equals("reliable-network-eventual-delivery")));
     }
 
     @Test
