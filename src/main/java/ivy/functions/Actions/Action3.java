@@ -47,6 +47,6 @@ public class Action3<T1, T2, T3, U> implements Function3<T1, T2, T3, Either<Acti
     }
 
     public Action0<U> pipe(Supplier<Tuple3<T1, T2, T3>> source) {
-        return new Action0<>(() -> source.get().apply(this));
+        return new Action0<U>("TODO", () -> source.get().apply(this));
     }
 }

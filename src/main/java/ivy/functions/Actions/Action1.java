@@ -54,6 +54,6 @@ public class Action1<T, U> implements Function1<T, Either<ActionException, U>> {
     }
 
     public Action0<U> pipe(Supplier<T> source) {
-        return new Action0<>(() -> this.apply(source.get()));
+        return new Action0<U>("TODO", () -> this.apply(source.get()));
     }
 }

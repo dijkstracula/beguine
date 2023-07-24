@@ -50,4 +50,10 @@ public class IvyExceptions {
             super("Ghost code condition necessitates retrying action generation");
         }
     }
+
+    public static class Unimplemented extends ActionException {
+        public Unimplemented(String name) {
+            super(String.format("Action \"%s\" not implemented", name));
+        }
+    }
 }

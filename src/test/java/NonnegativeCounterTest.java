@@ -11,13 +11,15 @@ public class NonnegativeCounterTest {
     public class NonnegativeCounterImpl {
         int val;
 
-        void dec() {
+        Either<IvyExceptions.ActionException, Void> dec() {
             val -= 1;
             System.out.println(String.format("[dec] val = %d", val));
+            return Either.right(null);
         }
-        void inc() {
+        Either<IvyExceptions.ActionException, Void> inc() {
             val += 1;
             System.out.println(String.format("[inc] val = %d", val));
+            return Either.right(null);
         }
     }
 
@@ -25,8 +27,8 @@ public class NonnegativeCounterTest {
         public NonnegativeCounterProtocol(Random r, NonnegativeCounterImpl impl) {
             super(r);
             addConjecture("non-negativity", () -> impl.val >= 0);
-            addAction(Action0.from(impl::dec));
-            addAction(Action0.from(impl::inc));
+            addAction(new Action0("dec", impl::dec));
+            addAction(new Action0("inc", impl::inc));
         }
     }
 

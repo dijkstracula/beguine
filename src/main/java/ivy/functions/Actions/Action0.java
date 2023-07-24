@@ -3,54 +3,68 @@ package ivy.functions.Actions;
 import io.vavr.Function0;
 import io.vavr.Function1;
 import io.vavr.control.Either;
+import ivy.exceptions.IvyExceptions;
 import ivy.exceptions.IvyExceptions.ActionException;
+
+import javax.annotation.Nullable;
+import java.security.Provider;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * An action comprises a function and optional pre/post operations.
  */
 public class Action0<U> implements Function0<Either<ActionException, U>> {
-    private final Function0<Either<ActionException, U>> action;
 
+    private String name;
 
-    Action0(Function0<Either<ActionException, U>> f) {
-        action = f;
+    private Optional<Function0<Either<ActionException, Void>>> pre;
+    @Nullable
+    private Supplier<Either<ActionException, U>> impl;
+    private Optional<Function1<U, Either<ActionException, U>>> post;
+
+    public Action0(String n) {
+        name = n;
+        pre = Optional.empty();
+        impl = null;
+        post = Optional.empty();
     }
 
-    public static <U> Action0<U> from(Function0<Either<ActionException, Void>> pre,
-                                      Function0<U> f,
-                                      Function1<U, Either<ActionException, U>> post) {
-        return new Action0<>(
-                () -> pre.get()
-                .map(v -> f.apply())
-                .flatMap(post));
+    public Action0(String n, Supplier<Either<ActionException, U>> f) {
+        name = n;
+        pre = Optional.empty();
+        impl = f;
+        post = Optional.empty();
     }
 
-    public static <U> Action0<U> from(Function0<Either<ActionException, Void>> pre,
-                                      Function0<U> f) {
-        return new Action0<>(() -> pre.get().map(v -> f.apply()));
+    public Action0(String n, Runnable f) {
+        name = n;
+        pre = Optional.empty();
+        impl = () -> { f.run(); return Either.right(null); };
+        post = Optional.empty();
     }
 
-
-    public static <U> Action0<U> from(Function0<U> f) {
-        return new Action0<>(() -> Either.right(f.apply()));
-    }
-
-    public static <U> Action0<U> from(Runnable f) {
-        return new Action0<>(() -> {
-            f.run();
-            return Either.right(null);
-        });
+    public void on(Supplier<Either<ActionException, U>> f) {
+        if (impl != null) {
+            throw new RuntimeException(String.format("impl already set for action %s", name));
+        }
+        impl = f;
     }
 
     @Override
     public Either<ActionException, U> apply() {
-        return action.apply();
-    }
+        if (impl == null) {
+            return Either.left(new IvyExceptions.Unimplemented(name));
+        }
 
-    public Function0<Either<ActionException, U>> pipe(Runnable sideEffect) {
-        return () -> {
-            sideEffect.run();
-            return action.apply();
-        };
+        Either<ActionException, Void> ret = Either.right(null);
+        if (pre.isPresent()) {
+            ret = pre.get().apply();
+        }
+
+        Either<ActionException, U> impl_ret = ret.flatMap((v) -> impl.get());
+
+        return impl_ret;
     }
 }

@@ -47,6 +47,6 @@ public class Action2<T1, T2, U> implements Function2<T1, T2, Either<ActionExcept
     }
 
     public Action0<U> pipe(Supplier<Tuple2<T1, T2>> source) {
-        return new Action0<>(() -> source.get().apply(this));
+        return new Action0<U>("TODO", () -> source.get().apply(this));
     }
 }
