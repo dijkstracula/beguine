@@ -1,4 +1,4 @@
-package ivy.net;
+package ivy.stdlib.net;
 
 /**
  * Mocks an asynchronous network.

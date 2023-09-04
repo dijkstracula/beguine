@@ -11,16 +11,30 @@ import java.util.function.Supplier;
  * An action comprises a function and optional pre/post operations.
  */
 public class Action1<T, U> implements Function1<T, Either<ActionException, U>> {
-    private final Function1<T, Either<ActionException, U>> action;
+    private Function1<T, Either<ActionException, U>> action;
 
 
-    private Action1(Function1<T, Either<ActionException, U>> f) {
+    public Action1(Function1<T, Either<ActionException, U>> f) {
         action = f;
+    }
+
+    public Action1() {
+        action = null;
     }
 
     @Override
     public Either<ActionException, U> apply(T t) {
+        if (action == null) {
+            throw new RuntimeException("Action was never defined!");
+        }
         return action.apply(t);
+    }
+
+    public void on(Function1<T, Either<ActionException, U>> f) {
+        if (action == null) {
+            throw new RuntimeException("Action was already defined!");
+        }
+        action = f;
     }
 
     //

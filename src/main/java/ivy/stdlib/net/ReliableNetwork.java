@@ -1,10 +1,9 @@
-package ivy.net;
+package ivy.stdlib.net;
 
 import io.vavr.Tuple3;
 import io.vavr.control.Either;
 import ivy.exceptions.IvyExceptions.*;
 import ivy.functions.Actions.Action1;
-import ivy.functions.Actions.Action3;
 import ivy.sorts.Sorts;
 
 import java.util.*;

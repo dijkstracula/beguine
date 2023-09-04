@@ -5,7 +5,7 @@ import io.vavr.control.Either;
 import ivy.Protocol;
 import ivy.exceptions.IvyExceptions;
 import ivy.functions.Actions.Action3;
-import ivy.net.ReliableNetwork;
+import ivy.stdlib.net.ReliableNetwork;
 
 import ivy.sorts.Sorts;
 import org.junit.jupiter.api.Test;
