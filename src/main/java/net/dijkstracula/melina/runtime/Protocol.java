@@ -17,21 +17,34 @@ public class Protocol {
     /** What must be true after any action */
     private final List<Supplier<Boolean>> conjectures;
 
+    /** What actions have been taken?
+     * TODO: Should be something better-structured than just a string!
+     * */
+    private final List<String> history;
+
     public Protocol() {
         actions = new ArrayList<>();
         conjectures = new ArrayList<>();
+        history = new ArrayList<>();
     }
 
     protected void addAction(Runnable r) {
         actions.add(r);
     }
 
-    protected void addAction(Action0<Void> r) {
-        actions.add(() -> r.apply());
+    protected <T> void addAction(String ident, Action0<T> r) {
+        actions.add(() -> {
+            T t = r.apply();
+            history.add(String.format("%s(%s)", ident, t));
+        });
     }
 
-    protected <T> void addAction(Action1<T, Void> c, Supplier<T> s) {
-        addAction(() -> c.apply(s.get()));
+    protected <T, U> void addAction(String ident, Action1<T, U> c, Supplier<T> s) {
+        addAction(() -> {
+            T t = s.get();
+            U u = c.apply(t);
+            history.add(String.format("%s(%s, %s)", ident));
+        });
     }
 
     protected void addConjecture(Supplier<Boolean> pred) {
@@ -44,5 +57,9 @@ public class Protocol {
 
     public List<Supplier<Boolean>> getConjectures() {
         return Collections.unmodifiableList(conjectures);
+    }
+
+    public List<String> getHistory() {
+        return Collections.unmodifiableList(history);
     }
 }

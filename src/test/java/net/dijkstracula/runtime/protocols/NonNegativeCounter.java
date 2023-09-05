@@ -26,13 +26,13 @@ public class NonNegativeCounter {
                     count = (count + 1) < 0 ? 0 : (count + 1);
                     return null;
                 });
-                addAction(inc);
+                addAction("mutator.inc", inc);
                 dec.on(() -> {
                     System.out.println("dec: " + count);
                     count = (count - 1) < 0 ? 0 : (count - 1);
                     return null;
                 });
-                addAction(dec);
+                addAction("mutator.dec", dec);
                 addConjecture(() -> {
                     return count < 10;
                 });
