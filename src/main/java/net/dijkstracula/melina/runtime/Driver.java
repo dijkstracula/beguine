@@ -3,7 +3,6 @@ package net.dijkstracula.melina.runtime;
 import com.microsoft.z3.Context;
 import com.microsoft.z3.Solver;
 import net.dijkstracula.irving.sorts.Sorts;
-import net.dijkstracula.melina.actions.Action0;
 import net.dijkstracula.melina.exceptions.ActionArgGenRetryException;
 import net.dijkstracula.melina.exceptions.ConjectureFailureException;
 import net.dijkstracula.melina.exceptions.MelinaException;
@@ -14,8 +13,7 @@ import java.util.Random;
 import java.util.function.Supplier;
 
 /**
- * Top-level class for choosing actions to take.
- * TODO: for n-way implementation tests, does that live here or in something higher-up?
+ * Top-level class for choosing actions to take and validating global invariants.
  */
 public class Driver implements Runnable {
     protected final Random random;
@@ -25,23 +23,19 @@ public class Driver implements Runnable {
 
     protected final Sorts sorts;
 
-    private List<Supplier<Boolean>> conjectures;
-
     private final List<Runnable> actions;
 
-    public Driver(Random r) {
+    private final List<Supplier<Boolean>> conjectures;
+
+
+    public Driver(Random r, Protocol p) {
         random = r;
         ctx = new Context();
         slvr = ctx.mkSolver();
         sorts = new Sorts(ctx, r);
 
-        actions = new ArrayList<>();
-        conjectures = new ArrayList<>();
-    }
-
-    public void addProtocol(Protocol p) {
-        actions.addAll(p.getActions());
-        conjectures.addAll(p.getConjectures());
+        actions = p.getActions();
+        conjectures = p.getConjectures();
     }
 
     @Override
@@ -60,5 +54,4 @@ public class Driver implements Runnable {
             }
         }
     }
-
 }

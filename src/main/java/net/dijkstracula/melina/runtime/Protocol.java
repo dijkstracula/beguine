@@ -5,14 +5,16 @@ import net.dijkstracula.melina.actions.Action1;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /** Abstract class that all Ivy isolates extend. */
 public class Protocol {
 
     /** What can be called from the environment */
-    private final List<Runnable> actions;
+    private final HashMap<String, Runnable> actions;
 
     /** What must be true after any action */
     private final List<Supplier<Boolean>> conjectures;
@@ -23,27 +25,27 @@ public class Protocol {
     private final List<String> history;
 
     public Protocol() {
-        actions = new ArrayList<>();
+        actions = new HashMap<>();
         conjectures = new ArrayList<>();
         history = new ArrayList<>();
     }
 
-    protected void addAction(Runnable r) {
-        actions.add(r);
+    protected void addAction(String ident, Runnable r) {
+        actions.put(ident, r);
     }
 
     protected <T> void addAction(String ident, Action0<T> r) {
-        actions.add(() -> {
+        actions.put(ident, () -> {
             T t = r.apply();
             history.add(String.format("%s(%s)", ident, t));
         });
     }
 
     protected <T, U> void addAction(String ident, Action1<T, U> c, Supplier<T> s) {
-        addAction(() -> {
+        actions.put(ident, () -> {
             T t = s.get();
             U u = c.apply(t);
-            history.add(String.format("%s(%s, %s)", ident));
+            history.add(String.format("%s(%s, %s)", ident, t, u));
         });
     }
 
@@ -52,7 +54,8 @@ public class Protocol {
     }
 
     public List<Runnable> getActions() {
-        return Collections.unmodifiableList(actions);
+        // XXX: this is dumb.
+        return actions.values().stream().collect(Collectors.toList());
     }
 
     public List<Supplier<Boolean>> getConjectures() {

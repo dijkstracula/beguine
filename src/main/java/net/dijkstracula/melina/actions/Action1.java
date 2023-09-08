@@ -2,8 +2,10 @@ package net.dijkstracula.melina.actions;
 
 import java.util.Optional;
 
+import io.vavr.Function0;
 import io.vavr.Function1;
 import io.vavr.Function2;
+import io.vavr.Tuple2;
 import net.dijkstracula.melina.exceptions.IrvingCodegenException;
 
 /**
@@ -59,6 +61,14 @@ public class Action1<T, U> implements Function1<T, U> {
             throw new IrvingCodegenException.RedefinedActionCall();
         }
         post = Optional.of(f);
+    }
+
+    public static <T, U> Function1<T, Tuple2<U, U>> join(Function1<T, U> spec, Function1<T, U> impl) {
+        return (t) -> {
+            U su = spec.apply(t);
+            U iu = impl.apply(t);
+            return new Tuple2<>(su, iu);
+        };
     }
 }
 

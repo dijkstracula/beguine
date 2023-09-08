@@ -13,8 +13,8 @@ public class NonNegativeCounter {
 
     public static class Isolate extends Protocol {
         class IvyObj_mutator {
-            protected Action0<Void> inc = new Action0<>();
-            protected Action0<Void> dec = new Action0<>();
+            private Action0<Void> inc = new Action0<>();
+            private Action0<Void> dec = new Action0<>();
 
 
             private long count;
@@ -44,9 +44,7 @@ public class NonNegativeCounter {
 
     @Test
     public void testCounter() {
-        Driver d = new Driver(new Random(42));
-        Isolate iso = new Isolate();
-        d.addProtocol(iso);
+        Driver d = new Driver(new Random(42), new Isolate());
 
         // Eventually the counter will increase to the point where the conjecture fails.
         Assertions.assertThrows(ConjectureFailureException.class, () -> {
