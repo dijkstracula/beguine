@@ -5,14 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="356b47be-9cf5-4b46-b299-180ffd199158" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/nway/Composed.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/nway/MultiProtocol.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Tee.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/actions/Action1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/actions/Action1.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Driver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Protocol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Protocol.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/nway/Composed.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/nway/MultiProtocol.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/nway/NonNegativeCounter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/nway/NonNegativeCounter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/protocols/NonNegativeCounter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/protocols/NonNegativeCounter.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
