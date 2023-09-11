@@ -5,15 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="356b47be-9cf5-4b46-b299-180ffd199158" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/ntaylor.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Driveable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/nway/FourBitCounter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/actions/Action0.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/actions/Action0.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/ProtocolDriver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Tee.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Tee.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/nway/NonNegativeCounter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/nway/NonNegativeCounter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/protocols/NonNegativeCounter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/protocols/NonNegativeCounter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/nway/NonNegativeCounter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/nway/IdenticalProtocols.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +73,7 @@
       <recent name="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.NonNegativeCounter.testCounter (1)">
+  <component name="RunManager" selected="Gradle.FourBitCounter.testCounter">
     <configuration name="Composed.testCounter" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -93,6 +88,54 @@
             <option value=":test" />
             <option value="--tests" />
             <option value="&quot;net.dijkstracula.runtime.nway.Composed.testCounter&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <ForceTestExec>true</ForceTestExec>
+      <method v="2" />
+    </configuration>
+    <configuration name="FourBitCounter.testCounter" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;net.dijkstracula.runtime.nway.FourBitCounter.testCounter&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <ForceTestExec>true</ForceTestExec>
+      <method v="2" />
+    </configuration>
+    <configuration name="IdenticalProtocols.testCounter" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;net.dijkstracula.runtime.nway.IdenticalProtocols.testCounter&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -151,61 +194,13 @@
       <ForceTestExec>true</ForceTestExec>
       <method v="2" />
     </configuration>
-    <configuration name="ProtocolAndHandWritten.testCounter" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;net.dijkstracula.runtime.nway.ProtocolAndHandWritten.testCounter&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <ForceTestExec>true</ForceTestExec>
-      <method v="2" />
-    </configuration>
-    <configuration name="SortTests.testRange" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;net.dijkstracula.irving.sorts.SortTests.testRange&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <ForceTestExec>true</ForceTestExec>
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.FourBitCounter.testCounter" />
+        <item itemvalue="Gradle.IdenticalProtocols.testCounter" />
         <item itemvalue="Gradle.NonNegativeCounter.testCounter (1)" />
         <item itemvalue="Gradle.NonNegativeCounter.testCounter" />
         <item itemvalue="Gradle.Composed.testCounter" />
-        <item itemvalue="Gradle.ProtocolAndHandWritten.testCounter" />
-        <item itemvalue="Gradle.SortTests.testRange" />
       </list>
     </recent_temporary>
   </component>

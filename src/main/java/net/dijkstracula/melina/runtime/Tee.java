@@ -35,6 +35,7 @@ public class Tee<Spec extends Protocol, Impl extends Protocol> extends Driveable
 
         addConjecture(() -> {
             Tuple2<String, String> lastAction = getHistory().get(getHistory().size() - 1);
+            System.out.println(lastAction);
             return lastAction._1.equals(lastAction._2);
         });
     }

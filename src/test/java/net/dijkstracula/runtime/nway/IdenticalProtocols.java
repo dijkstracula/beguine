@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
-public class NonNegativeCounter {
+public class IdenticalProtocols {
 
     public static class Isolate extends Protocol {
         class IvyObj_mutator {
