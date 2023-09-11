@@ -6,6 +6,7 @@ import io.vavr.Tuple2;
 import net.dijkstracula.melina.exceptions.IrvingCodegenException;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * An action comprises a function and optional pre/post operations.
@@ -62,10 +63,10 @@ public class Action0<U> implements Function0<U> {
         post = Optional.of(f);
     }
 
-    public static <U> Function0<Tuple2<U, U>> join(Function0<U> spec, Function0<U> impl) {
+    public static <U> Function0<Tuple2<U, U>> join(Supplier<U> spec, Supplier<U> impl) {
         return () -> {
-            U su = spec.apply();
-            U iu = impl.apply();
+            U su = spec.get();
+            U iu = impl.get();
             return new Tuple2<>(su, iu);
         };
     }

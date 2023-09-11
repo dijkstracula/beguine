@@ -2,7 +2,7 @@ package net.dijkstracula.runtime.protocols;
 
 import net.dijkstracula.melina.actions.Action0;
 import net.dijkstracula.melina.exceptions.ConjectureFailureException;
-import net.dijkstracula.melina.runtime.Driver;
+import net.dijkstracula.melina.runtime.ProtocolDriver;
 import net.dijkstracula.melina.runtime.Protocol;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -44,7 +44,7 @@ public class NonNegativeCounter {
 
     @Test
     public void testCounter() {
-        Driver d = new Driver(new Random(42), new Isolate());
+        ProtocolDriver d = new ProtocolDriver(new Random(0), new Isolate());
 
         // Eventually the counter will increase to the point where the conjecture fails.
         Assertions.assertThrows(ConjectureFailureException.class, () -> {
