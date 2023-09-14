@@ -4,7 +4,9 @@ import com.microsoft.z3.Context;
 import com.microsoft.z3.Expr;
 import com.microsoft.z3.IntSort;
 
+import java.util.Iterator;
 import java.util.Random;
+import java.util.stream.LongStream;
 
 public class Sorts {
     private final Context ctx;
@@ -40,9 +42,14 @@ public class Sorts {
     }
 
     public class Range extends IvySort<Long, IntSort> {
+        long min;
+        long max;
+
         public Range(String name, long min, long max) {
             super(name, () -> (Math.abs(random.nextLong()) % (max - min)) + min);
             assert(min < max);
+            this.min = min;
+            this.max = max;
         }
 
         @Override
@@ -53,6 +60,10 @@ public class Sorts {
         @Override
         public IntSort getZ3Sort() {
             return ctx.getIntSort();
+        }
+
+        public LongStream iterator() {
+            return LongStream.range(min, max);
         }
     }
 }

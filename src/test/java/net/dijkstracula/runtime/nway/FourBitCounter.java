@@ -36,7 +36,7 @@ public class FourBitCounter {
                 });
                 addAction("dec", dec);
 
-                addConjecture(() -> count >= 0 && count < 16);
+                addConjecture("valid-four-byte-value", () -> count >= 0 && count < 16);
             } //cstr
         } // Ivyobj_mutator
 

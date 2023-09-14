@@ -1,5 +1,7 @@
 package net.dijkstracula.runtime.protocols;
 
+import com.microsoft.z3.Context;
+import net.dijkstracula.irving.sorts.Sorts;
 import net.dijkstracula.melina.actions.Action0;
 import net.dijkstracula.melina.exceptions.ConjectureFailureException;
 import net.dijkstracula.melina.runtime.ProtocolDriver;
@@ -10,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import java.util.Random;
 
 public class NonNegativeCounter {
-
     public static class Isolate extends Protocol {
         class IvyObj_mutator {
             private Action0<Void> inc = new Action0<>();
@@ -33,7 +34,7 @@ public class NonNegativeCounter {
                     return null;
                 });
                 addAction("mutator.dec", dec);
-                addConjecture(() -> {
+                addConjecture("count-is-single-digit", () -> {
                     return count < 10;
                 });
 

@@ -1,5 +1,6 @@
 package net.dijkstracula.melina.runtime;
 
+import net.dijkstracula.melina.exceptions.ActionArgGenRetryException;
 import net.dijkstracula.melina.exceptions.ConjectureFailureException;
 
 import java.util.*;
@@ -50,9 +51,18 @@ public abstract class Driveable<T> implements Runnable {
     @Override
     public void run() {
         assert(actions.size() > 0);
-        String act = actionNames.get(random.nextInt(actions.size()));
-        T t = actions.get(act).get();
-        addHistory(t);
+
+        while (true) {
+            String act = actionNames.get(random.nextInt(actions.size()));
+            T t;
+            try {
+                t = actions.get(act).get();
+            } catch (ActionArgGenRetryException e) {
+                continue;
+            }
+            addHistory(t);
+            break;
+        }
 
         for (Supplier<Boolean> conj : conjectures) {
             if (!conj.get()) {
