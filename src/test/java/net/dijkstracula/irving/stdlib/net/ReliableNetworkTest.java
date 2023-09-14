@@ -2,11 +2,8 @@ package net.dijkstracula.irving.stdlib.net;
 
 import com.microsoft.z3.Context;
 import net.dijkstracula.irving.sorts.Sorts;
-import net.dijkstracula.melina.actions.Action1;
-import net.dijkstracula.melina.runtime.Protocol;
 import net.dijkstracula.melina.runtime.ProtocolDriver;
 import net.dijkstracula.melina.stdlib.net.ReliableNetwork;
-import net.dijkstracula.runtime.protocols.NonNegativeCounter;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;

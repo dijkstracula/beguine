@@ -1,7 +1,5 @@
 package net.dijkstracula.runtime.protocols;
 
-import com.microsoft.z3.Context;
-import net.dijkstracula.irving.sorts.Sorts;
 import net.dijkstracula.melina.actions.Action0;
 import net.dijkstracula.melina.exceptions.ConjectureFailureException;
 import net.dijkstracula.melina.runtime.ProtocolDriver;
