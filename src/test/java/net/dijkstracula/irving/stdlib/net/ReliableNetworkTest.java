@@ -14,9 +14,11 @@ public class ReliableNetworkTest {
 
     @Test
     public void reliableNetworkTestTest() {
-        ReliableNetwork<Long> net = new ReliableNetwork<>(sorts.mkRange("pid", 0, 2));
+        ReliableNetwork<Long> net = new ReliableNetwork<>();
 
         ProtocolDriver d = new ProtocolDriver(new Random(0), net);
+
+        sorts.mkRange("pid", 0, 1).iterator().forEach(i -> net.dial.apply(i));
 
         net.sockets.get(1).recv.on((src, msg) -> {
             assert(src == 0);
