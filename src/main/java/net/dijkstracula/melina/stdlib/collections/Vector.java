@@ -36,6 +36,10 @@ public class Vector<T> {
         return this.backing.get(idx);
     }
 
+    public int end() {
+        return this.backing.size();
+    }
+
     public Vector<T> set(int x, T y) {
         Vector<T> ret = this.clone();
         ret.backing.set(x, y);

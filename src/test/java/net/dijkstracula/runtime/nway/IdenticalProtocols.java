@@ -10,6 +10,11 @@ import java.util.Random;
 public class IdenticalProtocols {
 
     public static class Isolate extends Protocol {
+
+        public Isolate(Random r) {
+            super(r);
+        }
+
         class IvyObj_mutator {
             private Action0<Void> inc = new Action0<>();
             private Action0<Void> dec = new Action0<>();
@@ -39,7 +44,8 @@ public class IdenticalProtocols {
 
     @Test
     public void testCounter() {
-        Tee t = new Tee(new Random(42), new Isolate(), new Isolate());
+        Random r = new Random(42);
+        Tee t = new Tee(r, new Isolate(r), new Isolate(r));
 
         // The behaviour of the two protocols under test should, of course, be
         // identical.

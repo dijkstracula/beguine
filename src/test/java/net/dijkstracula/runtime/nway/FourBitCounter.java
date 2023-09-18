@@ -10,7 +10,12 @@ import java.util.Random;
 public class FourBitCounter {
 
     public static class Spec extends Protocol {
+        public Spec() {
+            super(new Random(42));
+        }
+
         class IvyObj_mutator {
+
             private Action0<Long> inc = new Action0<>();
             private Action0<Long> dec = new Action0<>();
 
@@ -70,6 +75,8 @@ public class FourBitCounter {
         private Counter state;
 
         public CounterProxy() {
+            super(new Random(42));
+
             state = new Counter();
 
             inc.on(() -> {

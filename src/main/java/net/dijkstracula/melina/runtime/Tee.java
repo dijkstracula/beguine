@@ -3,11 +3,9 @@ package net.dijkstracula.melina.runtime;
 import io.vavr.Function0;
 import io.vavr.Tuple2;
 import net.dijkstracula.melina.actions.Action0;
-import net.dijkstracula.melina.exceptions.ActionArgGenRetryException;
 
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 // A driver that pipes actions to two protocols rather than just one.
 public class Tee<Spec extends Protocol, Impl extends Protocol> extends Driveable<Tuple2<String, String>> {
@@ -30,10 +28,10 @@ public class Tee<Spec extends Protocol, Impl extends Protocol> extends Driveable
             addAction(aname, s.getActions().get(aname), i.getActions().get(aname));
         }
         for (Supplier<Boolean> conj : s.getConjectures()) {
-            addConjecture(conj);
+            addConjecture("todo", conj);
         }
 
-        addConjecture(() -> {
+        addConjecture("final-histories-match", () -> {
             Tuple2<String, String> lastAction = getHistory().get(getHistory().size() - 1);
             System.out.println(lastAction);
             return lastAction._1.equals(lastAction._2);

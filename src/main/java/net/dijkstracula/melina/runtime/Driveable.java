@@ -7,14 +7,14 @@ import java.util.*;
 import java.util.function.Supplier;
 
 public abstract class Driveable<T> implements Runnable {
-    private final Random random;
+    protected final Random random;
 
     /** What can be called from the environment */
     private final Map<String, Supplier<T>> actions;
     private final List<String> actionNames;
     private final List<T> history;
 
-    private final List<Supplier<Boolean>> conjectures;
+    protected final List<Supplier<Boolean>> conjectures;
 
     public Driveable(Random r) {
         random = r;
@@ -27,12 +27,24 @@ public abstract class Driveable<T> implements Runnable {
 
     protected Supplier<T> randomAction() {
         assert(actionNames.size() > 0);
+        assert(actions.size() == actionNames.size());
+
         String aname = actionNames.get(random.nextInt(actionNames.size()));
         return actions.get(aname);
     }
 
     public List<T> getHistory() {
         return Collections.unmodifiableList(history);
+    }
+
+    public void addDrivable(Driveable<T> p) {
+        for (String name : p.getActions().keySet()) {
+            addAction(name, p.getActions().get(name));
+        }
+
+        for (Supplier<Boolean> conj : p.getConjectures()) {
+            addConjecture("TODO", conj);
+        }
     }
 
     protected void addHistory(T t) {
@@ -44,19 +56,24 @@ public abstract class Driveable<T> implements Runnable {
         actionNames.add(name);
     }
 
-    protected void addConjecture(Supplier<Boolean> conj) {
+    protected void addConjecture(String ident, Supplier<Boolean> conj) {
         conjectures.add(conj);
+    }
+
+    protected Map<String, Supplier<T>> getActions() {
+        return Collections.unmodifiableMap(actions);
+    }
+
+    protected List<Supplier<Boolean>> getConjectures() {
+        return Collections.unmodifiableList(conjectures);
     }
 
     @Override
     public void run() {
-        assert(actions.size() > 0);
-
+        T t;
         while (true) {
-            String act = actionNames.get(random.nextInt(actions.size()));
-            T t;
             try {
-                t = actions.get(act).get();
+                t = randomAction().get();
             } catch (ActionArgGenRetryException e) {
                 continue;
             }

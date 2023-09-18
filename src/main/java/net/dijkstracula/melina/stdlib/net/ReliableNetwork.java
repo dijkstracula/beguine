@@ -7,6 +7,7 @@ import net.dijkstracula.melina.exceptions.ActionArgGenRetryException;
 import net.dijkstracula.melina.runtime.Protocol;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 // An implementation of ivy's net.tcp_test.
 public class ReliableNetwork<Msg> extends Protocol {
@@ -17,9 +18,12 @@ public class ReliableNetwork<Msg> extends Protocol {
 
     public int inFlight; // ghost
 
-    public ReliableNetwork() {
+    public ReliableNetwork(Random r) {
+        super(r);
+
         routingTable = new HashMap<>();
 
+        // recvf is triggered when the underlying network is ready to deliver a message.
         recvf.before((id) -> {
             if (!routingTable.containsKey(id)) {
                 throw new ActionArgGenRetryException();
@@ -35,13 +39,20 @@ public class ReliableNetwork<Msg> extends Protocol {
             Msg msg = wrappedMsg._3;
             return sockets.get(id).recv.apply(source, msg);
         });
+        addAction("recvf", recvf, () -> {
+            List<Long> keys = sockets.keySet().stream().collect(Collectors.toList());
+            return keys.get(r.nextInt(keys.size()));
+        });
 
+        // Dial registers a socket with a pid.
+        // TODO: "connect" vs "dial"?
         dial.before((id) -> {
             assert(!sockets.containsKey(id));
             return null;
         });
         dial.on((id) -> {
-            Socket sock = new Socket(id);
+            System.out.println(String.format("[DIAL %d]", id));
+            Socket sock = new Socket(r, id);
             sockets.put(id, sock);
             return sock;
         });
@@ -61,13 +72,15 @@ public class ReliableNetwork<Msg> extends Protocol {
 
     // A reimplementation of ivy's net.tcp_test.socket, kinda-sorta.
     public class Socket extends Protocol {
-        private long id;
+        public long id;
 
         public Action2<Long, Msg, Void> send;
 
         public Action2<Long, Msg, Void> recv;
 
-        private Socket(long i) {
+        private Socket(Random r, long i) {
+            super(r);
+
             id = i;
             send = new Action2<>();
             recv = new Action2<>(); // Exported
