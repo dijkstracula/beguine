@@ -39,10 +39,7 @@ public class ReliableNetwork<Msg> extends Protocol {
             Msg msg = wrappedMsg._3;
             return sockets.get(id).recv.apply(source, msg);
         });
-        addAction("recvf", recvf, () -> {
-            List<Long> keys = sockets.keySet().stream().collect(Collectors.toList());
-            return keys.get(r.nextInt(keys.size()));
-        });
+        addAction("recvf", recvf, this::randomSockId);
 
         // Dial registers a socket with a pid.
         // TODO: "connect" vs "dial"?
@@ -66,9 +63,14 @@ public class ReliableNetwork<Msg> extends Protocol {
                 routingTable.values().stream().allMatch(q -> q.isEmpty()) || inFlight > 0);
 
         sockets = new HashMap<>();
+
     }
     public HashMap<Long, Socket> sockets;
 
+    public Long randomSockId() {
+        List<Long> keys = sockets.keySet().stream().collect(Collectors.toList());
+        return keys.get(random.nextInt(keys.size()));
+    }
 
     // A reimplementation of ivy's net.tcp_test.socket, kinda-sorta.
     public class Socket extends Protocol {

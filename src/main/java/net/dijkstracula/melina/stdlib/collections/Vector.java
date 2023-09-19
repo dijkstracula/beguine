@@ -5,7 +5,7 @@ import java.util.List;
 
 // Hand-written extraction for collections.Vector
 
-public class Vector<T> {
+public class Vector<T> implements Cloneable {
     private List<T> backing;
 
     public Vector() {
@@ -52,9 +52,10 @@ public class Vector<T> {
         return ret;
     }
 
+    @Override
     protected Vector<T> clone() {
         Vector<T> ret = new Vector<>();
-        ret.backing = List.copyOf(this.backing);
+        ret.backing = new ArrayList<>(backing);
         return ret;
     }
 }

@@ -52,7 +52,13 @@ public abstract class Driveable<T> implements Runnable {
     }
 
     protected void addAction(String name, Supplier<T> action) {
-        actions.put(name, action);
+        if (actions.containsKey(name)) {
+            throw new RuntimeException("Duplicate action " + name);
+        }
+        actions.put(name, () -> {
+            System.out.println("[Drivable] choosing " + name);
+            return action.get();
+        });
         actionNames.add(name);
     }
 
