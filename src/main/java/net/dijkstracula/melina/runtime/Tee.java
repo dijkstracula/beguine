@@ -33,13 +33,15 @@ public class Tee<Spec extends Protocol, Impl extends Protocol> extends Driveable
 
         addConjecture("final-histories-match", () -> {
             Tuple2<String, String> lastAction = getHistory().get(getHistory().size() - 1);
-            System.out.println(lastAction);
+            System.out.println("final-histories-match: " + lastAction);
             return lastAction._1.equals(lastAction._2);
         });
     }
 
     protected void addAction(String ident, Supplier<String> a1, Supplier<String> a2) {
         Function0<Tuple2<String, String>> joined = Action0.join(a1, a2);
-        addAction(ident, () -> joined.apply());
+        addAction(ident, () -> {
+            return joined.apply();
+        });
     }
 }

@@ -3,6 +3,7 @@ package net.dijkstracula.melina.actions;
 import io.vavr.Function0;
 import io.vavr.Function1;
 import io.vavr.Tuple2;
+import net.dijkstracula.melina.exceptions.ActionArgGenRetryException;
 import net.dijkstracula.melina.exceptions.IrvingCodegenException;
 
 import java.util.Optional;
@@ -65,8 +66,32 @@ public class Action0<U> implements Function0<U> {
 
     public static <U> Function0<Tuple2<U, U>> join(Supplier<U> spec, Supplier<U> impl) {
         return () -> {
-            U su = spec.get();
-            U iu = impl.get();
+            U su;
+            U iu;
+
+            System.out.println("[Tee] Executing spec");
+            while (true) {
+                try {
+                    su = spec.get();
+                } catch (ActionArgGenRetryException e) {
+                    System.out.println("[Driveable] Retrying action gen");
+                    continue;
+                }
+                break;
+            }
+
+            System.out.println("[Tee] Executing impl");
+            while (true) {
+                try {
+                    iu = impl.get();
+                } catch (ActionArgGenRetryException e) {
+                    System.out.println("[Driveable] Retrying action gen");
+                    continue;
+                }
+                break;
+            }
+
+            System.out.println("[Tee] Done");
             return new Tuple2<>(su, iu);
         };
     }

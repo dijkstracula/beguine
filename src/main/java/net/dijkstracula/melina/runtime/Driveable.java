@@ -37,7 +37,7 @@ public abstract class Driveable<T> implements Runnable {
         return Collections.unmodifiableList(history);
     }
 
-    public void addDrivable(Driveable<T> p) {
+    public void addDriveable(Driveable<T> p) {
         for (String name : p.getActions().keySet()) {
             addAction(name, p.getActions().get(name));
         }
@@ -56,7 +56,7 @@ public abstract class Driveable<T> implements Runnable {
             throw new RuntimeException("Duplicate action " + name);
         }
         actions.put(name, () -> {
-            System.out.println("[Drivable] choosing " + name);
+            System.out.println("[Driveable] choosing " + name);
             return action.get();
         });
         actionNames.add(name);
@@ -79,8 +79,10 @@ public abstract class Driveable<T> implements Runnable {
         T t;
         while (true) {
             try {
-                t = randomAction().get();
+                Supplier<T> action = randomAction();
+                t = action.get();
             } catch (ActionArgGenRetryException e) {
+                System.out.println("[Driveable] Retrying action gen");
                 continue;
             }
             addHistory(t);

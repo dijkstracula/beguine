@@ -4,10 +4,10 @@ import com.microsoft.z3.Context;
 import io.vavr.Function2;
 import io.vavr.Function3;
 import net.dijkstracula.irving.sorts.Sorts;
-import net.dijkstracula.melina.actions.Action0;
 import net.dijkstracula.melina.actions.Action1;
 
 import net.dijkstracula.melina.runtime.Protocol;
+import net.dijkstracula.melina.runtime.Tee;
 import net.dijkstracula.melina.stdlib.collections.*;
 import net.dijkstracula.melina.stdlib.net.*;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class LinearizableChainReplication {
+public class TrivialChainReplication {
 
     public class ChainRep extends Protocol {
         private final Sorts sorts;
@@ -117,6 +117,20 @@ public class LinearizableChainReplication {
 
         for (int i = 0; i < 1000; i++) {
             p.run();
+        }
+    }
+
+    @Test
+    public void LinearizableChainRepTee() {
+        Tee<ChainRep, ChainRep> t = new Tee<>(
+                new Random(17),
+                new ChainRep(new Random(42)),
+                new ChainRep(new Random(42)));
+
+        // The behaviour of the two protocols under test should, of course, be
+        // identical.
+        for (int i = 0; i < 1000; i++) {
+            t.run();
         }
     }
 
