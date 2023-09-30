@@ -4,6 +4,7 @@ import com.microsoft.z3.BoolSort;
 import com.microsoft.z3.Expr;
 import com.microsoft.z3.Model;
 import com.microsoft.z3.Sort;
+import net.dijkstracula.melina.runtime.MelinaContext;
 
 import java.util.List;
 import java.util.function.Function;
@@ -16,7 +17,7 @@ import java.util.function.Supplier;
  * @param <J> The Java datatype representing this type
  * @param <Z> The Z3 sort representing this type
  */
-public abstract class IvySort<J, Z extends Sort> implements Supplier<J> {
+public abstract class IvySort<J, Z extends Sort> {
 
     @FunctionalInterface
     interface Constraint<Z extends Sort> extends Function<Expr<Z>, Expr<BoolSort>> {
@@ -26,22 +27,32 @@ public abstract class IvySort<J, Z extends Sort> implements Supplier<J> {
     /** The name of the sort from the extracted Ivy code. */
     protected final String name;
 
-    /** Produces a random value of type J that conforms to the sort's constraints. */
-    protected final Supplier<J> supplier;
+    protected final MelinaContext ctx;
 
-    public IvySort(String name, Supplier<J> f) {
+    public IvySort(String name, MelinaContext ctx) {
         this.name = name;
-        this.supplier = f;
+        this.ctx = ctx;
     }
 
-    /** Produce a random value of type J from the sort's supplier. */
-    public J get() {
-        return supplier.get();
-    }
+    /**
+     * Instantiates a nascent instance of this sort.
+     * @return
+     */
+    public abstract J make();
 
-    /** Transforms an instance of the given sort into its Z3 representation. */
+    /**
+     * Produces a supplier that generates a random instance of this sort.
+     * @return
+     */
+    public abstract Supplier<J> generator();
+
+    /**
+     * Transforms an instance of the given sort into its Z3 representation.
+     */
     public abstract Expr<Z> to_solver(J val);
 
-    /** Produces the underlying Z3 sort used by the solver. */
+    /**
+     * Produces the underlying Z3 sort used by the solver.
+     */
     public abstract Z getZ3Sort();
 }

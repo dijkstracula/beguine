@@ -1,6 +1,7 @@
 package net.dijkstracula.runtime.nway;
 
 import net.dijkstracula.melina.actions.Action0;
+import net.dijkstracula.melina.runtime.MelinaContext;
 import net.dijkstracula.melina.runtime.Protocol;
 import net.dijkstracula.melina.runtime.Tee;
 import org.junit.jupiter.api.Test;
@@ -10,8 +11,8 @@ import java.util.Random;
 public class FourBitCounter {
 
     public static class Spec extends Protocol {
-        public Spec() {
-            super(new Random(42));
+        public Spec(MelinaContext ctx) {
+            super(ctx);
         }
 
         class IvyObj_mutator {
@@ -74,8 +75,8 @@ public class FourBitCounter {
 
         private Counter state;
 
-        public CounterProxy() {
-            super(new Random(42));
+        public CounterProxy(MelinaContext ctx) {
+            super(ctx);
 
             state = new Counter();
 
@@ -94,7 +95,8 @@ public class FourBitCounter {
 
     @Test
     public void testCounter() {
-        Tee<Spec, CounterProxy> t = new Tee<>(new Random(42), new Spec(), new CounterProxy());
+        MelinaContext ctx = MelinaContext.fromSeed(42);
+        Tee<Spec, CounterProxy> t = new Tee<>(ctx, new Spec(ctx), new CounterProxy(ctx));
 
         // The behaviour of the two protocols under test should, of course, be
         // identical.

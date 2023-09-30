@@ -1,39 +1,51 @@
 package net.dijkstracula.irving.protocols;
 
-import com.microsoft.z3.Context;
 import io.vavr.Function2;
 import io.vavr.Function3;
-import net.dijkstracula.irving.sorts.Sorts;
+import net.dijkstracula.irving.sorts.Range;
 import net.dijkstracula.melina.actions.Action1;
 
+import net.dijkstracula.melina.actions.Action2;
+import net.dijkstracula.melina.exceptions.ConjectureFailureException;
+import net.dijkstracula.melina.runtime.MelinaContext;
 import net.dijkstracula.melina.runtime.Protocol;
 import net.dijkstracula.melina.runtime.Tee;
 import net.dijkstracula.melina.stdlib.collections.*;
 import net.dijkstracula.melina.stdlib.net.*;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class TrivialChainReplication {
 
     public class ChainRep extends Protocol {
-        private final Sorts sorts;
-        private final Sorts.Range pid;
-
         final ReliableNetwork<Long> net;
 
-        public ChainRep(Random r) {
-            super(r);
+        final Range pid;
 
-            sorts = new Sorts(new Context(), random);
-            pid = sorts.mkRange("pid", 0, 2);
-            net = new ReliableNetwork<>(r);
-            addAction("recvf", net.recvf, net::randomSockId);
+        public ChainRep(MelinaContext ctx) {
+            super(ctx);
 
-            host_instances = IntStream.range(0, 3).boxed().map(j -> new IvyObj_host(j.longValue())).collect(Collectors.toList());
+            // Instantiate types
+            pid = ctx.mkRange("pid", 0, 3);
+
+            // Instantiate modules
+            net = new ReliableNetwork<>(ctx);
+            addAction("recvf", net.recvf, ctx.randomSelect(net.sockets));
+
+            // Instantiate parameterized objects
+            host_instances = new ArrayList<>();
+            for (long i = pid.min; i < pid.max; i++){
+                host_instances.add(new IvyObj_host(i));
+            }
+            // Virtual actions for parameterized object
+            Action2<Long, Long, Void> append = new Action2<>();
+            append.on((self, val) -> {
+                return host_instances.get(self.intValue()).append.apply(val);
+            });
+            addAction("append", append, pid.generator(), ctx.randomSmallNat());
         }
 
         class IvyObj_host {
@@ -60,15 +72,15 @@ public class TrivialChainReplication {
             public IvyObj_host(Long self) {
                 this.self = self;
 
+                // After init
                 sock = net.dial.apply(self);
-
                 contents = Vector.empty();
+
                 append.on((Long val) -> {
                     System.out.println(String.format("[host %d] append %d", self, val));
                     sock.send.apply(host(0).sock.id, val);
                     return null;
                 });
-                addAction(String.format("append-from-%d", self), append, () -> random.nextLong() % 10); // XXX: generator for "small ints"
 
                 sock.recv.on((Function2<Long, Long, Void>) (src, msg) -> {
                     System.out.println(String.format("[Recv %d] got %d from %d", self, msg, src));
@@ -112,8 +124,8 @@ public class TrivialChainReplication {
 
     @Test
     public void LinearizableChainRepTest() {
-        Random r = new Random(42);
-        ChainRep p = new ChainRep(r);
+        MelinaContext ctx = MelinaContext.fromSeed(42);
+        ChainRep p = new ChainRep(ctx);
 
         for (int i = 0; i < 1000; i++) {
             p.run();
@@ -122,16 +134,32 @@ public class TrivialChainReplication {
 
     @Test
     public void LinearizableChainRepTee() {
+        MelinaContext ctx = MelinaContext.fromSeed(42);
         Tee<ChainRep, ChainRep> t = new Tee<>(
-                new Random(17),
-                new ChainRep(new Random(42)),
-                new ChainRep(new Random(42)));
+                MelinaContext.fromSeed(42),
+                new ChainRep(MelinaContext.fromSeed(42)),
+                new ChainRep(MelinaContext.fromSeed(42)));
 
-        // The behaviour of the two protocols under test should, of course, be
-        // identical.
+        // The behaviour of the two protocols under test should, of course, be identical.
         for (int i = 0; i < 1000; i++) {
             t.run();
         }
     }
 
+    @Test
+    public void DivergentLinearizableChainRepTee() {
+        MelinaContext ctx = MelinaContext.fromSeed(42);
+        Tee<ChainRep, ChainRep> t = new Tee<>(
+                ctx,
+                new ChainRep(ctx),
+                new ChainRep(ctx));
+
+        // If different internal random choices, we should expect that histories
+        // will not match.
+        Assertions.assertThrows(ConjectureFailureException.class, () -> {
+            for (int i = 0; i < 1000; i++) {
+                t.run();
+            }
+        });
+    }
 }

@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.function.Supplier;
 
 public abstract class Driveable<T> implements Runnable {
-    protected final Random random;
+    protected final MelinaContext ctx;
 
     /** What can be called from the environment */
     private final Map<String, Supplier<T>> actions;
@@ -16,8 +16,8 @@ public abstract class Driveable<T> implements Runnable {
 
     protected final List<Supplier<Boolean>> conjectures;
 
-    public Driveable(Random r) {
-        random = r;
+    public Driveable(MelinaContext c) {
+        ctx = c;
         actions = new HashMap<>();
         actionNames = new ArrayList<>();
         history = new ArrayList<>();
@@ -29,7 +29,7 @@ public abstract class Driveable<T> implements Runnable {
         assert(actionNames.size() > 0);
         assert(actions.size() == actionNames.size());
 
-        String aname = actionNames.get(random.nextInt(actionNames.size()));
+        String aname = ctx.randomSelect(actionNames).get();
         return actions.get(aname);
     }
 

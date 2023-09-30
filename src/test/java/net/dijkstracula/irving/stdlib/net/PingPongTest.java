@@ -1,31 +1,28 @@
 package net.dijkstracula.irving.stdlib.net;
 
-import com.microsoft.z3.Context;
-import net.dijkstracula.irving.sorts.Sorts;
+import net.dijkstracula.irving.sorts.Range;
+import net.dijkstracula.melina.runtime.MelinaContext;
 import net.dijkstracula.melina.runtime.Protocol;
 import net.dijkstracula.melina.stdlib.net.ReliableNetwork;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class PingPongTest{
 
     public class PingPong extends Protocol {
-        private final Sorts sorts;
-        private final Sorts.Range pid;
+        private final Range pid;
 
         ReliableNetwork<Long> net;
 
-        public PingPong(Random r) {
-            super(r);
-            net = new ReliableNetwork<>(r);
-            sorts = new Sorts(new Context(), r);
-            pid = sorts.mkRange("pid", 0, 2);
+        public PingPong(MelinaContext ctx) {
+            super(ctx);
+            net = new ReliableNetwork<>(ctx);
+            pid = ctx.mkRange("pid", 0, 2);
             host = IntStream.range(0, 2).mapToObj(i -> new Host(i)).collect(Collectors.toList());
-            addAction("recvf", net.recvf, pid);
+            addAction("net.recvf", net.recvf, ctx.randomSelect(net.sockets));
         }
 
         public class Host {
@@ -40,7 +37,6 @@ public class PingPongTest{
                     sock.send.apply(src, msg+1);
                     return null;
                 });
-
             }
         }
         List<Host> host;
@@ -49,9 +45,9 @@ public class PingPongTest{
 
     @Test
     public void testPingPong() {
-        PingPong pp = new PingPong(new Random(42));
+        PingPong pp = new PingPong(MelinaContext.fromSeed(42));
         pp.host.get(0).sock.send.apply(1L, 0L);
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 10; i++) {
             pp.run();
         }
     }

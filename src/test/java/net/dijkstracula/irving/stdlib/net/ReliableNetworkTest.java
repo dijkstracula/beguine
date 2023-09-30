@@ -1,23 +1,20 @@
 package net.dijkstracula.irving.stdlib.net;
 
-import com.microsoft.z3.Context;
-import net.dijkstracula.irving.sorts.Sorts;
+import net.dijkstracula.melina.runtime.MelinaContext;
 import net.dijkstracula.melina.stdlib.net.ReliableNetwork;
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.IntStream;
 
 public class ReliableNetworkTest {
-    private final Random r = new Random(42);
-    private final Sorts sorts = new Sorts(new Context(), r);
-
+    private final MelinaContext ctx = MelinaContext.fromSeed(42);
     @Test
     public void reliableNetworkTestTest() {
-        ReliableNetwork<Long> net = new ReliableNetwork<>(r);
+        ReliableNetwork<Long> net = new ReliableNetwork<>(ctx);
 
-        sorts.mkRange("pid", 0, 2).iterator().forEach(i -> {
-            ReliableNetwork<Long>.Socket s = net.dial.apply(i);
+        IntStream.range(0, 2).forEach(i -> {
+            ReliableNetwork<Long>.Socket s = net.dial.apply((long)i);
         });
 
         AtomicBoolean recvRan = new AtomicBoolean(false);

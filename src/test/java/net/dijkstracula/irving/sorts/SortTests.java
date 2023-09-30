@@ -1,33 +1,30 @@
 package net.dijkstracula.irving.sorts;
 
-import com.microsoft.z3.Context;
+import net.dijkstracula.melina.runtime.MelinaContext;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 
-import java.util.Random;
+import java.util.function.Supplier;
 
 public class SortTests {
 
-    Context ctx = new Context();
-    Random random = new Random(42);
-    Sorts manager = new Sorts(ctx, random);
+    MelinaContext ctx = MelinaContext.fromSeed(42);
 
     @Test
     public void testUnboundedSequence() {
-        Sorts.UnboundedSequence nat = manager.mkUnboundedSequnce();
-
+        Supplier<Long> seqProducer = ctx.randomSmallNat();
         for (int i = 0; i < 1000; i++) {
-            long l = nat.get();
+            long l = seqProducer.get();
             Assertions.assertTrue(l >= 0);
         }
     }
 
     @Test
     public void testRange() {
-        Sorts.Range pid = manager.mkRange("pid", 0, 3);
-
+        Range r = ctx.mkRange("pid", 0, 3);
+        Supplier<Long> rangeSupplier = ctx.randomRange(r);
         for (int i = 0; i < 1000; i++) {
-            long l = pid.get();
+            long l = rangeSupplier.get();
             Assertions.assertTrue(l >= 0 && l < 3);
         }
     }

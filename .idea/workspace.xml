@@ -5,11 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="356b47be-9cf5-4b46-b299-180ffd199158" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/irving/sorts/IvyClass.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/irving/sorts/Range.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/irving/sorts/UnboundedSequence.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/MelinaContext.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/sorts/ClassTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/actions/Action0.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/actions/Action0.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/irving/sorts/IvySort.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/irving/sorts/IvySort.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/irving/sorts/Sorts.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Driveable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Driveable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Protocol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Protocol.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Tee.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Tee.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/LinearizableChainReplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/TrivialChainReplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/stdlib/net/ReliableNetwork.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/stdlib/net/ReliableNetwork.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/TrivialChainReplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/TrivialChainReplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/sorts/SortTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/sorts/SortTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/stdlib/net/PingPongTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/stdlib/net/PingPongTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/stdlib/net/ReliableNetworkTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/stdlib/net/ReliableNetworkTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/nway/FourBitCounter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/nway/FourBitCounter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/nway/IdenticalProtocols.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/nway/IdenticalProtocols.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/protocols/NonNegativeCounter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/protocols/NonNegativeCounter.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,6 +58,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -80,31 +95,7 @@
       <recent name="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.TrivialChainReplication.LinearizableChainRepTee">
-    <configuration name="LinearizableChainReplication.LinearizableChainRepTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;net.dijkstracula.irving.protocols.LinearizableChainReplication.LinearizableChainRepTest&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <ForceTestExec>true</ForceTestExec>
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Gradle.TrivialChainReplication.DivergentLinearizableChainRepTee">
     <configuration name="PingPongTest.testPingPong" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -143,6 +134,30 @@
             <option value=":test" />
             <option value="--tests" />
             <option value="&quot;net.dijkstracula.irving.stdlib.net.ReliableNetworkTest.reliableNetworkTestTest&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <ForceTestExec>true</ForceTestExec>
+      <method v="2" />
+    </configuration>
+    <configuration name="TrivialChainReplication.DivergentLinearizableChainRepTee" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;net.dijkstracula.irving.protocols.TrivialChainReplication.DivergentLinearizableChainRepTee&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -203,9 +218,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.TrivialChainReplication.DivergentLinearizableChainRepTee" />
         <item itemvalue="Gradle.TrivialChainReplication.LinearizableChainRepTee" />
         <item itemvalue="Gradle.TrivialChainReplication.LinearizableChainRepTest" />
-        <item itemvalue="Gradle.LinearizableChainReplication.LinearizableChainRepTest" />
         <item itemvalue="Gradle.PingPongTest.testPingPong" />
         <item itemvalue="Gradle.ReliableNetworkTest.reliableNetworkTestTest" />
       </list>

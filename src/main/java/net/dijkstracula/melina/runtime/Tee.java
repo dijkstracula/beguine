@@ -14,8 +14,8 @@ public class Tee<Spec extends Protocol, Impl extends Protocol> extends Driveable
 
     private final Impl impl;
 
-    public Tee(Random r, Spec s, Impl i) {
-        super(r);
+    public Tee(MelinaContext ctx, Spec s, Impl i) {
+        super(ctx);
         spec = s;
         impl = i;
 

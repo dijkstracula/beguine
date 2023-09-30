@@ -1,6 +1,7 @@
 package net.dijkstracula.runtime.nway;
 
 import net.dijkstracula.melina.actions.Action0;
+import net.dijkstracula.melina.runtime.MelinaContext;
 import net.dijkstracula.melina.runtime.Protocol;
 import net.dijkstracula.melina.runtime.Tee;
 import org.junit.jupiter.api.Test;
@@ -11,8 +12,8 @@ public class IdenticalProtocols {
 
     public static class Isolate extends Protocol {
 
-        public Isolate(Random r) {
-            super(r);
+        public Isolate(MelinaContext ctx) {
+            super(ctx);
         }
 
         class IvyObj_mutator {
@@ -44,11 +45,11 @@ public class IdenticalProtocols {
 
     @Test
     public void testCounter() {
-        Random r = new Random(42);
-        Tee t = new Tee(r, new Isolate(r), new Isolate(r));
+        MelinaContext ctx = MelinaContext.fromSeed(42);
+        Tee t = new Tee(ctx, new Isolate(ctx), new Isolate(ctx));
 
         // The behaviour of the two protocols under test should, of course, be
-        // identical.
+        // identical; Tee has a conjecture that will insist that this is true.
         for (int i = 0; i < 1000; i++) {
             t.run();
         }
