@@ -77,12 +77,16 @@ public abstract class Driveable<T> implements Runnable {
     @Override
     public void run() {
         T t;
+        int reattempts = 0;
         while (true) {
             try {
                 Supplier<T> action = randomAction();
                 t = action.get();
             } catch (ActionArgGenRetryException e) {
-                System.out.println("[Driveable] Retrying action gen");
+                if (reattempts++ == 20) {
+                    throw new RuntimeException("Too many retries!");
+                }
+                System.out.println(String.format("[Driveable] Retrying (reattempt %d)...", reattempts));
                 continue;
             }
             addHistory(t);

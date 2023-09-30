@@ -68,24 +68,33 @@ public class Action0<U> implements Function0<U> {
         return () -> {
             U su;
             U iu;
+            int reattempts;
 
             System.out.println("[Tee] Executing spec");
+            reattempts = 0;
             while (true) {
                 try {
                     su = spec.get();
                 } catch (ActionArgGenRetryException e) {
-                    System.out.println("[Driveable] Retrying action gen");
+                    if (reattempts++ == 20) {
+                        throw new RuntimeException("Too many retries!");
+                    }
+                    System.out.println(String.format("[Driveable] Retrying impl (reattempt %d)...", reattempts));
                     continue;
                 }
                 break;
             }
 
             System.out.println("[Tee] Executing impl");
+            reattempts = 0;
             while (true) {
                 try {
                     iu = impl.get();
                 } catch (ActionArgGenRetryException e) {
-                    System.out.println("[Driveable] Retrying action gen");
+                    if (reattempts++ == 20) {
+                        throw new RuntimeException("Too many retries!");
+                    }
+                    System.out.println(String.format("[Driveable] Retrying impl (reattempt %d)...", reattempts));
                     continue;
                 }
                 break;

@@ -2,12 +2,11 @@ package net.dijkstracula.melina.runtime;
 
 import com.microsoft.z3.Context;
 import net.dijkstracula.irving.sorts.Range;
+import net.dijkstracula.melina.utils.Random;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
  * Top-level state needed to drive protocols.
@@ -21,7 +20,7 @@ public class MelinaContext {
         this.random = r;
     }
 
-    public static MelinaContext fromSeed(int seed) {
+    public static MelinaContext fromSeed(long seed) {
         return new MelinaContext(new Random(seed));
     }
 
@@ -38,21 +37,18 @@ public class MelinaContext {
     }
 
     public Supplier<Long> randomRange(Range r) {
-        return () -> random.nextLong(r.min, r.max);
+        return () -> random.nextBounded(r.min, r.max);
     }
 
     public Supplier<Long> randomSmallNat() {
-        return () -> random.nextLong(10);
+        return () -> random.nextBounded(0, 10);
     }
 
     public <T> Supplier<T> randomSelect(List<T> seq) {
-        return () -> seq.get(random.nextInt(0, seq.size()));
+        return () -> random.nextElm(seq);
     }
 
     public <K, V> Supplier<V> randomSelect(Map<K, V> map) {
-        return () -> {
-            List<V> values = map.values().stream().collect(Collectors.toList());
-            return values.get(random.nextInt(0, values.size()));
-        };
+        return () -> random.nextElm(map).getValue();
     }
 }

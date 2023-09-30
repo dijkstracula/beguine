@@ -19,10 +19,12 @@ public class PingPongTest{
 
         public PingPong(MelinaContext ctx) {
             super(ctx);
-            net = new ReliableNetwork<>(ctx);
             pid = ctx.mkRange("pid", 0, 2);
-            host = IntStream.range(0, 2).mapToObj(i -> new Host(i)).collect(Collectors.toList());
+
+            net = new ReliableNetwork<>(ctx);
             addAction("net.recvf", net.recvf, ctx.randomSelect(net.sockets));
+
+            host = IntStream.range(0, 2).mapToObj(i -> new Host(i)).collect(Collectors.toList());
         }
 
         public class Host {

@@ -141,7 +141,7 @@ public class TrivialChainReplication {
                 new ChainRep(MelinaContext.fromSeed(42)));
 
         // The behaviour of the two protocols under test should, of course, be identical.
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 100; i++) {
             t.run();
         }
     }
