@@ -6,7 +6,7 @@ import net.dijkstracula.irving.sorts.Range;
 import net.dijkstracula.melina.actions.Action1;
 
 import net.dijkstracula.melina.actions.Action2;
-import net.dijkstracula.melina.exceptions.ConjectureFailureException;
+import net.dijkstracula.melina.exceptions.ConjectureFailure;
 import net.dijkstracula.melina.runtime.MelinaContext;
 import net.dijkstracula.melina.runtime.Protocol;
 import net.dijkstracula.melina.runtime.Tee;
@@ -22,8 +22,11 @@ public class TrivialChainReplication {
 
     public class ChainRep extends Protocol {
         final ReliableNetwork<Long> net;
-
         final Range pid;
+
+        // Exported actions
+        final Action1<ReliableNetwork<Long>.Socket, Void> recvf;
+        Action2<Long, Long, Void> append;
 
         public ChainRep(MelinaContext ctx) {
             super(ctx);
@@ -34,6 +37,7 @@ public class TrivialChainReplication {
             // Instantiate modules
             net = new ReliableNetwork<>(ctx);
             addAction("recvf", net.recvf, ctx.randomSelect(net.sockets));
+            recvf = net.recvf;
 
             // Instantiate parameterized objects
             host_instances = new ArrayList<>();
@@ -41,7 +45,7 @@ public class TrivialChainReplication {
                 host_instances.add(new IvyObj_host(i));
             }
             // Virtual actions for parameterized object
-            Action2<Long, Long, Void> append = new Action2<>();
+            append = new Action2<>();
             append.on((self, val) -> {
                 return host_instances.get(self.intValue()).append.apply(val);
             });
@@ -49,18 +53,10 @@ public class TrivialChainReplication {
         }
 
         class IvyObj_host {
-            protected Action1<Long, Void> append = new Action1<>();
+            public Action1<Long, Void> append = new Action1<>();
 
             private void show(Vector content) {
-                System.out.print(String.format("show %d: [", self));
-
-                for (int i = 0; i < content.end(); i++) {
-                    if (i > 0) {
-                        System.out.print(",");
-                    }
-                    System.out.print(content.get(i));
-                }
-                System.out.println("]");
+                System.out.println(String.format("show %d: %s", self, content));
             }
 
             private Long self;
@@ -135,10 +131,10 @@ public class TrivialChainReplication {
     @Test
     public void LinearizableChainRepTee() {
         MelinaContext ctx = MelinaContext.fromSeed(42);
-        Tee<ChainRep, ChainRep> t = new Tee<>(
-                MelinaContext.fromSeed(42),
-                new ChainRep(MelinaContext.fromSeed(42)),
-                new ChainRep(MelinaContext.fromSeed(42)));
+        ChainRep spec = new ChainRep(ctx);
+        ChainRep impl = new ChainRep(ctx);
+
+        Tee<ChainRep, ChainRep> t = new Tee<>(ctx, spec, impl);
 
         // The behaviour of the two protocols under test should, of course, be identical.
         for (int i = 0; i < 100; i++) {
@@ -156,7 +152,7 @@ public class TrivialChainReplication {
 
         // If different internal random choices, we should expect that histories
         // will not match.
-        Assertions.assertThrows(ConjectureFailureException.class, () -> {
+        Assertions.assertThrows(ConjectureFailure.class, () -> {
             for (int i = 0; i < 1000; i++) {
                 t.run();
             }

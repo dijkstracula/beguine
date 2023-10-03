@@ -1,13 +1,11 @@
 package net.dijkstracula.runtime.protocols;
 
 import net.dijkstracula.melina.actions.Action0;
-import net.dijkstracula.melina.exceptions.ConjectureFailureException;
+import net.dijkstracula.melina.exceptions.ConjectureFailure;
 import net.dijkstracula.melina.runtime.MelinaContext;
 import net.dijkstracula.melina.runtime.Protocol;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.Random;
 
 public class NonNegativeCounter {
     public static class Isolate extends Protocol {
@@ -51,7 +49,7 @@ public class NonNegativeCounter {
         Isolate iso = new Isolate(MelinaContext.fromSeed(42));
 
         // Eventually the counter will increase to the point where the conjecture fails.
-        Assertions.assertThrows(ConjectureFailureException.class, () -> {
+        Assertions.assertThrows(ConjectureFailure.class, () -> {
             for (int i = 0; i < 1000; i++) {
                 iso.run();
             }

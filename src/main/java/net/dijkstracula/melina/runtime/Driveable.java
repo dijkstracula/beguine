@@ -1,7 +1,8 @@
 package net.dijkstracula.melina.runtime;
 
 import net.dijkstracula.melina.exceptions.ActionArgGenRetryException;
-import net.dijkstracula.melina.exceptions.ConjectureFailureException;
+import net.dijkstracula.melina.exceptions.ConjectureFailure;
+import net.dijkstracula.melina.exceptions.GeneratorLivelock;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -79,12 +80,13 @@ public abstract class Driveable<T> implements Runnable {
         T t;
         int reattempts = 0;
         while (true) {
+            // XXX pull this into a Generator<T>.
             try {
                 Supplier<T> action = randomAction();
                 t = action.get();
             } catch (ActionArgGenRetryException e) {
                 if (reattempts++ == 20) {
-                    throw new RuntimeException("Too many retries!");
+                    throw new GeneratorLivelock();
                 }
                 System.out.println(String.format("[Driveable] Retrying (reattempt %d)...", reattempts));
                 continue;
@@ -95,7 +97,7 @@ public abstract class Driveable<T> implements Runnable {
 
         for (Supplier<Boolean> conj : conjectures) {
             if (!conj.get()) {
-                throw new ConjectureFailureException();
+                throw new ConjectureFailure();
             }
         }
     }

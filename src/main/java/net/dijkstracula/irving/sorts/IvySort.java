@@ -2,11 +2,9 @@ package net.dijkstracula.irving.sorts;
 
 import com.microsoft.z3.BoolSort;
 import com.microsoft.z3.Expr;
-import com.microsoft.z3.Model;
 import com.microsoft.z3.Sort;
 import net.dijkstracula.melina.runtime.MelinaContext;
 
-import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 

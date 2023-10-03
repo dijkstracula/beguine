@@ -1,10 +1,13 @@
 package net.dijkstracula.melina.actions;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import io.vavr.Function1;
 import io.vavr.Function2;
 import io.vavr.Tuple2;
+import net.dijkstracula.melina.exceptions.ActionArgGenRetryException;
+import net.dijkstracula.melina.exceptions.GeneratorLivelock;
 import net.dijkstracula.melina.exceptions.IrvingCodegenException;
 
 /**
@@ -39,6 +42,22 @@ public class Action1<T, U> implements Function1<T, U> {
         U u = action.apply(t);
         post.ifPresent(post-> post.apply(t, u));
         return u;
+    }
+
+    public Tuple2<T, U> genAndApply(Supplier<T> gen_t) throws GeneratorLivelock {
+        int reattempts = 0;
+        while (true) {
+            // XXX pull this into a Generator<T>.
+            try {
+                T t = gen_t.get();
+                return new Tuple2<>(t, apply(t));
+            } catch (ActionArgGenRetryException e) {
+                if (reattempts++ == 5) {
+                    throw e;
+                }
+                System.out.println(String.format("[Action1] Retrying (reattempt %d)...", reattempts));
+            }
+        }
     }
 
     public void on(Function1<T, U> f) {

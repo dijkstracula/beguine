@@ -56,7 +56,8 @@ public class Random implements Cloneable {
     }
     public long nextBounded(long min, long max) {
         assert(min < max);
-        return nextBounded(max - min) + min;
+        long ret = nextBounded(max - min) + min;
+        return ret;
     }
 
     public <T> T nextElm(List<T> v) {

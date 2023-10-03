@@ -58,4 +58,19 @@ public class Vector<T> implements Cloneable {
         ret.backing = new ArrayList<>(backing);
         return ret;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder ret = new StringBuilder();
+        ret.append("[");
+        for (int i = 0; i < end(); i++) {
+            if (i > 0) {
+                ret.append(",");
+            }
+            ret.append(get(i));
+        }
+        ret.append("]");
+
+        return ret.toString();
+    }
 }

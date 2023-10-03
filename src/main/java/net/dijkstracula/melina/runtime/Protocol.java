@@ -1,5 +1,6 @@
 package net.dijkstracula.melina.runtime;
 
+import io.vavr.Tuple2;
 import net.dijkstracula.melina.actions.Action0;
 import net.dijkstracula.melina.actions.Action1;
 import net.dijkstracula.melina.actions.Action2;
@@ -24,9 +25,8 @@ public class Protocol extends Driveable<String> {
 
     protected <T, U> void addAction(String ident, Action1<T, U> c, Supplier<T> s) {
         addAction(ident, () -> {
-            T t = s.get();
-            U u = c.apply(t);
-            return String.format("%s(%s, %s)", ident, t, u);
+            Tuple2<T, U> res = c.genAndApply(s);
+            return String.format("%s(%s, %s)", ident, res._1, res._2);
         });
     }
 
