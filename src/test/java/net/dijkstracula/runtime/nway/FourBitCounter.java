@@ -97,6 +97,8 @@ public class FourBitCounter {
     public void testCounter() {
         MelinaContext ctx = MelinaContext.fromSeed(42);
         Tee<Spec, CounterProxy> t = new Tee<>(ctx, new Spec(ctx), new CounterProxy(ctx));
+        t.tee0("inc", t.spec.mutator.inc, t.impl.inc);
+        t.tee0("dec", t.spec.mutator.dec, t.impl.dec);
 
         // The behaviour of the two protocols under test should, of course, be
         // identical.

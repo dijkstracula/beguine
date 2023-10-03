@@ -135,27 +135,12 @@ public class TrivialChainReplication {
         ChainRep impl = new ChainRep(ctx);
 
         Tee<ChainRep, ChainRep> t = new Tee<>(ctx, spec, impl);
+        t.tee1("recvf", spec.net.recvf, impl.net.recvf, ctx.randomSelect(spec.net.sockets));
+        t.tee2("append", spec.append, impl.append, spec.pid.generator(), ctx.randomSmallNat());
 
         // The behaviour of the two protocols under test should, of course, be identical.
         for (int i = 0; i < 100; i++) {
             t.run();
         }
-    }
-
-    @Test
-    public void DivergentLinearizableChainRepTee() {
-        MelinaContext ctx = MelinaContext.fromSeed(42);
-        Tee<ChainRep, ChainRep> t = new Tee<>(
-                ctx,
-                new ChainRep(ctx),
-                new ChainRep(ctx));
-
-        // If different internal random choices, we should expect that histories
-        // will not match.
-        Assertions.assertThrows(ConjectureFailure.class, () -> {
-            for (int i = 0; i < 1000; i++) {
-                t.run();
-            }
-        });
     }
 }

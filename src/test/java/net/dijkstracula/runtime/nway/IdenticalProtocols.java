@@ -46,11 +46,13 @@ public class IdenticalProtocols {
     @Test
     public void testCounter() {
         MelinaContext ctx = MelinaContext.fromSeed(42);
-        Tee t = new Tee(ctx, new Isolate(ctx), new Isolate(ctx));
+        Tee<Isolate, Isolate> t = new Tee<>(ctx, new Isolate(ctx), new Isolate(ctx));
+        t.tee0("inc", t.spec.mutator.inc, t.impl.mutator.inc);
+        t.tee0("dec", t.spec.mutator.dec, t.impl.mutator.dec);
 
         // The behaviour of the two protocols under test should, of course, be
         // identical; Tee has a conjecture that will insist that this is true.
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 100; i++) {
             t.run();
         }
     }

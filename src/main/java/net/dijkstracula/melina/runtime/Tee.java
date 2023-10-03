@@ -11,9 +11,9 @@ import java.util.function.Supplier;
 // A driver that pipes actions to two protocols rather than just one.
 public class Tee<Spec extends Protocol, Impl extends Protocol> extends Driveable<Tuple2<String, String>> {
 
-    private final Spec spec;
+    public final Spec spec;
 
-    private final Impl impl;
+    public final Impl impl;
 
     public Tee(MelinaContext ctx, Spec s, Impl i) {
         super(ctx);
@@ -24,9 +24,6 @@ public class Tee<Spec extends Protocol, Impl extends Protocol> extends Driveable
         Set<String> impl_actions = impl.getActions().keySet();
         if (!spec_actions.equals(impl_actions)) {
             throw new RuntimeException("Mismatch between spec and impl's action sets");
-        }
-        for (String aname : spec_actions) {
-            addAction(aname, s.getActions().get(aname), i.getActions().get(aname));
         }
         for (Supplier<Boolean> conj : s.getConjectures()) {
             addConjecture("todo", conj);
@@ -46,7 +43,18 @@ public class Tee<Spec extends Protocol, Impl extends Protocol> extends Driveable
         });
     }
 
-    protected <T, U> void tee1(String ident, Action1<T, U> spec, Function1<T, U> impl, Supplier<T> gen) {
+    public <U> void tee0(String ident, Action0<U> spec, Function0<U> impl) {
+        addAction(ident, () -> {
+            U spec_u = spec.apply();
+            U impl_u = impl.apply();
+
+            return new Tuple2<>(
+                    String.format("%s(%s)", ident, spec_u),
+                    String.format("%s(%s)", ident, impl_u));
+        });
+    }
+
+    public <T, U> void tee1(String ident, Action1<T, U> spec, Function1<T, U> impl, Supplier<T> gen) {
         addAction(ident, () -> {
             Tuple2<T, U> res = spec.genAndApply(gen);
             T t = res._1;
@@ -60,7 +68,7 @@ public class Tee<Spec extends Protocol, Impl extends Protocol> extends Driveable
         });
     }
 
-    protected <T1, T2, U> void tee2(String ident, Action2<T1, T2, U> spec, Function2<T1, T2, U> impl, Supplier<T1> gen_t1, Supplier<T2> gen_t2) {
+    public <T1, T2, U> void tee2(String ident, Action2<T1, T2, U> spec, Function2<T1, T2, U> impl, Supplier<T1> gen_t1, Supplier<T2> gen_t2) {
         addAction(ident, () -> {
             Tuple3<T1, T2, U> res = spec.genAndApply(gen_t1, gen_t2);
             T1 t1 = res._1;
