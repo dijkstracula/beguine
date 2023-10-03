@@ -5,11 +5,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="356b47be-9cf5-4b46-b299-180ffd199158" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Tee.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Tee.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/TrivialChainReplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/TrivialChainReplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/nway/FourBitCounter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/nway/FourBitCounter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/nway/IdenticalProtocols.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/nway/IdenticalProtocols.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/Conjecture.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/Generator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/Protocol.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/decls/Decls.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/exceptions/IvyExceptions.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/functions/Actions/Action0.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/functions/Actions/Action1.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/functions/Actions/Action2.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/functions/Actions/Action3.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/sorts/IvySort.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/sorts/Sorts.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/stdlib/collections/Vector.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/stdlib/net/Network.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/stdlib/net/ReliableNetwork.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/NonnegativeCounterTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/TrivialFailureDetectorTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/irving/CounterTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/multicounter/MultiCounterProto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/multicounter/MultiCounterTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/net/ChainRep.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,6 +69,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
@@ -103,7 +124,7 @@
       <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
-      <ForceTestExec>true</ForceTestExec>
+      <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
     <configuration name="IdenticalProtocols.testCounter" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
@@ -127,7 +148,7 @@
       <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
-      <ForceTestExec>true</ForceTestExec>
+      <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
     <configuration name="TrivialChainReplication.DivergentLinearizableChainRepTee" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
@@ -151,7 +172,7 @@
       <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
-      <ForceTestExec>true</ForceTestExec>
+      <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
     <configuration name="TrivialChainReplication.LinearizableChainRepTee" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
@@ -175,7 +196,7 @@
       <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
-      <ForceTestExec>true</ForceTestExec>
+      <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
     <configuration name="TrivialChainReplication.LinearizableChainRepTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
@@ -199,7 +220,7 @@
       <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
-      <ForceTestExec>true</ForceTestExec>
+      <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
     <recent_temporary>
