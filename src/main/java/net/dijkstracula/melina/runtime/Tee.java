@@ -4,12 +4,13 @@ import io.vavr.*;
 import net.dijkstracula.melina.actions.Action0;
 import net.dijkstracula.melina.actions.Action1;
 import net.dijkstracula.melina.actions.Action2;
+import net.dijkstracula.melina.history.ActionCall;
 
 import java.util.*;
 import java.util.function.Supplier;
 
 // A driver that pipes actions to two protocols rather than just one.
-public class Tee<Spec extends Protocol, Impl extends Protocol> extends Driveable<Tuple2<String, String>> {
+public class Tee<Spec extends Protocol, Impl extends Protocol> extends Driveable<Tuple2<ActionCall, ActionCall>> {
 
     public final Spec spec;
 
@@ -30,14 +31,14 @@ public class Tee<Spec extends Protocol, Impl extends Protocol> extends Driveable
         }
 
         addConjecture("final-histories-match", () -> {
-            Tuple2<String, String> lastAction = getHistory().get(getHistory().size() - 1);
+            Tuple2<ActionCall, ActionCall> lastAction = getHistory().get(getHistory().size() - 1);
             System.out.println("final-histories-match: " + lastAction);
             return lastAction._1.equals(lastAction._2);
         });
     }
 
-    protected void addAction(String ident, Supplier<String> a1, Supplier<String> a2) {
-        Function0<Tuple2<String, String>> joined = Action0.join(a1, a2);
+    protected void addAction(String ident, Supplier<ActionCall> a1, Supplier<ActionCall> a2) {
+        Function0<Tuple2<ActionCall, ActionCall>> joined = Action0.join(a1, a2);
         addAction(ident, () -> {
             return joined.apply();
         });
@@ -49,8 +50,8 @@ public class Tee<Spec extends Protocol, Impl extends Protocol> extends Driveable
             U impl_u = impl.apply();
 
             return new Tuple2<>(
-                    String.format("%s(%s)", ident, spec_u),
-                    String.format("%s(%s)", ident, impl_u));
+                    ActionCall.fromAction0(ident, spec_u),
+                    ActionCall.fromAction0(ident, impl_u));
         });
     }
 
@@ -63,8 +64,8 @@ public class Tee<Spec extends Protocol, Impl extends Protocol> extends Driveable
             U impl_u = impl.apply(t);
 
             return new Tuple2<>(
-                    String.format("%s(%s, %s)", ident, t, spec_u),
-                    String.format("%s(%s, %s)", ident, t, impl_u));
+                    ActionCall.fromAction1(ident, t, spec_u),
+                    ActionCall.fromAction1(ident, t, impl_u));
         });
     }
 
@@ -78,8 +79,8 @@ public class Tee<Spec extends Protocol, Impl extends Protocol> extends Driveable
             U impl_u = impl.apply(t1, t2);
 
             return new Tuple2<>(
-                    String.format("%s(%s, %s, %s)", ident, t1, t2, spec_u),
-                    String.format("%s(%s, %s, %s)", ident, t1, t2, impl_u));
+                    ActionCall.fromAction2(ident, t1, t2, spec_u),
+                    ActionCall.fromAction2(ident, t1, t2, impl_u));
         });
     }
 }

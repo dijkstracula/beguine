@@ -34,7 +34,7 @@ public class TrivialChainReplication {
 
             // Instantiate modules
             net = new ReliableNetwork<>(ctx);
-            exportAction("recvf", net.recvf, ctx.randomSelect(net.sockets));
+            exportAction("net.recvf", net.recvf, ctx.randomSelect(net.sockets));
             recvf = net.recvf;
 
             // Instantiate parameterized objects

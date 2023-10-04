@@ -19,7 +19,7 @@ public class Random implements Cloneable {
 
     private long next() {
         long ret = state;
-        System.out.println(String.format("[Random] %x", ret));
+        //System.out.println(String.format("[Random] %x", ret));
         // c/o Functional Programming in Scala, Second Edition
         state = (state * 0x5DEECE66DL + 0xBL) & ((1L << 48) - 1);
         return ret;
