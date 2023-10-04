@@ -6,8 +6,6 @@ import net.dijkstracula.melina.runtime.Protocol;
 import net.dijkstracula.melina.runtime.Tee;
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
-
 public class IdenticalProtocols {
 
     public static class Isolate extends Protocol {
@@ -30,13 +28,13 @@ public class IdenticalProtocols {
                     count = (count + 1) < 0 ? 0 : (count + 1);
                     return null;
                 });
-                addAction("mutator.inc", inc);
+                exportAction("mutator.inc", inc);
                 dec.on(() -> {
                     System.out.println("dec: " + count);
                     count = (count - 1) < 0 ? 0 : (count - 1);
                     return null;
                 });
-                addAction("mutator.dec", dec);
+                exportAction("mutator.dec", dec);
 
             } //cstr
         }

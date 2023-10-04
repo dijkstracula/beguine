@@ -28,13 +28,13 @@ public class NonNegativeCounter {
                     count = (count + 1) < 0 ? 0 : (count + 1);
                     return null;
                 });
-                addAction("mutator.inc", inc);
+                exportAction("mutator.inc", inc);
                 dec.on(() -> {
                     System.out.println("dec: " + count);
                     count = (count - 1) < 0 ? 0 : (count - 1);
                     return null;
                 });
-                addAction("mutator.dec", dec);
+                exportAction("mutator.dec", dec);
                 addConjecture("count-is-single-digit", () -> {
                     return count < 10;
                 });

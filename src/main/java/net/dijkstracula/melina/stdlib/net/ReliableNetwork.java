@@ -8,7 +8,6 @@ import net.dijkstracula.melina.runtime.MelinaContext;
 import net.dijkstracula.melina.runtime.Protocol;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 // An implementation of ivy's net.tcp_test.
 public class ReliableNetwork<Msg> extends Protocol {
@@ -64,7 +63,7 @@ public class ReliableNetwork<Msg> extends Protocol {
 
         sockets = new HashMap<>();
 
-        addAction("recvf", recvf, ctx.randomSelect(sockets));
+        exportAction("recvf", recvf, ctx.randomSelect(sockets));
     }
     public HashMap<Long, Socket> sockets;
 

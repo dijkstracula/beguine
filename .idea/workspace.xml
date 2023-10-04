@@ -5,29 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="356b47be-9cf5-4b46-b299-180ffd199158" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/history/ActionCall.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/Conjecture.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/Generator.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/Protocol.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/decls/Decls.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/exceptions/IvyExceptions.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/functions/Actions/Action0.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/functions/Actions/Action1.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/functions/Actions/Action2.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/functions/Actions/Action3.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/sorts/IvySort.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/sorts/Sorts.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/stdlib/collections/Vector.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/stdlib/net/Network.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ivy/stdlib/net/ReliableNetwork.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/NonnegativeCounterTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/TrivialFailureDetectorTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/irving/CounterTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/multicounter/MultiCounterProto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/multicounter/MultiCounterTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/net/ChainRep.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Protocol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Protocol.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/stdlib/net/ReliableNetwork.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/stdlib/net/ReliableNetwork.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/TrivialChainReplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/TrivialChainReplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/stdlib/net/PingPongTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/stdlib/net/PingPongTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/nway/FourBitCounter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/nway/FourBitCounter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/nway/IdenticalProtocols.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/nway/IdenticalProtocols.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/protocols/NonNegativeCounter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/protocols/NonNegativeCounter.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -249,7 +235,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/stdlib/net/ReliableNetwork.java</url>
-          <line>28</line>
+          <line>27</line>
           <option name="timeStamp" value="19" />
         </line-breakpoint>
       </breakpoints>

@@ -6,8 +6,6 @@ import net.dijkstracula.melina.runtime.Protocol;
 import net.dijkstracula.melina.runtime.Tee;
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
-
 public class FourBitCounter {
 
     public static class Spec extends Protocol {
@@ -30,7 +28,7 @@ public class FourBitCounter {
                     count = count % 16;
                     return count;
                 });
-                addAction("inc", inc);
+                exportAction("inc", inc);
                 dec.on(() -> {
                     System.out.println("[SPEC] dec: " + count);
                     if (count == 0) {
@@ -40,7 +38,7 @@ public class FourBitCounter {
                     }
                     return count;
                 });
-                addAction("dec", dec);
+                exportAction("dec", dec);
 
                 addConjecture("valid-four-byte-value", () -> count >= 0 && count < 16);
             } //cstr
@@ -84,12 +82,12 @@ public class FourBitCounter {
                 state.increment();
                 return state.getState();
             });
-            addAction("inc", inc);
+            exportAction("inc", inc);
             dec.on(() -> {
                 state.decrement();
                 return state.getState();
             });
-            addAction("dec", dec);
+            exportAction("dec", dec);
         }
     }
 

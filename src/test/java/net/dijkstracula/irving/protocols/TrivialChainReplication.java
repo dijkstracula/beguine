@@ -6,13 +6,11 @@ import net.dijkstracula.irving.sorts.Range;
 import net.dijkstracula.melina.actions.Action1;
 
 import net.dijkstracula.melina.actions.Action2;
-import net.dijkstracula.melina.exceptions.ConjectureFailure;
 import net.dijkstracula.melina.runtime.MelinaContext;
 import net.dijkstracula.melina.runtime.Protocol;
 import net.dijkstracula.melina.runtime.Tee;
 import net.dijkstracula.melina.stdlib.collections.*;
 import net.dijkstracula.melina.stdlib.net.*;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -36,7 +34,7 @@ public class TrivialChainReplication {
 
             // Instantiate modules
             net = new ReliableNetwork<>(ctx);
-            addAction("recvf", net.recvf, ctx.randomSelect(net.sockets));
+            exportAction("recvf", net.recvf, ctx.randomSelect(net.sockets));
             recvf = net.recvf;
 
             // Instantiate parameterized objects
@@ -49,7 +47,7 @@ public class TrivialChainReplication {
             append.on((self, val) -> {
                 return host_instances.get(self.intValue()).append.apply(val);
             });
-            addAction("append", append, pid.generator(), ctx.randomSmallNat());
+            exportAction("append", append, pid.generator(), ctx.randomSmallNat());
         }
 
         class IvyObj_host {

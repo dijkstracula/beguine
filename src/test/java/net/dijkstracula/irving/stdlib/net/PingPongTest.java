@@ -22,7 +22,7 @@ public class PingPongTest{
             pid = ctx.mkRange("pid", 0, 2);
 
             net = new ReliableNetwork<>(ctx);
-            addAction("net.recvf", net.recvf, ctx.randomSelect(net.sockets));
+            exportAction("net.recvf", net.recvf, ctx.randomSelect(net.sockets));
 
             host = IntStream.range(0, 2).mapToObj(i -> new Host(i)).collect(Collectors.toList());
         }
