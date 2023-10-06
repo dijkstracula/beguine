@@ -5,10 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="356b47be-9cf5-4b46-b299-180ffd199158" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/PingPong.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Tee.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Tee.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/utils/Random.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/utils/Random.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/TrivialChainReplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/TrivialChainReplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/irving/sorts/IvyClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/irving/sorts/IvyClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/MelinaContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/MelinaContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/sorts/ClassTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/sorts/ClassTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -224,17 +225,6 @@
       <updated>1693867138934</updated>
     </task>
     <servers />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/stdlib/net/ReliableNetwork.java</url>
-          <line>27</line>
-          <option name="timeStamp" value="19" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

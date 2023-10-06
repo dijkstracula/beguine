@@ -36,6 +36,10 @@ public class MelinaContext {
         return z3Ctx;
     }
 
+    public Supplier<Long> randomBounded(long min, long max) {
+        return () -> random.nextBounded(min, max);
+    }
+
     public Supplier<Long> randomRange(Range r) {
         return () -> random.nextBounded(r.min, r.max);
     }

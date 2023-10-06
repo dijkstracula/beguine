@@ -26,8 +26,8 @@ public class ClassTest {
         static Action1<Point, Long> norm = new Action1<>();
 
         // Fields
-        static UnboundedSequence x;
-        static UnboundedSequence y;
+        static IvySort<Long, ?> x;
+        static IvySort<Long, ?> y;
 
         public PointFactory(MelinaContext ctx) {
             super("point", ctx);
