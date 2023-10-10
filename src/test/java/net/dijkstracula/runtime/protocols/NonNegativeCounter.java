@@ -14,6 +14,7 @@ public class NonNegativeCounter {
             super(ctx);
         }
 
+
         class IvyObj_mutator {
             private final Action0<Void> inc = new Action0<>();
             private final Action0<Void> dec = new Action0<>();
