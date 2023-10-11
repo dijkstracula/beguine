@@ -40,10 +40,10 @@ public class LocalNetworkReadChainRep {
             super(ctx);
             net = new ReliableNetwork<>(ctx);
             pid = ctx.mkRange("pid", 0, 3);
-            exportAction("net.recvf_1", net.recvf, ctx.randomSelect(net.sockets));
-            exportAction("net.recvf_2", net.recvf, ctx.randomSelect(net.sockets));
-            exportAction("net.recvf_3", net.recvf, ctx.randomSelect(net.sockets));
-            exportAction("net.recvf_4", net.recvf, ctx.randomSelect(net.sockets));
+            exportAction("net.recvf_1", net.recvf, ctx.randomSelect(net.sockets.keySet().stream().toList()));
+            exportAction("net.recvf_2", net.recvf, ctx.randomSelect(net.sockets.keySet().stream().toList()));
+            exportAction("net.recvf_3", net.recvf, ctx.randomSelect(net.sockets.keySet().stream().toList()));
+            exportAction("net.recvf_4", net.recvf, ctx.randomSelect(net.sockets.keySet().stream().toList()));
 
 
             List<ChainRep.IvyObj_host> host_instances = LongStream.range(0, 3).mapToObj(i -> new ChainRep.IvyObj_host(i)).collect(Collectors.toList());
@@ -110,6 +110,7 @@ public class LocalNetworkReadChainRep {
             protected Action1<Long, Void> append = new Action1<>();
 
             private void show(Vector<Long> content) {
+                addHistory(ActionCall.fromAction1("show", content));
                 System.out.println("[host %d]: show: " + self + content);
             }
 

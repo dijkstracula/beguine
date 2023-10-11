@@ -1,6 +1,7 @@
 package net.dijkstracula.melina.history;
 
 import java.util.List;
+import java.util.Objects;
 
 // Down the road this should look a lot like a z3.FuncDecl.
 // TODO: Ivy doesn't log return values from actions.  Should we?
@@ -35,5 +36,18 @@ public record ActionCall(String funcName, List<Object> args) {
         s.append(")");
 
         return s.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ActionCall that = (ActionCall) o;
+        return Objects.equals(funcName, that.funcName) && Objects.equals(args, that.args);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(funcName, args);
     }
 }

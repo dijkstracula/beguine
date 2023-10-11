@@ -14,7 +14,8 @@ import java.util.*;
 public class ReliableNetwork<Msg> extends Protocol {
 
     public final Action1<Long, Socket> dial = new Action1<>();
-    public final Action1<Socket, Void> recvf = new Action1<>();
+    public final Action1<Long, Void> recvf = new Action1<>();
+    public final HashMap<Long, Socket> sockets;
     private final HashMap<Long, ArrayDeque<Tuple3<Long, Long, Msg>>> routingTable;
 
     public int inFlight; // ghost
@@ -22,23 +23,25 @@ public class ReliableNetwork<Msg> extends Protocol {
     public ReliableNetwork(MelinaContext ctx) {
         super(ctx);
 
+
+        sockets = new HashMap<>();
         routingTable = new HashMap<>();
 
         // recvf is triggered when the underlying network is ready to deliver a message.
-        recvf.before((sock) -> {
-            if (!routingTable.containsKey(sock.id)) {
+        recvf.before((id) -> {
+            if (!routingTable.containsKey(id)) {
                 throw new ActionArgGenRetryException();
             }
-            if (routingTable.get(sock.id).size() == 0) {
+            if (routingTable.get(id).size() == 0) {
                 throw new ActionArgGenRetryException();
             }
             return null;
         });
-        recvf.on((sock) -> {
-            Tuple3<Long, Long, Msg> wrappedMsg = routingTable.get(sock.id).pop();
+        recvf.on((id) -> {
+            Tuple3<Long, Long, Msg> wrappedMsg = routingTable.get(id).pop();
             long source = wrappedMsg._2;
             Msg msg = wrappedMsg._3;
-            return sock.recv.apply(source, msg);
+            return sockets.get(id).recv.apply(source, msg);
         });
 
         // Dial registers a socket with a pid.
@@ -62,11 +65,8 @@ public class ReliableNetwork<Msg> extends Protocol {
         addConjecture("reliable-network-eventual-delivery", () ->
                 routingTable.values().stream().allMatch(q -> q.isEmpty()) || inFlight > 0);
 
-        sockets = new HashMap<>();
-
-        exportAction("recvf", recvf, ctx.randomSelect(sockets));
+        exportAction("recvf", recvf, ctx.randomSelect(sockets.keySet().stream().toList()));
     }
-    public HashMap<Long, Socket> sockets;
 
     // A reimplementation of ivy's net.tcp_test.socket, kinda-sorta.
     public class Socket extends Protocol {

@@ -2,6 +2,7 @@ package net.dijkstracula.melina.stdlib.collections;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 // Hand-written extraction for collections.Vector
 
@@ -72,5 +73,18 @@ public class Vector<T> implements Cloneable {
         ret.append("]");
 
         return ret.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vector<?> vector = (Vector<?>) o;
+        return Objects.equals(backing, vector.backing);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(backing);
     }
 }

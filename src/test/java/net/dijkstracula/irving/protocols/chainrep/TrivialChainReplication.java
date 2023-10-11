@@ -23,7 +23,7 @@ public class TrivialChainReplication {
         final Range pid;
 
         // Exported actions
-        final Action1<ReliableNetwork<Long>.Socket, Void> recvf;
+        final Action1<Long, Void> recvf;
         Action2<Long, Long, Void> append;
 
         public ChainRep(MelinaContext ctx) {
@@ -34,7 +34,7 @@ public class TrivialChainReplication {
 
             // Instantiate modules
             net = new ReliableNetwork<>(ctx);
-            exportAction("net.recvf", net.recvf, ctx.randomSelect(net.sockets));
+            exportAction("net.recvf", net.recvf, ctx.randomSelect(net.sockets.keySet().stream().toList()));
             recvf = net.recvf;
 
             // Instantiate parameterized objects
@@ -133,7 +133,7 @@ public class TrivialChainReplication {
         ChainRep impl = new ChainRep(ctx);
 
         Tee<ChainRep, ChainRep> t = new Tee<>(ctx, spec, impl);
-        t.tee1("recvf", spec.net.recvf, impl.net.recvf, ctx.randomSelect(spec.net.sockets));
+        t.tee1("recvf", spec.net.recvf, impl.net.recvf, ctx.randomSelect(spec.net.sockets.keySet().stream().toList()));
         t.tee2("append", spec.append, impl.append, spec.pid.generator(), ctx.randomSmallNat());
 
         // The behaviour of the two protocols under test should, of course, be identical.
