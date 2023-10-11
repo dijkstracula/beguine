@@ -20,7 +20,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
-public class LinearizableChainRep {
+public class LocalReadChainRep {
+
     public static class ChainRep extends Protocol {
         int read_req = 0;
         int read_resp = 1;
@@ -31,7 +32,7 @@ public class LinearizableChainRep {
 
         final Range pid;
 
-        Function1<Long, IvyObj_host> host;
+        Function1<Long, ChainRep.IvyObj_host> host;
 
         Action1<Long, Void> read = new Action1<>();
         Action2<Long, Long, Void> append = new Action2<>();
@@ -46,7 +47,7 @@ public class LinearizableChainRep {
             exportAction("net.recvf_4", net.recvf, ctx.randomSelect(net.sockets));
 
 
-            List<IvyObj_host> host_instances = LongStream.range(0, 3).mapToObj(i -> new IvyObj_host(i)).collect(Collectors.toList());
+            List<ChainRep.IvyObj_host> host_instances = LongStream.range(0, 3).mapToObj(i -> new ChainRep.IvyObj_host(i)).collect(Collectors.toList());
             host = i -> host_instances.get(i.intValue());
 
             // Virtual actions for parameterized object
@@ -99,7 +100,7 @@ public class LinearizableChainRep {
                 };
             }
         }
-        Ivy_msg_t_Factory msg_t_metaclass = new Ivy_msg_t_Factory(ctx);
+        ChainRep.Ivy_msg_t_Factory msg_t_metaclass = new ChainRep.Ivy_msg_t_Factory(ctx);
 
         class IvyObj_host {
 
@@ -113,7 +114,7 @@ public class LinearizableChainRep {
 
             private Vector<Long> contents;
 
-            public ReliableNetwork<Msg>.Socket sock;
+            private ReliableNetwork<Msg>.Socket sock;
 
             public IvyObj_host(Long self) {
                 this.self = self;
@@ -138,12 +139,7 @@ public class LinearizableChainRep {
                     System.out.println(String.format("[host %d] read()", self));
                     addHistory(ActionCall.fromAction0("read"));
 
-                    Msg msg = msg_t_metaclass.make();
-                    msg.src = ((self) >= 2 ? 2 : ((self) < 0 ? 0 : (self)));
-                    msg.kind = read_req;
-
-                    sock.send.apply(host.apply(2L).sock.id, msg);
-
+                    show(contents);
                     return null;
                 });
                 sock.recv.on((Long src, Msg msg) -> {
@@ -151,7 +147,7 @@ public class LinearizableChainRep {
                     addHistory(ActionCall.fromAction3("sock.recv", self, src, msg));
 
                     if (msg.kind == read_req) {
-                        assert self == 2;
+                        //assert self == 2;
                         Msg resp = msg_t_metaclass.make();
                         resp.kind = read_resp;
                         resp.src = ((self) >= 2 ? 2 : ((self) < 0 ? 0 : (self)));
@@ -180,7 +176,7 @@ public class LinearizableChainRep {
                     return null;
                 });
 
-                IvyObj_spec spec = new IvyObj_spec();
+                ChainRep.IvyObj_host.IvyObj_spec spec = new ChainRep.IvyObj_host.IvyObj_spec();
             }
 
             class IvyObj_spec {

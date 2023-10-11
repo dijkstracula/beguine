@@ -11,7 +11,7 @@ public abstract class Driveable<T> implements Runnable {
     protected final MelinaContext ctx;
 
     /** What can be called from the environment */
-    private final Map<String, Supplier<T>> actions;
+    private final Map<String, Runnable> actions;
     private final List<String> actionNames;
     private final List<T> history;
 
@@ -26,7 +26,7 @@ public abstract class Driveable<T> implements Runnable {
     }
 
 
-    protected Supplier<T> randomAction() {
+    protected Runnable randomAction() {
         assert(actionNames.size() > 0);
         assert(actions.size() == actionNames.size());
 
@@ -52,13 +52,13 @@ public abstract class Driveable<T> implements Runnable {
         history.add(t);
     }
 
-    protected void addAction(String name, Supplier<T> action) {
+    protected void addAction(String name, Runnable action) {
         if (actions.containsKey(name)) {
             throw new RuntimeException("Duplicate action " + name);
         }
         actions.put(name, () -> {
             System.out.println("[Driveable] choosing " + name);
-            return action.get();
+            action.run();
         });
         actionNames.add(name);
     }
@@ -67,7 +67,7 @@ public abstract class Driveable<T> implements Runnable {
         conjectures.add(conj);
     }
 
-    protected Map<String, Supplier<T>> getActions() {
+    protected Map<String, Runnable> getActions() {
         return Collections.unmodifiableMap(actions);
     }
 
@@ -77,13 +77,12 @@ public abstract class Driveable<T> implements Runnable {
 
     @Override
     public void run() {
-        T t;
         int reattempts = 0;
         while (true) {
             // XXX pull this into a Generator<T>.
             try {
-                Supplier<T> action = randomAction();
-                t = action.get();
+                Runnable action = randomAction();
+                action.run();
             } catch (ActionArgGenRetryException e) {
                 if (reattempts++ == 20) {
                     throw new GeneratorLivelock();
@@ -91,7 +90,6 @@ public abstract class Driveable<T> implements Runnable {
                 System.out.println(String.format("[Driveable] Retrying (reattempt %d)...", reattempts));
                 continue;
             }
-            addHistory(t);
             break;
         }
 

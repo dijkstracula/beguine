@@ -3,37 +3,37 @@ package net.dijkstracula.melina.history;
 import java.util.List;
 
 // Down the road this should look a lot like a z3.FuncDecl.
-public record ActionCall(String funcName, List<Object> args, Object ret) {
-    public static <U> ActionCall fromAction0(String funcName, U ret) {
-        return new ActionCall(funcName, List.of(), ret);
+// TODO: Ivy doesn't log return values from actions.  Should we?
+// TODO: how to integrate this into a span-like representation?
+public record ActionCall(String funcName, List<Object> args) {
+    public static ActionCall fromAction0(String funcName) {
+        return new ActionCall(funcName, List.of());
     }
 
-    public static <T1, U> ActionCall fromAction1(String funcName, T1 t1, U ret) {
-        return new ActionCall(funcName, List.of(t1), ret);
+    public static <T1> ActionCall fromAction1(String funcName, T1 t1) {
+        return new ActionCall(funcName, List.of(t1));
     }
 
-    public static <T1, T2, U> ActionCall fromAction2(String funcName, T1 t1, T2 t2, U ret) {
-        return new ActionCall(funcName, List.of(t1, t2), ret);
+    public static <T1, T2> ActionCall fromAction2(String funcName, T1 t1, T2 t2) {
+        return new ActionCall(funcName, List.of(t1, t2));
     }
 
-    public static <T1, T2, T3, U> ActionCall fromAction3(String funcName, T1 t1, T2 t2, T3 t3, U ret) {
-        return new ActionCall(funcName, List.of(t1, t2, t3), ret);
+    public static <T1, T2, T3> ActionCall fromAction3(String funcName, T1 t1, T2 t2, T3 t3) {
+        return new ActionCall(funcName, List.of(t1, t2, t3));
     }
 
     @Override
     public String toString() {
-        StringBuilder ret = new StringBuilder();
-        ret.append(funcName + "(");
+        StringBuilder s = new StringBuilder();
+        s.append(funcName + "(");
         for (int i = 0; i < args.size(); i++) {
             if (i > 0) {
-                ret.append(",");
+                s.append(",");
             }
-            ret.append(args.get(i));
+            s.append(args.get(i));
         }
-        ret.append(")");
-        ret.append(" -> ");
-        ret.append(ret);
+        s.append(")");
 
-        return ret.toString();
+        return s.toString();
     }
 }

@@ -4,6 +4,7 @@ import io.vavr.Tuple3;
 import net.dijkstracula.melina.actions.Action1;
 import net.dijkstracula.melina.actions.Action2;
 import net.dijkstracula.melina.exceptions.ActionArgGenRetryException;
+import net.dijkstracula.melina.history.ActionCall;
 import net.dijkstracula.melina.runtime.MelinaContext;
 import net.dijkstracula.melina.runtime.Protocol;
 
@@ -86,6 +87,13 @@ public class ReliableNetwork<Msg> extends Protocol {
                 routingTable.computeIfAbsent(dst, id -> new ArrayDeque<>()).add(new Tuple3<>(dst, i, msg));
                 return null;
             });
+        }
+
+        @Override
+        public String toString() {
+            return "Socket{" +
+                    "id=" + id +
+                    '}';
         }
 
         @Override

@@ -1,4 +1,4 @@
-package net.dijkstracula.runtime.protocols;
+package net.dijkstracula.irving.protocols;
 
 import net.dijkstracula.melina.actions.Action0;
 import net.dijkstracula.melina.exceptions.ConjectureFailure;

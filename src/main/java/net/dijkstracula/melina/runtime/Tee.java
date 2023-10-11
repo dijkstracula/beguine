@@ -31,16 +31,14 @@ public class Tee<Spec extends Protocol, Impl extends Protocol> extends Driveable
         }
 
         addConjecture("final-histories-match", () -> {
-            Tuple2<ActionCall, ActionCall> lastAction = getHistory().get(getHistory().size() - 1);
-            System.out.println("final-histories-match: " + lastAction);
-            return lastAction._1.equals(lastAction._2);
-        });
-    }
-
-    protected void addAction(String ident, Supplier<ActionCall> a1, Supplier<ActionCall> a2) {
-        Function0<Tuple2<ActionCall, ActionCall>> joined = Action0.join(a1, a2);
-        addAction(ident, () -> {
-            return joined.apply();
+            if (spec.getHistory().size() == 0) {
+                return true;
+            }
+            ActionCall spec_act = spec.getHistory().get(spec.getHistory().size() - 1);
+            ActionCall impl_act = impl.getHistory().get(impl.getHistory().size() - 1);
+            Tuple2<ActionCall, ActionCall> lastAction = new Tuple2<>(spec_act, impl_act);
+            System.out.println(String.format("final-histories-match: %s <-> %s", spec_act, impl_act));
+            return spec_act.equals(impl_act);
         });
     }
 
@@ -48,10 +46,6 @@ public class Tee<Spec extends Protocol, Impl extends Protocol> extends Driveable
         addAction(ident, () -> {
             U spec_u = spec.apply();
             U impl_u = impl.apply();
-
-            return new Tuple2<>(
-                    ActionCall.fromAction0(ident, spec_u),
-                    ActionCall.fromAction0(ident, impl_u));
         });
     }
 
@@ -62,10 +56,6 @@ public class Tee<Spec extends Protocol, Impl extends Protocol> extends Driveable
             U spec_u = res._2;
 
             U impl_u = impl.apply(t);
-
-            return new Tuple2<>(
-                    ActionCall.fromAction1(ident, t, spec_u),
-                    ActionCall.fromAction1(ident, t, impl_u));
         });
     }
 
@@ -77,10 +67,6 @@ public class Tee<Spec extends Protocol, Impl extends Protocol> extends Driveable
             U spec_u = res._3;
 
             U impl_u = impl.apply(t1, t2);
-
-            return new Tuple2<>(
-                    ActionCall.fromAction2(ident, t1, t2, spec_u),
-                    ActionCall.fromAction2(ident, t1, t2, impl_u));
         });
     }
 }

@@ -17,15 +17,16 @@ public class Protocol extends Driveable<ActionCall> {
 
     protected <T> void exportAction(String ident, Action0<T> r) {
         addAction(ident, () -> {
+            addHistory(ActionCall.fromAction0(ident));
             T t = r.apply();
-            return ActionCall.fromAction0(ident, t);
         });
     }
 
     protected <T, U> void exportAction(String ident, Action1<T, U> c, Supplier<T> s) {
         addAction(ident, () -> {
-            Tuple2<T, U> res = c.genAndApply(s);
-            return ActionCall.fromAction1(ident, res._1, res._2);
+            T t1 = s.get();
+            addHistory(ActionCall.fromAction1(ident, t1));
+            U u = c.apply(t1);
         });
     }
 
@@ -33,8 +34,9 @@ public class Protocol extends Driveable<ActionCall> {
         addAction(ident, () -> {
             T1 t1 = s1.get();
             T2 t2 = s2.get();
+            addHistory(ActionCall.fromAction2(ident, t1, t2));
+
             U u = c.apply(t1, t2);
-            return ActionCall.fromAction2(ident, t1, t2, u);
         });
     }
 
@@ -43,8 +45,9 @@ public class Protocol extends Driveable<ActionCall> {
             T1 t1 = s1.get();
             T2 t2 = s2.get();
             T3 t3 = s3.get();
+            addHistory(ActionCall.fromAction3(ident, t1, t2, t3));
+
             U u = c.apply(t1, t2, t3);
-            return ActionCall.fromAction3(ident, t1, t2, t3, u);
         });
     }
 }

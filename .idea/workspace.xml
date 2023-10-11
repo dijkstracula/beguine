@@ -5,10 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="356b47be-9cf5-4b46-b299-180ffd199158" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/chainrep/LinearizableChainRep.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/chainrep/DivergentExecutionTests.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/chainrep/LocalNetworkReadChainRep.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/chainrep/LocalReadChainRep.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/chainrep/Msg.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/PingPong.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/PingPong.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/TrivialChainReplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/chainrep/TrivialChainReplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/history/ActionCall.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/history/ActionCall.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Driveable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Driveable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Protocol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Protocol.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Tee.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Tee.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/stdlib/net/ReliableNetwork.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/stdlib/net/ReliableNetwork.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/chainrep/LinearizableChainRep.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/chainrep/LinearizableChainRep.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/runtime/protocols/NonNegativeCounter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/NonNegativeCounter.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,8 +86,8 @@
       <recent name="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.LinearizableChainRep.LinearizableChainRepTest">
-    <configuration name="FourBitCounter.testCounter" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+  <component name="RunManager" selected="Gradle.DivergentExecutionTests.linearizableAndLocalNetworkReadChainRepAreDifferent">
+    <configuration name="DivergentExecutionTests.linearizableAndLocalChainRepAreDifferent" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -92,7 +100,7 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;net.dijkstracula.runtime.nway.FourBitCounter.testCounter&quot;" />
+            <option value="&quot;net.dijkstracula.irving.protocols.chainrep.DivergentExecutionTests.linearizableAndLocalChainRepAreDifferent&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -103,7 +111,7 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="IdenticalProtocols.testCounter" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="DivergentExecutionTests.linearizableAndLocalNetworkChainRepAreDifferent" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -116,7 +124,7 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;net.dijkstracula.runtime.nway.IdenticalProtocols.testCounter&quot;" />
+            <option value="&quot;net.dijkstracula.irving.protocols.chainrep.DivergentExecutionTests.linearizableAndLocalNetworkChainRepAreDifferent&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -127,7 +135,7 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="LinearizableChainRep.LinearizableChainRepTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="DivergentExecutionTests.linearizableAndLocalNetworkReadChainRepAreDifferent" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -140,7 +148,7 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;net.dijkstracula.irving.protocols.LinearizableChainRep.LinearizableChainRepTest&quot;" />
+            <option value="&quot;net.dijkstracula.irving.protocols.chainrep.DivergentExecutionTests.linearizableAndLocalNetworkReadChainRepAreDifferent&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -151,7 +159,7 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="PingPong.PingPongTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="LinearizableChainRep.LinearizableChainRepTest (1)" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -164,7 +172,7 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;net.dijkstracula.irving.protocols.PingPong.PingPongTest&quot;" />
+            <option value="&quot;net.dijkstracula.irving.protocols.chainrep.LinearizableChainRep.LinearizableChainRepTest&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -175,7 +183,7 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="TrivialChainReplication.LinearizableChainRepTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="LocalNetworkReadChainRep.LinearizableChainRepTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -188,7 +196,7 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;net.dijkstracula.irving.protocols.TrivialChainReplication.LinearizableChainRepTest&quot;" />
+            <option value="&quot;net.dijkstracula.irving.protocols.chainrep.LocalNetworkReadChainRep.LinearizableChainRepTest&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -201,11 +209,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.LinearizableChainRep.LinearizableChainRepTest" />
-        <item itemvalue="Gradle.PingPong.PingPongTest" />
-        <item itemvalue="Gradle.TrivialChainReplication.LinearizableChainRepTest" />
-        <item itemvalue="Gradle.FourBitCounter.testCounter" />
-        <item itemvalue="Gradle.IdenticalProtocols.testCounter" />
+        <item itemvalue="Gradle.DivergentExecutionTests.linearizableAndLocalNetworkReadChainRepAreDifferent" />
+        <item itemvalue="Gradle.DivergentExecutionTests.linearizableAndLocalNetworkChainRepAreDifferent" />
+        <item itemvalue="Gradle.DivergentExecutionTests.linearizableAndLocalChainRepAreDifferent" />
+        <item itemvalue="Gradle.LocalNetworkReadChainRep.LinearizableChainRepTest" />
+        <item itemvalue="Gradle.LinearizableChainRep.LinearizableChainRepTest (1)" />
       </list>
     </recent_temporary>
   </component>
@@ -219,6 +227,17 @@
       <updated>1693867138934</updated>
     </task>
     <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Driveable.java</url>
+          <line>97</line>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

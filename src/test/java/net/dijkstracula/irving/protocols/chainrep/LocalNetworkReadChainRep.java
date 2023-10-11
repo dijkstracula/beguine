@@ -13,14 +13,14 @@ import net.dijkstracula.melina.runtime.MelinaContext;
 import net.dijkstracula.melina.runtime.Protocol;
 import net.dijkstracula.melina.stdlib.collections.Vector;
 import net.dijkstracula.melina.stdlib.net.ReliableNetwork;
-import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
-public class LinearizableChainRep {
+public class LocalNetworkReadChainRep {
+
     public static class ChainRep extends Protocol {
         int read_req = 0;
         int read_resp = 1;
@@ -31,7 +31,7 @@ public class LinearizableChainRep {
 
         final Range pid;
 
-        Function1<Long, IvyObj_host> host;
+        Function1<Long, ChainRep.IvyObj_host> host;
 
         Action1<Long, Void> read = new Action1<>();
         Action2<Long, Long, Void> append = new Action2<>();
@@ -46,7 +46,7 @@ public class LinearizableChainRep {
             exportAction("net.recvf_4", net.recvf, ctx.randomSelect(net.sockets));
 
 
-            List<IvyObj_host> host_instances = LongStream.range(0, 3).mapToObj(i -> new IvyObj_host(i)).collect(Collectors.toList());
+            List<ChainRep.IvyObj_host> host_instances = LongStream.range(0, 3).mapToObj(i -> new ChainRep.IvyObj_host(i)).collect(Collectors.toList());
             host = i -> host_instances.get(i.intValue());
 
             // Virtual actions for parameterized object
@@ -81,7 +81,9 @@ public class LinearizableChainRep {
             }
 
             @Override
-            public Msg make() { return new Msg(); }
+            public Msg make() {
+                return new Msg();
+            }
 
             @Override
             public Supplier<Msg> generator() {
@@ -99,21 +101,25 @@ public class LinearizableChainRep {
                 };
             }
         }
-        Ivy_msg_t_Factory msg_t_metaclass = new Ivy_msg_t_Factory(ctx);
+
+        ChainRep.Ivy_msg_t_Factory msg_t_metaclass = new ChainRep.Ivy_msg_t_Factory(ctx);
 
         class IvyObj_host {
 
             protected Action0<Void> read = new Action0<>();
             protected Action1<Long, Void> append = new Action1<>();
+
             private void show(Vector<Long> content) {
                 System.out.println("[host %d]: show: " + self + content);
-            };
+            }
+
+            ;
 
             private Long self;
 
             private Vector<Long> contents;
 
-            public ReliableNetwork<Msg>.Socket sock;
+            private ReliableNetwork<Msg>.Socket sock;
 
             public IvyObj_host(Long self) {
                 this.self = self;
@@ -142,7 +148,7 @@ public class LinearizableChainRep {
                     msg.src = ((self) >= 2 ? 2 : ((self) < 0 ? 0 : (self)));
                     msg.kind = read_req;
 
-                    sock.send.apply(host.apply(2L).sock.id, msg);
+                    sock.send.apply(host.apply(self).sock.id, msg);
 
                     return null;
                 });
@@ -180,7 +186,7 @@ public class LinearizableChainRep {
                     return null;
                 });
 
-                IvyObj_spec spec = new IvyObj_spec();
+                ChainRep.IvyObj_host.IvyObj_spec spec = new ChainRep.IvyObj_host.IvyObj_spec();
             }
 
             class IvyObj_spec {
@@ -204,18 +210,6 @@ public class LinearizableChainRep {
 
                 } //cstr
             }
-
         }
     }
-
-    @Test
-    public void LinearizableChainRepTest() {
-        MelinaContext ctx = MelinaContext.fromSeed(42);
-        ChainRep p = new ChainRep(ctx);
-
-        for (int i = 0; i < 100; i++) {
-            p.run();
-        }
-    }
-
 }
