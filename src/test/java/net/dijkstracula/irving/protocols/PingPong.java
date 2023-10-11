@@ -35,7 +35,6 @@ public class PingPong {
             super(ctx);
             net = new ReliableNetwork<>(ctx);
             pid = ctx.mkRange("pid", 0, 3);
-
             exportAction("net.recvf", net.recvf, ctx.randomSelect(net.sockets));
 
             List<IvyObj_proc> proc_instances = LongStream.range(0, 2).mapToObj(i -> new IvyObj_proc(i)).collect(Collectors.toList());

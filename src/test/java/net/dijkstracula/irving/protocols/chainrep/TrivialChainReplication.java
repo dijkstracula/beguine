@@ -1,4 +1,4 @@
-package net.dijkstracula.irving.protocols;
+package net.dijkstracula.irving.protocols.chainrep;
 
 import io.vavr.Function2;
 import io.vavr.Function3;
