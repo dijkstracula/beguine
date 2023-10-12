@@ -137,6 +137,7 @@ public class LocalNetworkReadChainRep {
                     msg.kind = append_req;
                     msg.to_append = val;
 
+                    addHistory(ActionCall.fromAction2("sock.send", host.apply(0L).sock.id, msg));
                     sock.send.apply(host.apply(0L).sock.id, msg);
 
                     return null;
@@ -149,6 +150,7 @@ public class LocalNetworkReadChainRep {
                     msg.src = ((self) >= 2 ? 2 : ((self) < 0 ? 0 : (self)));
                     msg.kind = read_req;
 
+                    addHistory(ActionCall.fromAction2("sock.send", host.apply(self).sock.id, msg));
                     sock.send.apply(host.apply(self).sock.id, msg);
 
                     return null;
@@ -164,6 +166,7 @@ public class LocalNetworkReadChainRep {
                         resp.src = ((self) >= 2 ? 2 : ((self) < 0 ? 0 : (self)));
                         resp.read_state = contents;
 
+                        addHistory(ActionCall.fromAction2("sock.send", host.apply(msg.src).sock.id, msg));
                         sock.send.apply(host.apply(((msg.src) >= 2 ? 2 : ((msg.src) < 0 ? 0 : (msg.src)))).sock.id, resp);
                     } else if (msg.kind == read_resp) {
                         show(msg.read_state);
@@ -171,12 +174,15 @@ public class LocalNetworkReadChainRep {
                         contents = contents.append(msg.to_append);
                         System.out.println(String.format("[host %d] contents = %s", self, contents));
                         if (self < 2) {
+                            addHistory(ActionCall.fromAction2("sock.send", host.apply(self + 1).sock.id, msg));
                             sock.send.apply(host.apply((self + 1) < 0 ? 0 : (self + 1)).sock.id, msg);
                         } else {
                             Msg resp = msg_t_metaclass.make();
                             resp.kind = append_resp;
                             resp.src = ((self) >= 2 ? 2 : ((self) < 0 ? 0 : (self)));
                             resp.read_state = contents;
+
+                            addHistory(ActionCall.fromAction2("sock.send", host.apply(msg.src).sock.id, msg));
                             sock.send.apply(host.apply(((msg.src) >= 2 ? 2 : ((msg.src) < 0 ? 0 : (msg.src)))).sock.id, resp);
                         }
                     } else if (msg.kind == append_resp) {

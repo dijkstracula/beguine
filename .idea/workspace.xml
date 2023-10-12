@@ -6,9 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="356b47be-9cf5-4b46-b299-180ffd199158" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/MelinaContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/MelinaContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/utils/Random.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/utils/Random.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/chainrep/LinearizableChainRep.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/chainrep/LinearizableChainRep.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/chainrep/LocalNetworkReadChainRep.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/chainrep/LocalNetworkReadChainRep.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +79,7 @@
       <recent name="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.DivergentExecutionTests.identicalLinearizableChainRepAreTheSame">
+  <component name="RunManager" selected="Gradle.DivergentExecutionTests.linearizableAndLocalChainRepAreDifferent">
     <configuration name="DivergentExecutionTests.identicalLinearizableChainRepAreTheSame" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -100,7 +101,7 @@
       <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
+      <ForceTestExec>false</ForceTestExec>
       <method v="2" />
     </configuration>
     <configuration name="DivergentExecutionTests.linearizableAndLocalChainRepAreDifferent" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
@@ -124,7 +125,7 @@
       <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
+      <ForceTestExec>false</ForceTestExec>
       <method v="2" />
     </configuration>
     <configuration name="DivergentExecutionTests.linearizableAndLocalNetworkReadChainRepAreDifferent" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
@@ -148,7 +149,7 @@
       <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
+      <ForceTestExec>false</ForceTestExec>
       <method v="2" />
     </configuration>
     <configuration name="LinearizableChainRep.LinearizableChainRepTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
@@ -172,7 +173,7 @@
       <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
+      <ForceTestExec>false</ForceTestExec>
       <method v="2" />
     </configuration>
     <configuration name="TrivialChainReplication.LinearizableChainRepTee" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
@@ -196,16 +197,16 @@
       <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
       <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
       <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
+      <ForceTestExec>false</ForceTestExec>
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.DivergentExecutionTests.linearizableAndLocalChainRepAreDifferent" />
+        <item itemvalue="Gradle.DivergentExecutionTests.linearizableAndLocalNetworkReadChainRepAreDifferent" />
         <item itemvalue="Gradle.DivergentExecutionTests.identicalLinearizableChainRepAreTheSame" />
         <item itemvalue="Gradle.LinearizableChainRep.LinearizableChainRepTest" />
         <item itemvalue="Gradle.TrivialChainReplication.LinearizableChainRepTee" />
-        <item itemvalue="Gradle.DivergentExecutionTests.linearizableAndLocalChainRepAreDifferent" />
-        <item itemvalue="Gradle.DivergentExecutionTests.linearizableAndLocalNetworkReadChainRepAreDifferent" />
       </list>
     </recent_temporary>
   </component>
