@@ -40,10 +40,11 @@ public class LinearizableChainRep {
             super(ctx);
             net = new ReliableNetwork<>(ctx);
             pid = ctx.mkRange("pid", 0, 3);
-            exportAction("net.recvf_1", net.recvf, ctx.randomSelect(net.sockets.keySet().stream().toList()));
-            exportAction("net.recvf_2", net.recvf, ctx.randomSelect(net.sockets.keySet().stream().toList()));
-            exportAction("net.recvf_3", net.recvf, ctx.randomSelect(net.sockets.keySet().stream().toList()));
-            exportAction("net.recvf_4", net.recvf, ctx.randomSelect(net.sockets.keySet().stream().toList()));
+
+            exportAction("net.recvf_1", net.recvf, ctx.randomSelect(net.sockets));
+            exportAction("net.recvf_2", net.recvf, ctx.randomSelect(net.sockets));
+            exportAction("net.recvf_3", net.recvf, ctx.randomSelect(net.sockets));
+            exportAction("net.recvf_4", net.recvf, ctx.randomSelect(net.sockets));
 
             List<IvyObj_host> host_instances = LongStream.range(0, 3).mapToObj(i -> new IvyObj_host(i)).collect(Collectors.toList());
             host = i -> host_instances.get(i.intValue());

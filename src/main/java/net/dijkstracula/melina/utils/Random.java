@@ -61,6 +61,7 @@ public class Random implements Cloneable {
     }
 
     public <T> T nextElm(List<T> v) {
+        assert(!v.isEmpty());
         int idx = (int)nextBounded(0, v.size());
         return v.get(idx);
     }

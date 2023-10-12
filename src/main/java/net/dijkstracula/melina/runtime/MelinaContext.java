@@ -6,6 +6,7 @@ import net.dijkstracula.melina.utils.Random;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 
 /**
@@ -52,7 +53,11 @@ public class MelinaContext {
         return () -> random.nextElm(seq);
     }
 
-    public <K, V> Supplier<V> randomSelect(Map<K, V> map) {
-        return () -> random.nextElm(map).getValue();
+    public <T> Supplier<T> randomSelect(Set<T> seq) {
+        return () -> random.nextElm(seq.stream().toList());
+    }
+
+    public <K, V> Supplier<K> randomSelect(Map<K, V> map) {
+        return () -> random.nextElm(map).getKey();
     }
 }

@@ -6,17 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="356b47be-9cf5-4b46-b299-180ffd199158" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/history/ActionCall.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/history/ActionCall.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/stdlib/collections/Vector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/stdlib/collections/Vector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/stdlib/net/ReliableNetwork.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/stdlib/net/ReliableNetwork.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/PingPong.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/PingPong.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/chainrep/DivergentExecutionTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/chainrep/DivergentExecutionTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/MelinaContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/MelinaContext.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/utils/Random.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/utils/Random.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/chainrep/LinearizableChainRep.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/chainrep/LinearizableChainRep.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/chainrep/LocalNetworkReadChainRep.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/chainrep/LocalNetworkReadChainRep.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/chainrep/LocalReadChainRep.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/chainrep/LocalReadChainRep.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/chainrep/Msg.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/chainrep/Msg.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/chainrep/TrivialChainReplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/protocols/chainrep/TrivialChainReplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/stdlib/net/PingPongTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/dijkstracula/irving/stdlib/net/PingPongTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,7 +78,7 @@
       <recent name="$PROJECT_DIR$/src/main/java/net/dijkstracula/melina" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.DivergentExecutionTests.linearizableAndLocalChainRepAreDifferent">
+  <component name="RunManager" selected="Gradle.DivergentExecutionTests.identicalLinearizableChainRepAreTheSame">
     <configuration name="DivergentExecutionTests.identicalLinearizableChainRepAreTheSame" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -135,30 +127,6 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="DivergentExecutionTests.linearizableAndLocalNetworkChainRepAreDifferent" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;net.dijkstracula.irving.protocols.chainrep.DivergentExecutionTests.linearizableAndLocalNetworkChainRepAreDifferent&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
-      <method v="2" />
-    </configuration>
     <configuration name="DivergentExecutionTests.linearizableAndLocalNetworkReadChainRepAreDifferent" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -183,7 +151,7 @@
       <RunAsTest>true</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="LocalNetworkReadChainRep.LinearizableChainRepTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="LinearizableChainRep.LinearizableChainRepTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -196,7 +164,31 @@
           <list>
             <option value=":test" />
             <option value="--tests" />
-            <option value="&quot;net.dijkstracula.irving.protocols.chainrep.LocalNetworkReadChainRep.LinearizableChainRepTest&quot;" />
+            <option value="&quot;net.dijkstracula.irving.protocols.chainrep.LinearizableChainRep.LinearizableChainRepTest&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="TrivialChainReplication.LinearizableChainRepTee" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;net.dijkstracula.irving.protocols.chainrep.TrivialChainReplication.LinearizableChainRepTee&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -209,11 +201,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.DivergentExecutionTests.identicalLinearizableChainRepAreTheSame" />
+        <item itemvalue="Gradle.LinearizableChainRep.LinearizableChainRepTest" />
+        <item itemvalue="Gradle.TrivialChainReplication.LinearizableChainRepTee" />
         <item itemvalue="Gradle.DivergentExecutionTests.linearizableAndLocalChainRepAreDifferent" />
         <item itemvalue="Gradle.DivergentExecutionTests.linearizableAndLocalNetworkReadChainRepAreDifferent" />
-        <item itemvalue="Gradle.DivergentExecutionTests.identicalLinearizableChainRepAreTheSame" />
-        <item itemvalue="Gradle.DivergentExecutionTests.linearizableAndLocalNetworkChainRepAreDifferent" />
-        <item itemvalue="Gradle.LocalNetworkReadChainRep.LinearizableChainRepTest" />
       </list>
     </recent_temporary>
   </component>
@@ -232,11 +224,6 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/runtime/Driveable.java</url>
-          <line>97</line>
-          <option name="timeStamp" value="27" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/net/dijkstracula/melina/history/ActionCall.java</url>
           <line>42</line>
           <properties>
@@ -246,6 +233,11 @@
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="net.dijkstracula.melina.runtime.MelinaContext$$Lambda$374/0x0000000800d3f570" memberName="arg" />
+      </pinned-members>
+    </pin-to-top-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
