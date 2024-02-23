@@ -5,15 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="133233d4-8514-4b4e-b602-1215de481723" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/scala/beguine/Actions.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/scala/beguine/refinement/Refined.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/scala/Actions.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sbt.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sbt.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.sbt" beforeDir="false" afterPath="$PROJECT_DIR$/build.sbt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/beguine/runtime/Context.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/beguine/runtime/Context.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/beguine/runtime/Protocol.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/beguine/runtime/Protocol.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/protocols/NonNegCounter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/protocols/NonNegCounter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/beguine/Actions.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/beguine/Actions.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

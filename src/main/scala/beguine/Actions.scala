@@ -1,8 +1,10 @@
 package beguine.actions
 
-class Action0[U](val name: String, val f: () => U) extends (() => U):
+class Action0[Z](val name: String, val f: () => Z) extends (() => Z):
 
-  override def apply(): U = f()
+  override def apply(): Z = f()
+
+  def tee[Y](g: () => Y): Action0[(Z, Y)] = Action0(name, () => (f(), g()))
 
 
 class Action1[A, Z](agen: => A)(val name: String, val f: A => Z) extends (() => (A, Z)):
@@ -11,4 +13,4 @@ class Action1[A, Z](agen: => A)(val name: String, val f: A => Z) extends (() => 
     (a, f(a))
   }
 
-  def tee(g: A => Z): Action1[A, (Z, Z)] = Action1(agen)(name, a => (f(a), g(a)))
+  def tee[Y](g: A => Y): Action1[A, (Z, Y)] = Action1(agen)(name, a => (f(a), g(a)))
