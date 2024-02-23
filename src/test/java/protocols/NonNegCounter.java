@@ -3,6 +3,7 @@ package protocols;
 import beguine.runtime.Arbitrary;
 import beguine.runtime.Protocol;
 
+
 public class NonNegCounter extends Protocol {
     int mutator__count;
 
