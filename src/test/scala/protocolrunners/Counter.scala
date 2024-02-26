@@ -16,7 +16,7 @@ class Counter extends AnyFunSpec with BeforeAndAfter {
     val p = NonNegCounter(RandomArbitrary())
     it("should eventually fail"):
       assertThrows[ConjectureFailure] {
-        for (_ <- 1 to 100) do
+        for (_ <- 1 to 10) do
           p() match {
             case Left(e) => throw e
             case Right(()) => ()

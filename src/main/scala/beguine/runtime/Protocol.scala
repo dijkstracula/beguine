@@ -1,5 +1,6 @@
 package beguine.runtime
 
+import beguine.actions.{Action, Action0, Action1, Witness}
 import beguine.{ConjectureFailure, Error, GeneratorLivelock}
 import com.typesafe.scalalogging.Logger
 import org.slf4j.{Marker, MarkerFactory}
@@ -9,12 +10,10 @@ import java.lang.Runnable
 import java.util.function.BooleanSupplier
 import scala.util.{Failure, Success, Try}
 
-case class ActionCall(name: String, args: List[Any], ret: Option[Any])
-
 abstract class Protocol(a: Arbitrary):
   protected val conjectures: mutable.Map[String, () => Option[ConjectureFailure]] = mutable.Map.empty
-  protected val exportedActions: mutable.Map[String, () => Unit] = mutable.Map.empty
-  protected val history: mutable.ArrayBuffer[ActionCall] = mutable.ArrayBuffer.empty
+  protected val exportedActions: mutable.ArrayBuffer[Action] = mutable.ArrayBuffer.empty
+  protected val history: mutable.ArrayBuffer[Witness.Call] = mutable.ArrayBuffer.empty
 
   protected val logger = Logger(getClass.getName)
 
@@ -22,11 +21,12 @@ abstract class Protocol(a: Arbitrary):
   private val debugMarker = MarkerFactory.getMarker("ivy-debug")
 
   def apply(): Either[Error, Unit] =
-    a.collection(exportedActions.values.toSeq) match {
+    a.collection(exportedActions.toSeq) match {
       case None => Left(GeneratorLivelock())
-      case Some(f) =>
-        Try(f()) match {
-          case Success(()) => ()
+      case Some(action) =>
+        logger.info(invokingActionMarker, action.name)
+        Try(action()) match {
+          case Success(call) => history.append(call)
           case Failure(failed: ConjectureFailure) => return Left(failed)
           case Failure(e) => throw e
         }
@@ -38,7 +38,7 @@ abstract class Protocol(a: Arbitrary):
 
   def getHistory = history.toSeq
 
-  def getActions = exportedActions.keys.toSeq
+  def getActions = exportedActions.toSeq
 
   // Conjecture registration
 
@@ -52,34 +52,10 @@ abstract class Protocol(a: Arbitrary):
 
   // Exported action registration
 
-  def exported[Z](name: String, f: Runnable): Unit =
-    exportedActions.addOne(name, () => {
-      debug(invokingActionMarker, name)
-      history.append(ActionCall(name, List.empty, Option(f.run())))
-      ()
-    })
+  def exported(name: String, f: java.lang.Runnable): Unit = exported[Unit](name, () => f.run())
+  def exported[Z](name: String, f: () => Z): Unit = exportedActions.append(Action0[Z](name, f))
+  def exported[A, Z](name: String, f: A => Z, gena: => A): Unit = exportedActions.append(Action1[A,Z](gena)(name, f))
 
-
-  def exported[A, Z](name: String, f: A => Z, gena: => A): Unit =
-    exportedActions.addOne(name, () => {
-      val a = gena
-
-      debug(invokingActionMarker, name)
-      val z = f(gena)
-      history.append(ActionCall(name, List(a), Option(z)))
-      ()
-    })
-
-  def exported[A, B, Z](name: String, f: (A, B) => Z, gena: => A, genb: => B): Unit =
-    exportedActions.addOne(name, () => {
-      val a = gena
-      val b = genb
-
-      debug(invokingActionMarker, name)
-      val z = f(gena, genb)
-      history.append(ActionCall(name, List(a, b), Option(z)))
-      ()
-    })
 
   // TODO: maybe the code generator shouldn't format the arguments
   // and we just consume it directly?  Maybe having semi-structured
