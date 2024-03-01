@@ -12,8 +12,8 @@ class GenerationTest extends AnyFunSpec with BeforeAndAfter:
     it("Can be generated"):
       for (i <- 0 to 1000) do
         val b = r.bool
-        val i = r.numeric(None, None)
-        val n = r.numeric(Some(0), None)
+        val i = r.numeric(-100, 100)
+        val n = r.numeric(0, 1 << 16)
         assert(n >= 0)
         val bv = r.bitvec(8)
         assert(bv >= 0 && bv < 256)

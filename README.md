@@ -12,3 +12,9 @@
 ```
 $ sudo apt-get install openjdk-18-jre openjdk-18-jdk
 ```
+
+```
+$ git clone https://github.com/apache/cassandra-accord.git
+$ cd cassandra-accord
+$ ./gradlew publishToMavenLocal
+```

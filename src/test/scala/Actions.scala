@@ -35,7 +35,7 @@ class ActionTest extends AnyFunSpec with BeforeAndAfter:
       assert(z == 100)
 
     it("can be called with a generator explicitly from an Arbitrary"):
-      val action = Action1[Int, Int](r.numeric(Some(0), Some(99)))("f", n => n+1)
+      val action = Action1[Int, Int](r.numeric(0, 99))("f", n => n+1)
 
       val seen = scala.collection.mutable.Set[Int]()
       for (_ <- 0 to 100) do
