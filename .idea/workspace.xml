@@ -5,17 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="133233d4-8514-4b4e-b602-1215de481723" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/scala/beguine/Maps.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/scala/beguine/sorts/Sorts.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/accordconsensus/Wrapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/protocols/PingPong.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.sbt" beforeDir="false" afterPath="$PROJECT_DIR$/build.sbt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/beguine/Sorts.scala" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/beguine/Actions.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/beguine/Actions.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/beguine/Maps.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/beguine/Maps.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/beguine/refinement/Refined.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/beguine/refinement/Refined.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/beguine/runtime/Context.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/beguine/runtime/Context.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/beguine/runtime/Protocol.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/beguine/runtime/Protocol.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/beguine/sorts/Sorts.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/beguine/sorts/Sorts.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/scala/Actions.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/scala/Actions.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/scala/Generation.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/scala/Generation.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/scala/protocolrunners/Counter.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/scala/protocolrunners/Counter.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/scala/protocolrunners/Hello.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/scala/protocolrunners/Hello.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/scala/protocolrunners/Trivial.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/scala/protocolrunners/Trivial.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

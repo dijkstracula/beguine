@@ -8,9 +8,8 @@ import scala.util.Random
 
 
 class TrivialProtocolTests extends AnyFunSpec with BeforeAndAfter {
-  given r: Random(42)
-
-  given a: Arbitrary = RandomArbitrary()
+  implicit val r: Random = new Random(42)
+  implicit val a: Arbitrary = new RandomArbitrary()
 
   class EmptyProtocol extends Protocol(a) {
     // Can't do much with this: no actions, so every attempt to choose
@@ -18,7 +17,7 @@ class TrivialProtocolTests extends AnyFunSpec with BeforeAndAfter {
   }
 
   describe("an empty protocol") {
-    val proto = EmptyProtocol()
+    val proto = new EmptyProtocol()
     it("Should never be able to generate an Action to invoke") {
       assert(proto().isLeft)
     }

@@ -9,18 +9,19 @@ import protocols.NonNegCounter
 import scala.util.Random
 
 class Counter extends AnyFunSpec with BeforeAndAfter {
-  given r: Random(42)
+  implicit val r: Random = new Random(42)
 
-
-  describe("The non-negative counter test"):
-    val p = NonNegCounter(RandomArbitrary())
-    it("should eventually fail"):
+  describe("The non-negative counter test") {
+    val p = new NonNegCounter(new RandomArbitrary())
+    it("should eventually fail") {
       assertThrows[ConjectureFailure] {
-        for (_ <- 1 to 10) do
+        for (_ <- 1 to 10) {
           p() match {
             case Left(e) => throw e
             case Right(()) => ()
           }
+        }
       }
-
+    }
+  }
 }

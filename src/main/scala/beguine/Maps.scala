@@ -13,13 +13,15 @@ object Maps {
 
     override def get(key: K): Option[V] = Some(this (key))
 
-    override def addOne(elem: (K, V)): AbstractMap.this.type =
-      backingMap.addOne(elem);
+    override def addOne(elem: (K, V)): this.type = {
+      backingMap.addOne(elem)
       this
+    }
 
-    override def subtractOne(elem: K): AbstractMap.this.type =
-      backingMap.subtractOne(elem);
+    override def subtractOne(elem: K): this.type = {
+      backingMap.subtractOne(elem)
       this
+    }
   }
 
   class Map1[A, Z](as: IvySort[A])(default: => Z) extends AbstractMap[A, Z](default) {

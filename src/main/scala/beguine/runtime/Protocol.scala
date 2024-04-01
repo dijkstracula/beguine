@@ -10,7 +10,7 @@ import java.lang.Runnable
 import java.util.function.BooleanSupplier
 import scala.util.{Failure, Success, Try}
 
-abstract class Protocol(a: Arbitrary):
+abstract class Protocol(a: Arbitrary) {
   protected val conjectures: mutable.Map[String, () => Option[ConjectureFailure]] = mutable.Map.empty
   protected val exportedActions: mutable.ArrayBuffer[Action] = mutable.ArrayBuffer.empty
   protected val history: mutable.ArrayBuffer[Witness.Call] = mutable.ArrayBuffer.empty
@@ -30,7 +30,7 @@ abstract class Protocol(a: Arbitrary):
           case Failure(failed: ConjectureFailure) => return Left(failed)
           case Failure(e) => throw e
         }
-        conjectures.collectFirst((_, conj) => conj()).getOrElse(None) match {
+        conjectures.collectFirst({case (_, conj) => conj() }).getOrElse(None) match {
           case None => Right(())
           case Some(failed) => Left(failed)
         }
@@ -44,7 +44,7 @@ abstract class Protocol(a: Arbitrary):
 
   def conjectured(name: String, file: String, lineno: Int, conj: BooleanSupplier) =
     conjectures.addOne(name, () => {
-      if conj.getAsBoolean() then
+      if (conj.getAsBoolean())
         None
       else
         Some(ConjectureFailure(file, name, lineno))
@@ -53,8 +53,10 @@ abstract class Protocol(a: Arbitrary):
   // Exported action registration
 
   def exported(name: String, f: java.lang.Runnable): Unit = exported[Unit](name, () => f.run())
+
   def exported[Z](name: String, f: () => Z): Unit = exportedActions.append(Action0[Z](name, f))
-  def exported[A, Z](name: String, f: A => Z, gena: => A): Unit = exportedActions.append(Action1[A,Z](gena)(name, f))
+
+  def exported[A, Z](name: String, f: A => Z, gena: () => A): Unit = exportedActions.append(Action1[A, Z](gena)(name, f))
 
 
   // TODO: maybe the code generator shouldn't format the arguments
@@ -64,4 +66,6 @@ abstract class Protocol(a: Arbitrary):
 
   def debug(msg: String): Unit = debug(debugMarker, msg)
 
-  def assertThat(file: String, lineno: Int, cond: Boolean) = if !cond then throw ConjectureFailure("", file, lineno) else ()
+  def assertThat(file: String, lineno: Int, cond: Boolean) = if (!cond) throw ConjectureFailure("", file, lineno) else ()
+
+}
