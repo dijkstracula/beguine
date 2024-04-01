@@ -5,17 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="133233d4-8514-4b4e-b602-1215de481723" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/scala/beguine/Maps.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/scala/beguine/sorts/Sorts.scala" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/accordconsensus/Wrapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/protocols/PingPong.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/accordconsensus/Cluster.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/accordconsensus/Store.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/accordconsensus/shims/ConfigurationService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/accordconsensus/shims/OverlayNetwork.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/accordconsensus/shims/Socket.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/accordconsensus/shims/SynchronizedAsyncExecutor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/scala/protocolrunners/AccordWrapper.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.sbt" beforeDir="false" afterPath="$PROJECT_DIR$/build.sbt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/beguine/Sorts.scala" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/beguine/runtime/Context.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/beguine/runtime/Context.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/scala/Actions.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/scala/Actions.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/scala/Generation.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/scala/Generation.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/accordconsensus/Wrapper.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,18 +68,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/ntaylor/school/melina/beguine&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "last_opened_file_path": "/Users/ntaylor/school/melina/beguine",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "run.code.analysis.last.selected.profile": "pProject Default"
   }
-}</component>
-  <component name="RunManager" selected="ScalaTest.GenerationTest">
+}]]></component>
+  <component name="RunManager" selected="ScalaTest.AccordWrapper">
+    <configuration name="AccordWrapper" type="ScalaTestRunConfiguration" factoryName="ScalaTest" temporary="true" nameIsGenerated="true" show_console_on_std_err="false" show_console_on_std_out="false">
+      <module name="beguine" />
+      <option name="allowRunningInParallel" value="false" />
+      <option name="projectPathOnTarget" />
+      <option name="selectedOptions">
+        <list />
+      </option>
+      <option name="testKind" value="Class" />
+      <option name="testClassPath" value="protocolrunners.AccordWrapper" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="ActionTest" type="ScalaTestRunConfiguration" factoryName="ScalaTest" temporary="true" nameIsGenerated="true" show_console_on_std_err="false" show_console_on_std_out="false">
       <module name="beguine" />
       <option name="allowRunningInParallel" value="false" />
@@ -120,19 +133,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="HelloTest" type="ScalaTestRunConfiguration" factoryName="ScalaTest" temporary="true" nameIsGenerated="true" show_console_on_std_err="false" show_console_on_std_out="false">
-      <module name="beguine" />
-      <option name="allowRunningInParallel" value="false" />
-      <option name="projectPathOnTarget" />
-      <option name="selectedOptions">
-        <list />
-      </option>
-      <option name="testKind" value="Class" />
-      <option name="testClassPath" value="protocols.HelloTest" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="NonNegCounterTests" type="ScalaTestRunConfiguration" factoryName="ScalaTest" temporary="true" nameIsGenerated="true" show_console_on_std_err="false" show_console_on_std_out="false">
       <module name="beguine" />
       <option name="allowRunningInParallel" value="false" />
@@ -148,11 +148,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="ScalaTest.AccordWrapper" />
         <item itemvalue="ScalaTest.GenerationTest" />
         <item itemvalue="ScalaTest.ActionTest" />
         <item itemvalue="ScalaTest.Counter" />
         <item itemvalue="ScalaTest.NonNegCounterTests" />
-        <item itemvalue="ScalaTest.HelloTest" />
       </list>
     </recent_temporary>
   </component>
