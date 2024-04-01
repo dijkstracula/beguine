@@ -9,6 +9,9 @@ lazy val root = (project in file("."))
 
 resolvers += Resolver.mavenLocal
 
+// TODO: consider pulling the Accord dependency from source and building
+// itself, instead of assuming it's in your local Maven repo.  Maybe see:
+// https://stackoverflow.com/questions/7550376/how-can-sbt-pull-dependency-artifacts-from-git
 libraryDependencies += "accord" % "accord" % "1.0-SNAPSHOT" % Test
 libraryDependencies += "accord" % "accord" % "1.0-SNAPSHOT" % Test classifier "tests"
 
