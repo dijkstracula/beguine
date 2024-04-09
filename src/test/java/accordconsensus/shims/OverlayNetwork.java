@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-public class OverlayNetwork implements Network {
+public class OverlayNetwork {
 
     private final Map<Node.Id, Socket> connections;
     private final Map<Node.Id, Deque<Packet>> inFlight;
@@ -23,10 +23,13 @@ public class OverlayNetwork implements Network {
     //  like SafeCallback?
     private final Map<Long, Callback<Reply>> callbacks;
 
+    private long nextMessageId;
+
     public OverlayNetwork() {
         this.connections = new HashMap<>();
         this.inFlight = new HashMap<>();
         this.callbacks = new HashMap<>();
+        this.nextMessageId = 0L;
     }
 
     public Socket createSink(Node.Id id) {
@@ -46,14 +49,21 @@ public class OverlayNetwork implements Network {
         }
     }
 
-    @Override
-    public void send(Node.Id from, Node.Id to, Request request, @Nullable AgentExecutor agentExecutor, Nullable Callback callback) {
-        // XXX: at the moment we discard the executor.  It is possible that our model-driven executor may have
-        // a different type, in which case this shouldn't extend mock.Network.
+    public void send(Node.Id from, Node.Id to, Request request, @Nullable AgentExecutor executor, @Nullable Callback callback) {
+        long msgId = getNextMessageId();
+        Packet p = new Packet(from, to, msgId, request);
+        inFlight.get(to).push(p);
+        if (callback != null) {
+            callbacks.put(msgId, callback);
+        }
     }
 
-    @Override
     public void reply(Node.Id from, Node.Id to, long replyId, Reply reply) {
+        Packet p = new Packet(from, to, replyId, reply);
+        inFlight.get(to).push(p);
+    }
 
+    private long getNextMessageId() {
+        return nextMessageId++;
     }
 }

@@ -24,6 +24,8 @@ trait Arbitrary {
       case Number(lo, hi) => () => this.numeric(lo, hi)
     }
    */
+
+  def asScala: Random // XXX: I'm not fully sure I know the semantics of this outside a RandomArbitrary.
 }
 
 
@@ -44,4 +46,6 @@ class RandomArbitrary(implicit r: Random) extends Arbitrary {
   override def numeric(lo: Integer, hi: Integer): Integer = {
     r.between(lo, hi)
   }
+
+  def asScala = r
 }

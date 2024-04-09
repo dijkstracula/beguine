@@ -1,4 +1,4 @@
-package accordconsensus;
+package accordconsensus.shims;
 
 import accord.api.DataStore;
 import accord.local.Node;

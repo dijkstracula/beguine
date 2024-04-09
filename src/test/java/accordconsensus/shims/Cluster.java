@@ -1,4 +1,4 @@
-package accordconsensus;
+package accordconsensus.shims;
 
 import static accord.impl.IntKey.keys;
 import static accord.impl.IntKey.range;
@@ -8,7 +8,6 @@ import accord.config.LocalConfig;
 import accord.config.MutableLocalConfig;
 import accord.coordinate.CoordinationAdapter;
 import accord.impl.*;
-import accord.impl.mock.MockConfigurationService;
 import accord.local.Node;
 import accord.local.NodeTimeService;
 import accord.local.ShardDistributor;
@@ -18,8 +17,6 @@ import accord.topology.Shard;
 import accord.topology.Topology;
 import accord.utils.EpochFunction;
 import accord.utils.ThreadPoolScheduler;
-import accordconsensus.shims.ConfigurationService;
-import accordconsensus.shims.OverlayNetwork;
 import beguine.runtime.Arbitrary;
 
 import accord.local.Node.Id;
@@ -31,8 +28,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.*;
 import java.util.stream.Collectors;
 
-import static accord.impl.PrefixedIntHashKey.ranges;
-import static accord.utils.Utils.toArray;
 import static accord.utils.async.AsyncChains.awaitUninterruptibly;
 
 public class Cluster {
@@ -76,7 +71,7 @@ public class Cluster {
                 () -> store,
                 new ShardDistributor.EvenSplit(8, ignore -> new IntKey.Splitter()),
                 new TestAgent(),
-                null /* yolo */,
+                new RandomSource(arbitrary),
                 new ThreadPoolScheduler(),
                 SizeOfIntersectionSorter.SUPPLIER,
                 SimpleProgressLog::new,

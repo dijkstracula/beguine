@@ -43,7 +43,7 @@ public class ConfigurationService implements TestableConfigurationService {
 
     @Override
     public Topology currentTopology() {
-        return epochs.get(epochs.size() - 1);
+        return epochs.get(epochs.size() - 1L);
     }
 
     @Nullable
