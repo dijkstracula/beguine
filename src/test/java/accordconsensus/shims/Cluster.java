@@ -1,6 +1,5 @@
 package accordconsensus.shims;
 
-import static accord.impl.IntKey.keys;
 import static accord.impl.IntKey.range;
 
 import accord.api.MessageSink;
@@ -20,6 +19,8 @@ import accord.utils.ThreadPoolScheduler;
 import beguine.runtime.Arbitrary;
 
 import accord.local.Node.Id;
+import com.google.common.collect.ImmutableList;
+import melina.Store;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,13 +35,10 @@ public class Cluster {
     private static final Logger logger = LoggerFactory.getLogger(Cluster.class);
 
     private final Arbitrary arbitrary;
-
     private final Topology topology;
-
     private final LongSupplier nowSupplier;
-
     private final OverlayNetwork network;
-
+    private final List<Node> nodes;
 
     public Cluster(Arbitrary a) {
         Range rng = range(0, 100);
@@ -51,13 +49,11 @@ public class Cluster {
         this.topology = new Topology(1, new Shard(rng, ids, fastpath));
         this.nowSupplier = () -> 42L;
         this.network = new OverlayNetwork();
-
-
-        List<Node> nodes = ids.stream().map(id -> newNode(id)).collect(Collectors.toList());
+        this.nodes = ids.stream().map(id -> newNode(id)).collect(Collectors.toList());
     }
 
     public Node newNode(Id id) {
-        Store store = new Store();
+        Store melinaStore = new Store();
         MessageSink socket = network.createSink(id);
         ConfigurationService configService = new ConfigurationService(EpochFunction.noop(), this.topology);
         LocalConfig localConfig = new MutableLocalConfig();
@@ -68,7 +64,7 @@ public class Cluster {
                 configService,
                 nowSupplier,
                 NodeTimeService.unixWrapper(TimeUnit.MILLISECONDS, nowSupplier),
-                () -> store,
+                () -> melinaStore,
                 new ShardDistributor.EvenSplit(8, ignore -> new IntKey.Splitter()),
                 new TestAgent(),
                 new RandomSource(arbitrary),
@@ -83,5 +79,9 @@ public class Cluster {
         node.onTopologyUpdate(topology, true);
 
         return node;
+    }
+
+    public ImmutableList<Node> getNodes() {
+        return ImmutableList.copyOf(nodes);
     }
 }
