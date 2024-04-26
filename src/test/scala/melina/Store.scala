@@ -1,20 +1,27 @@
 package melina
 
 import accord.api
-import accord.api.{Data, DataStore, Key, Write}
+import accord.api.{Data, DataStore, Key, Result, Write}
 import accord.api.DataStore.FetchResult
+import accord.local.Node.Id
 import accord.local.{Node, SafeCommandStore}
-import accord.primitives.{Keys, PartialTxn, Ranges, Seekable, Seekables, SyncPoint, Timestamp, Writes}
+import accord.primitives.{Keys, PartialTxn, Ranges, Seekable, Seekables, SyncPoint, Timestamp, TxnId, Writes}
 import accord.utils.Timestamped
 import accord.utils.async.{AsyncChain, AsyncChains, AsyncResult, AsyncResults}
 import melina.Exceptions.NonMelinaEntity
 
 import scala.collection.mutable
-
+import scala.jdk.CollectionConverters
+import scala.jdk.CollectionConverters.SetHasAsJava
 
 object Store {
   class Data extends accord.api.Data {
     val values: mutable.Map[Seekable, Integer] = mutable.Map.empty
+
+    def this(k: Key, v: Integer) = {
+      this()
+      values.addOne(k, v)
+    }
 
     def this(k: Key, v: Option[Integer]) = {
       this()
@@ -24,18 +31,25 @@ object Store {
       }
     }
 
+    def this(data: Iterable[(Seekable, Integer)]) = {
+      this()
+      values.addAll(data)
+    }
+
     override def merge(other: api.Data): api.Data = {
       other match {
-         case d: Data => values.addAll(d.values)
+         case d: Data => new Data(values ++ d.values)
          case d => throw NonMelinaEntity(d, this.getClass)
        }
-      this
+    }
+
+    def slice(ranges: Ranges) = {
+      def data = values.filter(kv => ranges.contains(kv._1.asKey()))
+      new Data(data)
     }
   }
 
-  class Read(keys: Keys) extends accord.api.Read {
-    override def keys = keys
-
+  class Read(val keys: Keys) extends accord.api.Read {
     override def read(key: Seekable, commandStore: SafeCommandStore, executeAt: Timestamp, store: DataStore): AsyncChain[accord.api.Data] = {
       store match {
         case ms: Store => {
@@ -43,19 +57,19 @@ object Store {
           val v = ms.values.get(k).map(_.data)
           AsyncChains.success(new Data(k, v))
         }
-        case s => throw NonMelinaEntity(s, Store.getClass)
+        case s => throw NonMelinaEntity(s)
       }
     }
 
     override def slice(ranges: Ranges): api.Read = new Read(keys slice ranges)
 
     override def merge(other: api.Read): api.Read = other match {
-      case other: Read => new Read(keys `with` (other.keys))
-      case other => throw new NonMelinaEntity(other, this.getClass)
+      case other: Read => new Read(keys `with` other.keys)
+      case other => throw NonMelinaEntity(other)
     }
   }
 
-  class Write(data: Data) extends accord.api.Write {
+  class Write(val data: Data) extends accord.api.Write {
     override def apply(key: Seekable, safeStore: SafeCommandStore, executeAt: Timestamp, store: DataStore, txn: PartialTxn): AsyncChain[Void] = {
       store match {
         case ms: Store =>
@@ -67,27 +81,41 @@ object Store {
                 ms.values.put(key, ts)
               }
           }
-        case other => throw NonMelinaEntity(other, this.getClass)
+        case other => throw NonMelinaEntity(other)
       }
       AsyncChains.success(null)
     }
   }
 
-  class Update(keys: Keys) extends accord.api.Update {
-    override def keys = keys
-
-    override def apply(executeAt: Timestamp, data: api.Data): Write = {
-      data match {
-        case d: Data => new Write(d)
-        case other => throw NonMelinaEntity(other, this.getClass)
-      }
+  class Update(val data: Data) extends accord.api.Update {
+    override def keys = {
+      val jset = new java.util.TreeSet[Key]()
+      jset.addAll(data.values.keySet.map(_.asKey()).asJava)
+      new Keys(jset)
     }
 
-    override def slice(ranges: Ranges): api.Update = new Update(keys slice ranges)
+    override def apply(executeAt: Timestamp, data: api.Data): Write = {
+      val d = data.asInstanceOf[Data]
+      new Write(d)
+    }
 
-    override def merge(other: api.Update): api.Update = new Update(keys `with` other.keys().asInstanceOf[Keys])
+    override def slice(ranges: Ranges): api.Update = new Update(data slice ranges)
+
+    override def merge(other: api.Update): api.Update = {
+      val u = other.asInstanceOf[Update]
+      val merged = u.data.merge(data).asInstanceOf[Data]
+      new Update(merged)
+    }
   }
 
+  case class Result(client: Id, results: Map[Seekable, Integer]) extends api.Result
+
+  class Query(client: Id) extends api.Query {
+    override def compute(txnId: TxnId, executeAt: Timestamp, keys: Seekables[_, _], data: api.Data, read: api.Read, update: api.Update): Result = {
+      val md = data.asInstanceOf[Data]
+      Result(client, md.values.toMap)
+    }
+  }
 }
 
 class Store extends DataStore {

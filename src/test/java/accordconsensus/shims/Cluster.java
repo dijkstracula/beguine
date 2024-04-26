@@ -2,6 +2,7 @@ package accordconsensus.shims;
 
 import static accord.impl.IntKey.range;
 
+import accord.api.Key;
 import accord.api.MessageSink;
 import accord.config.LocalConfig;
 import accord.config.MutableLocalConfig;
@@ -11,18 +12,21 @@ import accord.local.Node;
 import accord.local.NodeTimeService;
 import accord.local.ShardDistributor;
 import accord.messages.LocalRequest;
-import accord.primitives.Range;
+import accord.primitives.*;
 import accord.topology.Shard;
 import accord.topology.Topology;
 import accord.utils.EpochFunction;
 import accord.utils.ThreadPoolScheduler;
+import accord.utils.async.AsyncChain;
 import beguine.runtime.Arbitrary;
 
 import accord.local.Node.Id;
 import com.google.common.collect.ImmutableList;
+import melina.OverlayNetwork;
 import melina.Store;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scala.Option;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -40,6 +44,8 @@ public class Cluster {
     private final OverlayNetwork network;
     private final List<Node> nodes;
 
+    public OverlayNetwork getNetwork() { return network; }
+
     public Cluster(Arbitrary a) {
         Range rng = range(0, 100);
         List<Id> ids = List.of(0,1,2).stream().map(Id::new).collect(Collectors.toList());
@@ -47,14 +53,18 @@ public class Cluster {
 
         this.arbitrary = a;
         this.topology = new Topology(1, new Shard(rng, ids, fastpath));
-        this.nowSupplier = () -> 42L;
-        this.network = new OverlayNetwork();
-        this.nodes = ids.stream().map(id -> newNode(id)).collect(Collectors.toList());
+        this.nowSupplier = () -> 0L;
+
+        this.nodes = new LinkedList<>();
+        this.network = new OverlayNetwork(id -> Option.apply(this.nodes.stream().filter(n -> n.id().equals(id)).findFirst().orElse(null)));
+        for (Node.Id id : ids) {
+            this.nodes.add(newNode(id));
+        }
     }
 
-    public Node newNode(Id id) {
+    private Node newNode(Id id) {
         Store melinaStore = new Store();
-        MessageSink socket = network.createSink(id);
+        MessageSink socket = network.dial(id);
         ConfigurationService configService = new ConfigurationService(EpochFunction.noop(), this.topology);
         LocalConfig localConfig = new MutableLocalConfig();
 
@@ -83,5 +93,33 @@ public class Cluster {
 
     public ImmutableList<Node> getNodes() {
         return ImmutableList.copyOf(nodes);
+    }
+
+    public Optional<Node> getNode(Id id) {
+        return Optional.ofNullable(nodes.get(id.id));
+    }
+
+    public AsyncChain<accord.api.Result> read(Id id, Key k) {
+        Keys keys = Keys.of(k);
+
+        Node n = getNode(id).orElseThrow(() -> new RuntimeException("What node??"));
+
+        TxnId txnid = n.nextTxnId(Txn.Kind.Read, Routable.Domain.Key);
+        Txn txn = new Txn.InMemory(keys, new Store.Read(keys), new Store.Query(id));
+
+        return n.coordinate(txnid, txn);
+    }
+
+    public AsyncChain<accord.api.Result> write(Id id, int k, int v) {
+        IntKey.Raw key = new IntKey.Raw(k);
+        Keys keys = Keys.of(key);
+
+        Node n = getNode(id).orElseThrow(() -> new RuntimeException("What node??"));
+
+        TxnId txnid = n.nextTxnId(Txn.Kind.Write, Routable.Domain.Key);
+        Store.Data d = new Store.Data(key, v);
+        Txn txn = new Txn.InMemory(keys, new Store.Read(keys), new Store.Query(id), new Store.Update(d));
+
+        return n.coordinate(txnid, txn);
     }
 }
