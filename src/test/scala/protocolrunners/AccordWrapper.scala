@@ -21,14 +21,17 @@ class AccordWrapper extends AnyFunSpec with BeforeAndAfter {
 
   describe("The Accord wrapper") {
     val w = new Cluster(a)
-    w.getNode(new Id(0))
+    w.write(new Id(1), 42, 99)
 
-    w.write(new Id(0), 42, 99)
-
-    // Pre-accept message deliveries
-    w.getNetwork().deliver(new Node.Id(0))
+    // Pre-accept send
     w.getNetwork().deliver(new Node.Id(1))
     w.getNetwork().deliver(new Node.Id(2))
+    w.getNetwork().deliver(new Node.Id(3))
+
+    // Pre-accept response
+    w.getNetwork().deliver(new Node.Id(1))
+    w.getNetwork().deliver(new Node.Id(1))
+    w.getNetwork().deliver(new Node.Id(1))
     //AsyncChains.getUninterruptibly(w.write(new Id(0), 42, 99))
   }
 }

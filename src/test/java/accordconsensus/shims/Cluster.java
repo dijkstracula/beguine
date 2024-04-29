@@ -4,6 +4,7 @@ import static accord.impl.IntKey.range;
 
 import accord.api.Key;
 import accord.api.MessageSink;
+import accord.api.Scheduler;
 import accord.config.LocalConfig;
 import accord.config.MutableLocalConfig;
 import accord.coordinate.CoordinationAdapter;
@@ -16,7 +17,6 @@ import accord.primitives.*;
 import accord.topology.Shard;
 import accord.topology.Topology;
 import accord.utils.EpochFunction;
-import accord.utils.ThreadPoolScheduler;
 import accord.utils.async.AsyncChain;
 import beguine.runtime.Arbitrary;
 
@@ -36,6 +36,30 @@ import java.util.stream.Collectors;
 import static accord.utils.async.AsyncChains.awaitUninterruptibly;
 
 public class Cluster {
+    public class Scheduler implements accord.api.Scheduler {
+        // TODO: everything argh
+        public class Scheduled implements accord.api.Scheduler.Scheduled {
+            @Override
+            public void cancel() {
+            }
+        }
+
+        @Override
+        public Scheduled recurring(Runnable run, long delay, TimeUnit units) {
+            return new Scheduled();
+        }
+
+        @Override
+        public Scheduled once(Runnable run, long delay, TimeUnit units) {
+            return new Scheduled();
+        }
+
+        @Override
+        public void now(Runnable run) {
+            run.run();
+        }
+    }
+
     private static final Logger logger = LoggerFactory.getLogger(Cluster.class);
 
     private final Arbitrary arbitrary;
@@ -44,12 +68,13 @@ public class Cluster {
     private final OverlayNetwork network;
     private final List<Node> nodes;
 
+
     public OverlayNetwork getNetwork() { return network; }
 
     public Cluster(Arbitrary a) {
         Range rng = range(0, 100);
-        List<Id> ids = List.of(0,1,2).stream().map(Id::new).collect(Collectors.toList());
-        Set<Id> fastpath = List.of(0,1).stream().map(Id::new).collect(Collectors.toSet());
+        List<Id> ids = List.of(1,2,3).stream().map(Id::new).collect(Collectors.toList());
+        Set<Id> fastpath = List.of(1,2).stream().map(Id::new).collect(Collectors.toSet());
 
         this.arbitrary = a;
         this.topology = new Topology(1, new Shard(rng, ids, fastpath));
@@ -78,10 +103,10 @@ public class Cluster {
                 new ShardDistributor.EvenSplit(8, ignore -> new IntKey.Splitter()),
                 new TestAgent(),
                 new RandomSource(arbitrary),
-                new ThreadPoolScheduler(),
+                new Scheduler(),
                 SizeOfIntersectionSorter.SUPPLIER,
                 SimpleProgressLog::new,
-                InMemoryCommandStores.SingleThread::new,
+                InMemoryCommandStores.Synchronized::new,
                 new CoordinationAdapter.DefaultFactory(),
                 localConfig);
 
@@ -96,7 +121,7 @@ public class Cluster {
     }
 
     public Optional<Node> getNode(Id id) {
-        return Optional.ofNullable(nodes.get(id.id));
+        return nodes.stream().filter(n -> n.id().equals(id)).findFirst();
     }
 
     public AsyncChain<accord.api.Result> read(Id id, Key k) {

@@ -39,7 +39,7 @@ class OverlayNetwork(nodeLookup: Function[Node.Id, Option[Node]]) {
 
   var nextMsgId = 0L
 
-  def dial(self: Node.Id) = {
+  def dial(self: Node.Id) = synchronized {
     if (inFlight.get(self).isEmpty) {
       // XXX: throw on reconnect instead?
       inFlight.put(self, mutable.ArrayDeque.empty)
@@ -47,7 +47,7 @@ class OverlayNetwork(nodeLookup: Function[Node.Id, Option[Node]]) {
     new Socket(self, this)
   }
 
-  def send(from: Node.Id, to: Node.Id, req: Request, cb: Option[Callback[_]]): Unit = {
+  def send(from: Node.Id, to: Node.Id, req: Request, cb: Option[Callback[_]]): Unit = synchronized {
     val msgId = getNextMessageId
 
     inFlight.get(to)
@@ -56,18 +56,18 @@ class OverlayNetwork(nodeLookup: Function[Node.Id, Option[Node]]) {
     cb.foreach(cb => pendingCallbacks.put(msgId, cb.asInstanceOf[Callback[Reply]]))
   }
 
-  def reply(from: Node.Id, to: Node.Id, replyId: Long, reply: Reply): Unit = {
+  def reply(from: Node.Id, to: Node.Id, replyId: Long, reply: Reply): Unit = synchronized {
     inFlight.get(to)
       .getOrElse(throw NoConnectionError(to))
       .append(new Packet(from, to, replyId, reply))
   }
 
-  def deliver(to: Node.Id) = {
+  def deliver(to: Node.Id) = synchronized {
     val p = inFlight.get(to).getOrElse(throw NoConnectionError(to)).removeHead()
     val n = nodeLookup(to).getOrElse(throw NoConnectionError(to))
     val cb = pendingCallbacks.remove(p.requestId)
     p.message match {
-      case req: Request => n.receive(req, p.dst, Network.replyCtxFor(p.requestId))
+      case req: Request => n.receive(req, p.src, Network.replyCtxFor(p.requestId))
       case rep: Reply.FailureReply => cb.foreach(cb => cb.onFailure(p.src, rep.failure))
       case rep: Reply => cb.foreach(cb => cb.onSuccess(p.src, rep))
 
