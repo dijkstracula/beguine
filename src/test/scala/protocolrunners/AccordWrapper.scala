@@ -19,19 +19,46 @@ class AccordWrapper extends AnyFunSpec with BeforeAndAfter {
   implicit val a: RandomArbitrary = new RandomArbitrary()
 
 
+  def deliverScatter(w: Cluster): Unit = {
+    for (i <- 1 to 3) {
+      deliverOne(w, new Node.Id(i))
+    }
+  }
+
+  def deliverGather(w: Cluster, id: Node.Id): Unit = {
+    for (_ <- 1 to 3) {
+      deliverOne(w, id)
+    }
+  }
+
+  def deliverOne(w: Cluster, id: Node.Id): Unit = {
+    w.getNetwork().deliver(id)
+  }
+
   describe("The Accord wrapper") {
     val w = new Cluster(a)
-    w.write(new Id(1), 42, 99)
+    val id = new Id(1)
+    val res = w.write(id, 42, 99)
 
-    // Pre-accept send
-    w.getNetwork().deliver(new Node.Id(1))
-    w.getNetwork().deliver(new Node.Id(2))
-    w.getNetwork().deliver(new Node.Id(3))
+    // Pre-accept
+    deliverScatter(w)
+    deliverGather(w, id)
 
-    // Pre-accept response
-    w.getNetwork().deliver(new Node.Id(1))
-    w.getNetwork().deliver(new Node.Id(1))
-    w.getNetwork().deliver(new Node.Id(1))
-    //AsyncChains.getUninterruptibly(w.write(new Id(0), 42, 99))
+    // Commit
+    deliverScatter(w)
+
+    // ReadOK
+    deliverOne(w, id)
+
+    // Apply
+    deliverScatter(w)
+    deliverGather(w, id)
+
+    // InformOfPersistence
+    deliverScatter(w)
+    deliverGather(w, id)
+
+    // InformOfPersistence
+    AsyncChains.getUninterruptibly(res)
   }
 }

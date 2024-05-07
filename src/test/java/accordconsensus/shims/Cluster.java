@@ -4,7 +4,6 @@ import static accord.impl.IntKey.range;
 
 import accord.api.Key;
 import accord.api.MessageSink;
-import accord.api.Scheduler;
 import accord.config.LocalConfig;
 import accord.config.MutableLocalConfig;
 import accord.coordinate.CoordinationAdapter;
@@ -22,6 +21,7 @@ import beguine.runtime.Arbitrary;
 
 import accord.local.Node.Id;
 import com.google.common.collect.ImmutableList;
+import melina.CommandStore;
 import melina.OverlayNetwork;
 import melina.Store;
 import org.slf4j.Logger;
@@ -30,6 +30,7 @@ import scala.Option;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.*;
 import java.util.stream.Collectors;
 
@@ -62,6 +63,7 @@ public class Cluster {
 
     private static final Logger logger = LoggerFactory.getLogger(Cluster.class);
 
+    private AtomicLong walltime;
     private final Arbitrary arbitrary;
     private final Topology topology;
     private final LongSupplier nowSupplier;
@@ -76,9 +78,10 @@ public class Cluster {
         List<Id> ids = List.of(1,2,3).stream().map(Id::new).collect(Collectors.toList());
         Set<Id> fastpath = List.of(1,2).stream().map(Id::new).collect(Collectors.toSet());
 
+        this.walltime = new AtomicLong(0L);
         this.arbitrary = a;
         this.topology = new Topology(1, new Shard(rng, ids, fastpath));
-        this.nowSupplier = () -> 0L;
+        this.nowSupplier = () -> walltime.longValue();
 
         this.nodes = new LinkedList<>();
         this.network = new OverlayNetwork(id -> Option.apply(this.nodes.stream().filter(n -> n.id().equals(id)).findFirst().orElse(null)));
@@ -106,7 +109,7 @@ public class Cluster {
                 new Scheduler(),
                 SizeOfIntersectionSorter.SUPPLIER,
                 SimpleProgressLog::new,
-                InMemoryCommandStores.Synchronized::new,
+                CommandStore.Factory::new,
                 new CoordinationAdapter.DefaultFactory(),
                 localConfig);
 
@@ -114,6 +117,10 @@ public class Cluster {
         node.onTopologyUpdate(topology, true);
 
         return node;
+    }
+
+    public void tick() {
+        this.walltime.addAndGet(1);
     }
 
     public ImmutableList<Node> getNodes() {

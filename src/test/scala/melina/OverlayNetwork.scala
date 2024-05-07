@@ -3,9 +3,9 @@ package melina
 import accord.api.MessageSink
 import accord.impl.basic.Packet
 import accord.impl.mock.Network
-import accord.local.Node.Id
 import accord.local.{AgentExecutor, Node}
 import accord.messages.{Callback, Reply, ReplyContext, Request}
+import accordconsensus.shims.WrappedCallback
 import melina.OverlayNetwork.NoConnectionError
 
 import scala.collection.mutable
@@ -22,8 +22,8 @@ class OverlayNetwork(nodeLookup: Function[Node.Id, Option[Node]]) {
       net.send(self, to, request, None)
 
     override def send(to: Node.Id, request: Request, executor: AgentExecutor, callback: Callback[_]): Unit = {
-      // XXX: we discard the executor now.  What if this isn't okay?
-      net.send(self, to, request, Some(callback))
+      val cb = new WrappedCallback[Reply](executor, callback.asInstanceOf[Callback[Reply]])
+      net.send(self, to, request, Some(cb))
     }
 
     override def reply(to: Node.Id, replyContext: ReplyContext, reply: Reply): Unit =
@@ -35,7 +35,7 @@ class OverlayNetwork(nodeLookup: Function[Node.Id, Option[Node]]) {
 
   val inFlight: mutable.Map[Node.Id, mutable.ArrayDeque[Packet]] = mutable.Map.empty
 
-  val pendingCallbacks: mutable.Map[Long, Callback[Reply]] = mutable.Map.empty
+  val pendingCallbacks: mutable.Map[Long, WrappedCallback[Reply]] = mutable.Map.empty
 
   var nextMsgId = 0L
 
@@ -47,29 +47,31 @@ class OverlayNetwork(nodeLookup: Function[Node.Id, Option[Node]]) {
     new Socket(self, this)
   }
 
-  def send(from: Node.Id, to: Node.Id, req: Request, cb: Option[Callback[_]]): Unit = synchronized {
+  def send(from: Node.Id, to: Node.Id, req: Request, cb: Option[WrappedCallback[Reply]]): Unit = synchronized {
     val msgId = getNextMessageId
 
     inFlight.get(to)
       .getOrElse(throw NoConnectionError(to))
-      .append(new Packet(from, to, getNextMessageId, req))
-    cb.foreach(cb => pendingCallbacks.put(msgId, cb.asInstanceOf[Callback[Reply]]))
+      .append(new Packet(from, to, msgId, req))
+    cb.foreach(cb => pendingCallbacks.put(msgId, cb))
   }
 
-  def reply(from: Node.Id, to: Node.Id, replyId: Long, reply: Reply): Unit = synchronized {
+  def reply(from: Node.Id, to: Node.Id, replyId: Long, reply: Reply): Unit = {
     inFlight.get(to)
       .getOrElse(throw NoConnectionError(to))
       .append(new Packet(from, to, replyId, reply))
   }
 
-  def deliver(to: Node.Id) = synchronized {
+  def deliver(to: Node.Id) = {
     val p = inFlight.get(to).getOrElse(throw NoConnectionError(to)).removeHead()
     val n = nodeLookup(to).getOrElse(throw NoConnectionError(to))
-    val cb = pendingCallbacks.remove(p.requestId)
     p.message match {
       case req: Request => n.receive(req, p.src, Network.replyCtxFor(p.requestId))
-      case rep: Reply.FailureReply => cb.foreach(cb => cb.onFailure(p.src, rep.failure))
-      case rep: Reply => cb.foreach(cb => cb.onSuccess(p.src, rep))
+      case rep: Reply.FailureReply => {
+        pendingCallbacks.remove(p.replyId).foreach(cb => cb.onFailure(p.src, rep.failure))
+        throw rep.failure
+      }
+      case rep: Reply => pendingCallbacks.remove(p.replyId).foreach(cb => cb.onSuccess(p.src, rep))
 
       case _ => throw new RuntimeException("TODO: What is a " + n)
     }
