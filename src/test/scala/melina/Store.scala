@@ -27,6 +27,7 @@ object Store {
       this()
       v match {
         case None => ()
+        case Some(null) => ()
         case Some(v) => values.addOne(k, v)
       }
     }
@@ -94,9 +95,8 @@ object Store {
       new Keys(jset)
     }
 
-    override def apply(executeAt: Timestamp, data: api.Data): Write = {
-      val d = data.asInstanceOf[Data]
-      new Write(d)
+    override def apply(executeAt: Timestamp, d: api.Data): Write = {
+      new Write(d.merge(data).asInstanceOf[Data])
     }
 
     override def slice(ranges: Ranges): api.Update = new Update(data slice ranges)

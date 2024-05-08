@@ -35,30 +35,73 @@ class AccordWrapper extends AnyFunSpec with BeforeAndAfter {
     w.getNetwork().deliver(id)
   }
 
-  describe("The Accord wrapper") {
-    val w = new Cluster(a)
-    val id = new Id(1)
-    val res = w.write(id, 42, 99)
+
+  def doWrite(c: Cluster, id: Node.Id, k: Int, v: Int) = {
+    val res = c.write(id, 42, 99)
 
     // Pre-accept
-    deliverScatter(w)
-    deliverGather(w, id)
+    deliverScatter(c)
+    deliverGather(c, id)
 
     // Commit
-    deliverScatter(w)
+    deliverScatter(c)
 
     // ReadOK
-    deliverOne(w, id)
+    deliverOne(c, id)
 
     // Apply
-    deliverScatter(w)
-    deliverGather(w, id)
+    deliverScatter(c)
+    deliverGather(c, id)
 
     // InformOfPersistence
-    deliverScatter(w)
-    deliverGather(w, id)
+    deliverScatter(c)
+    deliverGather(c, id)
+
+    res
+  }
+
+  def doRead(c: Cluster, id: Node.Id, k: Int) = {
+    val res = c.read(id, k)
+
+    // Pre-accept
+    deliverScatter(c)
+    deliverGather(c, id)
+
+    // Commit
+    deliverScatter(c)
+
+    // ReadOK
+    deliverOne(c, id)
+
+    // Apply
+    deliverScatter(c)
+    deliverGather(c, id)
 
     // InformOfPersistence
-    AsyncChains.getUninterruptibly(res)
+    deliverScatter(c)
+    deliverGather(c, id)
+
+    res
+  }
+
+  describe("The Accord wrapper") {
+    it("can issue a read") {
+      val w = new Cluster(a)
+      val res = AsyncChains.getUninterruptibly(doRead(w, new Id(1), 42))
+      res
+    }
+
+    it("can issue a write") {
+      val w = new Cluster(a)
+      val res = AsyncChains.getUninterruptibly(doWrite(w, new Id(1), 42, 99))
+      res
+    }
+
+    it("Can read a write") {
+      val c = new Cluster(a)
+      AsyncChains.getUninterruptibly(doWrite(c, new Id(1), 42, 99))
+      val res = AsyncChains.getUninterruptibly(doRead(c, new Id(1), 42))
+      res
+    }
   }
 }

@@ -131,8 +131,9 @@ public class Cluster {
         return nodes.stream().filter(n -> n.id().equals(id)).findFirst();
     }
 
-    public AsyncChain<accord.api.Result> read(Id id, Key k) {
-        Keys keys = Keys.of(k);
+    public AsyncChain<accord.api.Result> read(Id id, int k) {
+        IntKey.Raw key = new IntKey.Raw(k);
+        Keys keys = Keys.of(key);
 
         Node n = getNode(id).orElseThrow(() -> new RuntimeException("What node??"));
 
