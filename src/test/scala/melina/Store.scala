@@ -3,6 +3,7 @@ package melina
 import accord.api
 import accord.api.{Data, DataStore, Key, Result, Write}
 import accord.api.DataStore.FetchResult
+import accord.impl.{IntHashKey, IntKey}
 import accord.local.Node.Id
 import accord.local.{Node, SafeCommandStore}
 import accord.primitives.{Keys, PartialTxn, Ranges, Seekable, Seekables, SyncPoint, Timestamp, TxnId, Writes}
@@ -16,23 +17,22 @@ import scala.jdk.CollectionConverters.SetHasAsJava
 
 object Store {
   class Data extends accord.api.Data {
-    val values: mutable.Map[Seekable, Integer] = mutable.Map.empty
+    val values: mutable.Map[Seekable, Int] = mutable.Map.empty
 
-    def this(k: Key, v: Integer) = {
+    def this(k: Key, v: Int) = {
       this()
       values.addOne(k, v)
     }
 
-    def this(k: Key, v: Option[Integer]) = {
+    def this(k: Key, v: Option[Int]) = {
       this()
       v match {
         case None => ()
-        case Some(null) => ()
         case Some(v) => values.addOne(k, v)
       }
     }
 
-    def this(data: Iterable[(Seekable, Integer)]) = {
+    def this(data: Iterable[(Seekable, Int)]) = {
       this()
       values.addAll(data)
     }
@@ -74,7 +74,7 @@ object Store {
     override def apply(key: Seekable, safeStore: SafeCommandStore, executeAt: Timestamp, store: DataStore, txn: PartialTxn): AsyncChain[Void] = {
       store match {
         case ms: Store =>
-          val ts = new Timestamped[Integer](executeAt, data.values.get(key).getOrElse(null), i => i.toString)
+          val ts = new Timestamped[Int](executeAt, data.values.get(key).getOrElse(-1), i => i.toString)
           ms.values.get(key) match {
             case None => ms.values.put(key, ts)
             case Some(existing) =>
@@ -108,18 +108,21 @@ object Store {
     }
   }
 
-  case class Result(client: Id, results: Map[Seekable, Integer]) extends api.Result
+  case class Result(client: Id, results: Map[Int, Int]) extends api.Result {
+  }
 
   class Query(client: Id) extends api.Query {
     override def compute(txnId: TxnId, executeAt: Timestamp, keys: Seekables[_, _], data: api.Data, read: api.Read, update: api.Update): Result = {
       val md = data.asInstanceOf[Data]
-      Result(client, md.values.toMap)
+      Result(client, Map.from(md.values.map(_ match {
+        case (k, v) => (k.asKey().asInstanceOf[IntKey].key, v.intValue())
+      })))
     }
   }
 }
 
 class Store extends DataStore {
-  private val values: mutable.Map[Seekable, Timestamped[Integer]] = mutable.Map.empty
+  private val values: mutable.Map[Seekable, Timestamped[Int]] = mutable.Map.empty
 
   class FixMeLaterSuccessfulFetch(ranges: Ranges) extends AsyncResults.SettableResult[Ranges] with FetchResult {
     // XXX: This is fine for the moment.  However, we are going to need

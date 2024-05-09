@@ -1,6 +1,7 @@
 package protocolrunners
 
 import accord.api.Key
+import accord.impl.IntKey
 import accord.local.Node
 import accord.local.Node.Id
 import accord.primitives.Routable.Domain
@@ -9,6 +10,7 @@ import accord.utils.async.{AsyncChain, AsyncChains}
 import accordconsensus.shims.Cluster
 import beguine.runtime.RandomArbitrary
 import melina.Store
+import melina.Store.Result
 import org.scalatest.BeforeAndAfter
 import org.scalatest.funspec.AnyFunSpec
 
@@ -100,8 +102,8 @@ class AccordWrapper extends AnyFunSpec with BeforeAndAfter {
     it("Can read a write") {
       val c = new Cluster(a)
       AsyncChains.getUninterruptibly(doWrite(c, new Id(1), 42, 99))
-      val res = AsyncChains.getUninterruptibly(doRead(c, new Id(1), 42))
-      res
+      val res = AsyncChains.getUninterruptibly(doRead(c, new Id(1), 42)).asInstanceOf[Result]
+      assert(res.results(42) == 99)
     }
   }
 }
