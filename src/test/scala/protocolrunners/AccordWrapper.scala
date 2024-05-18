@@ -46,6 +46,8 @@ class AccordWrapper extends AnyFunSpec with BeforeAndAfter {
     deliverGather(c, id)
 
     // Commit
+    // NB: Only Node 3 will have a callback registered to send the ReadOK.
+    // It appears
     deliverScatter(c)
 
     // ReadOK
@@ -101,8 +103,10 @@ class AccordWrapper extends AnyFunSpec with BeforeAndAfter {
 
     it("Can read a write") {
       val c = new Cluster(a)
-      AsyncChains.getUninterruptibly(doWrite(c, new Id(1), 42, 99))
-      val res = AsyncChains.getUninterruptibly(doRead(c, new Id(1), 42)).asInstanceOf[Result]
+      AsyncChains.getUninterruptibly(
+        doWrite(c, new Id(1), 42, 99))
+      val res = AsyncChains.getUninterruptibly(
+        doRead(c, new Id(1), 42)).asInstanceOf[Result]
       assert(res.results(42) == 99)
     }
   }

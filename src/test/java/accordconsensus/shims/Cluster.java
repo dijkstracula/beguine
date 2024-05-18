@@ -52,6 +52,7 @@ public class Cluster {
 
         @Override
         public Scheduled once(Runnable run, long delay, TimeUnit units) {
+            // TODO: Seems like we only get called here to handle the progress log.
             return new Scheduled();
         }
 

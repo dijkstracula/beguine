@@ -26,8 +26,8 @@ sealed case class Function(domain: List[IvySort[_]], range: IvySort[_]) extends 
   override def inhabitants: Iterator[Nothing] = throw new Exception("Function is an infinite sort")
 }
 
-sealed case class Number(lo: Integer, hi: Integer) extends IvySort[Integer] {
-  override def inhabitants: Iterator[Integer] = Range.Int.inclusive(lo, hi, 1).iterator.map(_.asInstanceOf[Integer])
+sealed case class Number(lo: Int, hi: Int) extends IvySort[Int] {
+  override def inhabitants: Iterator[Int] = Range.Int.inclusive(lo, hi, 1).iterator.map(_.asInstanceOf[Integer])
 }
 
 case class Record[T <: Object]() extends IvySort[T] {
