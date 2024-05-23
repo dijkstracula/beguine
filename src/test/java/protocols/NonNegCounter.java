@@ -22,7 +22,7 @@ public class NonNegCounter extends Protocol {
     public void ext__mutator__inc() {
         mutator__count = mutator__count + 1;
         mutator__show(mutator__count);
-        assertThat("007_counter.ivy", 31, true);
+        assertThat("007_counter.ivy", 31, true, "true");
     }
     public void ext__mutator__dec() {
         mutator__count = mutator__count - 1;

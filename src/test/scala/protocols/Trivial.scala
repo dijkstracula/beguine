@@ -1,4 +1,4 @@
-package protocolrunners
+package protocols
 
 import beguine.runtime.{Arbitrary, Protocol, RandomArbitrary}
 import org.scalatest.BeforeAndAfter

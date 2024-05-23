@@ -6,9 +6,9 @@ import com.typesafe.scalalogging.Logger
 import org.slf4j.{Marker, MarkerFactory}
 
 import scala.collection.mutable
-import java.lang.Runnable
 import java.util.function.BooleanSupplier
 import scala.util.{Failure, Success, Try}
+import scala.language.experimental.macros
 
 abstract class Protocol(a: Arbitrary) {
   protected val conjectures: mutable.Map[String, () => Option[ConjectureFailure]] = mutable.Map.empty
@@ -62,10 +62,11 @@ abstract class Protocol(a: Arbitrary) {
   // TODO: maybe the code generator shouldn't format the arguments
   // and we just consume it directly?  Maybe having semi-structured
   // debug input might be nice (log to JSON or something?)
-  def debug(marker: Marker, msg: String): Unit = logger.info(marker, msg)
+  def debug(marker: String, msg: Any*): Unit = logger.info(debugMarker, marker + ": " + msg)
 
-  def debug(msg: String): Unit = debug(debugMarker, msg)
+  def debug(msg: String): Unit = logger.info(debugMarker, msg)
 
-  def assertThat(file: String, lineno: Int, cond: Boolean) = if (!cond) throw ConjectureFailure("", file, lineno) else ()
+  def assertThat(file: String, lineno: Int, cond: Boolean, msg: String): Unit =
+    if (!cond) throw ConjectureFailure(msg, file, lineno) else ()
 
 }
