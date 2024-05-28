@@ -1,6 +1,7 @@
 
 import beguine.actions.{Action0, Action1, Witness}
 import beguine.runtime.{Arbitrary, RandomArbitrary}
+import beguine.sorts
 import org.scalatest.BeforeAndAfter
 import org.scalatest.funspec.AnyFunSpec
 
@@ -39,7 +40,7 @@ class ActionTest extends AnyFunSpec with BeforeAndAfter {
     }
 
     it("can be called with a generator explicitly from an Arbitrary") {
-      val action = Action1[Int, Int](() => a.numeric(0, 99))("f", n => n + 1)
+      val action = Action1[Int, Int](() => a.numeric(sorts.Number(0, 100)))("f", n => n + 1)
 
       val seen = scala.collection.mutable.Set[Int]()
       for (_ <- 0 to 100) {

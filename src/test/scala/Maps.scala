@@ -10,8 +10,7 @@ class MapTest extends AnyFunSpec with BeforeAndAfter {
   describe ("Map1") {
    it("an empty map can be iterated through") {
      val sort = sorts.Number(0, 10)
-     val m = new Maps.Map1(sort)(() => 42)
-  m
+     val m = new Maps.Map1(sort).initWithDefault(() => 42)
      assert(m.iterator.toMap.size == sort.inhabitants.get.size)
      // This would likely involve a logical variable (i.e. `m(X) == 42`),
      m.iterator collect { case (_x, fx) => assert(fx == 42) }
@@ -19,7 +18,7 @@ class MapTest extends AnyFunSpec with BeforeAndAfter {
 
     it("point values can be accessed, or fall back to a default") {
       val sort = sorts.Number(0, 10)
-      val m = new Maps.Map1(sort)(() => 42)
+      val m = new Maps.Map1(sort).initWithDefault(() => 42)
 
       assert(m(4) == 42)
 
@@ -33,7 +32,7 @@ class MapTest extends AnyFunSpec with BeforeAndAfter {
 
     it("falls back to default values for infinite sort cardinalities") {
       val sort = sorts.Uninterpreted()
-      val m = new Maps.Map1(sort)(() => 42)
+      val m = new Maps.Map1(sort).initWithDefault(() => 42)
 
       assert(m(4) == 42)
       assert(m.iterator.toMap.size == 0)
@@ -47,7 +46,7 @@ class MapTest extends AnyFunSpec with BeforeAndAfter {
     it("an empty Map2 can be iterated through") {
       val s1 = sorts.Number(0, 10)
       val s2 = sorts.Number(0, 3)
-      val m = new Maps.Map2(s1, s2)(() => 42)
+      val m = new Maps.Map2(s1, s2).initWithDefault(() => 42)
 
       assert(m.iterator.toMap.size == s1.inhabitants.get.size * s2.inhabitants.get.size)
       // This would likely involve a logical variable (i.e. `m(X, Y) == 42`),
@@ -56,7 +55,7 @@ class MapTest extends AnyFunSpec with BeforeAndAfter {
 
     it("point values can be accessed, or fall back to a default") {
       val sort = sorts.Number(0, 10)
-      val m = new Maps.Map1(sort)(() => 42)
+      val m = new Maps.Map1(sort).initWithDefault(() => 42)
 
       assert(m(4) == 42)
 

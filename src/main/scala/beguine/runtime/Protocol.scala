@@ -1,7 +1,7 @@
 package beguine.runtime
 
 import beguine.actions.{Action, Action0, Action1, Witness}
-import beguine.{ConjectureFailure, Error, GeneratorLivelock}
+import beguine.{ConjectureFailure, Error, GeneratorLivelock, RetryValueGeneration}
 import com.typesafe.scalalogging.Logger
 import org.slf4j.{Marker, MarkerFactory}
 
@@ -66,7 +66,9 @@ abstract class Protocol(a: Arbitrary) {
 
   def debug(msg: String): Unit = logger.info(debugMarker, msg)
 
-  def assertThat(file: String, lineno: Int, cond: Boolean, msg: String): Unit =
+  def assertThat(file: String, lineno: Int, cond: Boolean, msg: String = "<unknown>"): Unit =
     if (!cond) throw ConjectureFailure(msg, file, lineno) else ()
 
+  def assumeThat(cond: Boolean): Unit =
+    if (!cond) throw RetryValueGeneration() else ()
 }

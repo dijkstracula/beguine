@@ -1,6 +1,7 @@
 package accordconsensus.shims;
 
 import beguine.runtime.Arbitrary;
+import beguine.sorts.Number;
 import scala.Int;
 
 public class RandomSource implements accord.utils.RandomSource {
@@ -23,7 +24,7 @@ public class RandomSource implements accord.utils.RandomSource {
 
     @Override
     public int nextInt() {
-        return arbitrary.numeric(Int.MinValue(), Int.MaxValue());
+        return arbitrary.numeric(new Number(Int.MinValue(), Int.MaxValue()));
     }
 
     @Override
