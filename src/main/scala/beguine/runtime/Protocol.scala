@@ -1,6 +1,7 @@
 package beguine.runtime
 
-import beguine.actions.{Action, Action0, Action1, Witness}
+import beguine.actions._
+import beguine.sorts.IvySort
 import beguine.{ConjectureFailure, Error, GeneratorLivelock, RetryValueGeneration}
 import com.typesafe.scalalogging.Logger
 import org.slf4j.{Marker, MarkerFactory}
@@ -56,8 +57,14 @@ abstract class Protocol(a: Arbitrary) {
 
   def exported[Z](name: String, f: () => Z): Unit = exportedActions.append(Action0[Z](name, f))
 
-  def exported[A, Z](name: String, f: A => Z, gena: () => A): Unit = exportedActions.append(Action1[A, Z](gena)(name, f))
+  def exported[A, Z](name: String, f: A => Z, gena: IvySort[A]): Unit =
+    exportedActions.append(Action1[A, Z](() => gena.arbitrary(a))(name, f))
 
+  def exported[A, B, Z](name: String, f: (A, B) => Z, gena: IvySort[A], genb: IvySort[B]): Unit =
+    exportedActions.append(Action2[A, B, Z](() => gena.arbitrary(a), () => genb.arbitrary(a))(name, f))
+
+  def exported[A, B, C, Z](name: String, f: (A, B, C) => Z, gena: IvySort[A], genb: IvySort[B], genc: IvySort[C]): Unit =
+    exportedActions.append(Action3[A, B, C, Z](() => gena.arbitrary(a), () => genb.arbitrary(a), () => genc.arbitrary(a))(name, f))
 
   // TODO: maybe the code generator shouldn't format the arguments
   // and we just consume it directly?  Maybe having semi-structured

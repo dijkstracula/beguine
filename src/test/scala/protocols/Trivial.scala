@@ -28,7 +28,7 @@ class TrivialProtocolTests extends AnyFunSpec with BeforeAndAfter {
     class PorterIsolate(a: Arbitrary) extends Protocol(a) {
       val nat = beguine.sorts.Number(0, Int.MaxValue)
 
-      exported("ext:p.doit", ext__p__doit, () => 42)
+      exported("ext:p.doit", ext__p__doit, nat)
 
       def ext__p__doit(val_ident: Int) : Unit = {
         this.assumeThat(val_ident == 42)

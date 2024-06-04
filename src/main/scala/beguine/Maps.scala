@@ -15,7 +15,10 @@ object Maps {
       backingMap.getOrElse(key, default.getOrElse(throw new Exception("Producer for defaults not set")).apply())
     }
 
-    override def get(key: K): Option[V] = Some(this (key))
+    override def get(key: K): Option[V] = backingMap.get(key) match {
+      case res @ Some(_) => res
+      case None => default.map(_.apply())
+    }
 
     override def addOne(elem: (K, V)): this.type = {
       backingMap.addOne(elem)
@@ -32,6 +35,7 @@ object Maps {
       backingMap.clear()
       this
     }
+    override def size = this.iterator.size
   }
 
   class Map1[A, Z](as: IvySort[A]) extends AbstractMap[A, Z] {

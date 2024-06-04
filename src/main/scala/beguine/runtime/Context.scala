@@ -14,9 +14,13 @@ trait Arbitrary {
 
   def collection[T](s: Seq[T]): Option[T]
 
-  def enumeration[E <: Enumeration](e: Enum[E]): e.discriminants.Value
+  def enumeration[E <: Enumeration](e: Enum[E]): E#Value
 
   def numeric(n: Number): Int
+
+  def record[T <: Object](r: Record[T]): T
+
+  def uninterpreted: Int
 
   /*
   def fromIvySort[J](s: IvySort[J]): () => J =
@@ -41,9 +45,14 @@ class RandomArbitrary(implicit r: Random) extends Arbitrary {
 
   // XXX: slightly dumb to fall back onto collection()
   // XXX: broken lol; how do I get this to typecheck, again?
-  override def enumeration[E <: Enumeration](e: Enum[E]) = null //this.collection(e.discriminants.values.toSeq).get
+  override def enumeration[E <: Enumeration](e: Enum[E]) = e.discriminants.values.toSeq(r.nextInt(e.discriminants.values.size))
 
   override def numeric(n: Number) = { r.between(n.lo, n.hi + 1) }
 
+  override def record[T <: Object](r: Record[T]) = r.arbitrary(this)
+
+  override def uninterpreted: Int = numeric(Number(0, 100)) // TODO: gradually increasing values?
+
   def asScala = r
 }
+
